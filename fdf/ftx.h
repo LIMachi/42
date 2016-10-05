@@ -6,17 +6,25 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/08/10 09:52:50 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/06 01:50:52 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FTX_H
 # define FTX_H
 
+# if !defined(NORM42)
+#  define NORM42 0
+# endif
+
 # include <libft.h>
 # include <mlx.h>
-# include <time.h>
-# include <stdio.h> //
+# if NORM42 == 0
+#  include <time.h>
+# endif
+# if DEBUG == 1
+#  include <stdio.h> //
+# endif
 //# include <stdint.h>
 # include <math.h>
 

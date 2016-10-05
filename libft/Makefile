@@ -6,7 +6,7 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/10/06 01:17:57 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/06/22 13:40:40 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,9 @@ NAME =
 SRCDIR =
 OBJDIR =
 INCDIR =
-LIBFT  = ../libft
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -DNORM42=1
+FLAGS = -Wall -Wextra -Werror
 LIBS =
 
 OS = $(shell uname)
@@ -160,22 +159,20 @@ LFTFOUND = $(shell grep '\#*include\ \"libft.h\"' $(DOTC))
 endif
 endif
 ifneq ($(LFTFOUND), )
-ifeq ($(LIBFT), )
+ifneq ($(wildcard libft/.), )
 LIBFT = libft
-endif
-ifneq ($(wildcard $(LIBFT)/.), )
 LLIBFT = libft.a
-LFLAGS = $(LIBFT)/libft.a
-ifneq ($(wildcard $(LIBFT)/includes/.), )
-ILIBFT = -I$(LIBFT)/includes
+LFLAGS = libft/libft.a
+ifneq ($(wildcard libft/includes/.), )
+ILIBFT = -Ilibft/includes
 else
-ifneq ($(wildcard $(LIBFT)/include/.), )
-ILIBFT = -I$(LIBFT)/include
+ifneq ($(wildcard libft/include/.), )
+ILIBFT = -Ilibft/include
 else
-ifneq ($(wildcard $(LIBFT)/inc/.), )
-ILIBFT = -I$(LIBFT)/inc
+ifneq ($(wildcard libft/inc/.), )
+ILIBFT = -Ilibft/inc
 else
-ILIBFT = -I$(LIBFT)
+ILIBFT = -Ilibft
 endif
 endif
 endif
@@ -196,19 +193,19 @@ all: auteur $(NAME)
 ifneq ($(MAINFOUND), )
 $(NAME): trash $(DEP) allobj
 	@echo "compiling executable"
-	$(CC) $(FLAGS) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
+	@$(CC) $(FLAGS) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
 else
 $(NAME): trash $(DEP) allobj
 	@echo "compiling library"
-	ar -rcs $(NAME) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB)
-	ranlib $(NAME)
+	@ar -rcs $(NAME) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB)
+	@ranlib $(NAME)
 endif
 
 ifneq ($(LIBFT), )
 .PHONY: libft
 libft:
 	@echo "making libft"
-	test '$(LIBFT)' != '' && make -C $(LIBFT) --no-print-directory
+	@test '$(LIBFT)' != '' && make -C $(LIBFT) --no-print-directory
 endif
 
 ifneq ($(MLXFOUND), )
@@ -216,7 +213,7 @@ ifneq ($(MLXFOUND), )
 ifneq ($(MLX), )
 mlx:
 	@echo "making mlx"
-	test '$(MLX)' != '' && make -C $(MLX) --no-print-directory
+	@test '$(MLX)' != '' && make -C $(MLX) --no-print-directory
 else
 mlx:
 	@echo "using standard mlx"
@@ -226,7 +223,7 @@ endif
 .PHONY: allobj
 allobj:
 	@echo "making objects"
-	make makeobj -j$(NPROCS) AOBJ="$(OBJ)" --no-print-directory #--silent
+	@make makeobj -j$(NPROCS) AOBJ="$(OBJ)" --no-print-directory #--silent
 
 .PHONY: makeobj
 makeobj: $(OBJDIR) $(AOBJ)
@@ -234,10 +231,10 @@ makeobj: $(OBJDIR) $(AOBJ)
 
 $(OBJDIR):
 	@echo "creating dir $(OBJDIR)"
-	mkdir $(OBJDIR)
+	@mkdir $(OBJDIR)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(FLAGS) -c $< -o $@ $(patsubst %, -I%, $(INCDIR)) $(ILIBFT) $(IMLX)
+	@$(CC) $(FLAGS) -c $< -o $@ $(patsubst %, -I%, $(INCDIR)) $(ILIBFT) $(IMLX)
 
 TRASH = $(shell find `pwd` -type f | grep -e "/\._" -e "~$$" -e "\.swp$$" -e "\.DS_Store$$") $(shell find `pwd` -type f | grep -e "/\#" | grep -e "\#$$")
 
@@ -245,7 +242,7 @@ TRASH = $(shell find `pwd` -type f | grep -e "/\._" -e "~$$" -e "\.swp$$" -e "\.
 ifneq ('$(TRASH)', ' ')
 trash:
 	@echo "trashing unwanted files"
-	rm -f $(TRASH)
+	@rm -f $(TRASH)
 else
 trash:
 	@echo "no trash to clear"
@@ -257,38 +254,38 @@ endif
 ifneq ($(LIBFT), )
 ifneq ($(MLX), )
 clean: trash
-	make clean -C $(LIBFT) --no-print-directory
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
+	@make clean -C $(LIBFT) --no-print-directory
+	@make clean -C $(MLX) --no-print-directory
+	@rm -rf $(OBJDIR)
 fclean: trash
-	make clean -C $(MLX) --no-print-directory
-	make fclean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
+	@make clean -C $(MLX) --no-print-directory
+	@make fclean -C $(LIBFT) --no-print-directory
+	@rm -rf $(OBJDIR)
+	@rm -rf $(NAME)
 else
 clean: trash
-	make clean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
+	@make clean -C $(LIBFT) --no-print-directory
+	@rm -rf $(OBJDIR)
 fclean: trash
-	make fclean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
+	@make fclean -C $(LIBFT) --no-print-directory
+	@rm -rf $(OBJDIR)
+	@rm -rf $(NAME)
 endif
 else
 ifneq ($(MLX), )
 clean: trash
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
+	@make clean -C $(MLX) --no-print-directory
+	@rm -rf $(OBJDIR)
 fclean: trash
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
+	@make clean -C $(MLX) --no-print-directory
+	@rm -rf $(OBJDIR)
+	@rm -rf $(NAME)
 else
 clean: trash
-	rm -rf $(OBJDIR)
+	@rm -rf $(OBJDIR)
 fclean: trash
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
+	@rm -rf $(OBJDIR)
+	@rm -rf $(NAME)
 endif
 endif
 
@@ -297,4 +294,4 @@ re: fclean all
 
 auteur:
 	@echo "creating default auteur file"
-	echo "hmartzol" > auteur
+	@echo "hmartzol" > auteur

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:21:53 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/08/28 19:32:28 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/06 01:52:11 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int		sf_color_mix(int s, int e, t_fix p)
 	return (ftx_fixtorgb(r, g, b));
 }
 
+#if NORM42 == 0
 int	ftx_update(void *ptr)
 {
 	t_mlx_data		*data;
@@ -104,6 +105,41 @@ int	ftx_update(void *ptr)
 	}
 	return (0);
 }
+#else
+# if OS == LINUX
+#  pragma message "Warning: NORM42 will disable the fps stabilisation on Linux."
+#  pragma message "Please disable NORM42 (= 0/undef) to allow fps stabilisation"
+# endif
+int	ftx_update(void *ptr)
+{
+	t_mlx_data		*data;
+	t_window		*tmpwin;
+	t_image			*tmpimg;
+
+	data = (t_mlx_data*)ptr;
+	tmpwin = data->windows;
+	while (tmpwin != NULL)
+	{
+			ftx_clear_img(tmpwin->vbuffer);
+			if (tmpwin->up_func)
+				tmpwin->up_func(tmpwin);
+			tmpimg = tmpwin->images;
+			while (tmpimg != NULL)
+			{
+				if (tmpimg->fill_func)
+					tmpimg->fill_func(tmpwin, tmpimg);
+				if (tmpimg->update && !(tmpimg->update = 0))
+					ftx_put_img_to_img(tmpwin->vbuffer, tmpimg, 0);
+				tmpimg = tmpimg->next;
+			}
+			mlx_put_image_to_window(data->mlx, tmpwin->win,
+				tmpwin->vbuffer->ptr, tmpwin->vbuffer->pos.x,
+				tmpwin->vbuffer->pos.y);
+		tmpwin = tmpwin->next;
+	}
+	return (0);
+}
+#endif
 
 int		fill_fdf(t_window *win, t_image *img)
 {
