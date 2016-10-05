@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/08/23 00:40:57 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/06 00:13:26 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 **	and return it
 */
 
+#if 0
 static const char *g_errno_str[256] = {
 	[EPERM] = "Operation not permitted", [ESRCH] = "No such process",
 	[ENOENT] = "No such file or directory", [EIO] = "I/O error",
@@ -151,6 +152,7 @@ static const char *g_errno_str[256] = {
 	[ERFKILL] = "Operation not possible due to RF-kill",
 	[EHWPOISON] = "Memory page has hardware error",
 };
+#endif
 
 int	ft_error(int flag, int data)
 {
@@ -162,8 +164,8 @@ int	ft_error(int flag, int data)
 		error = errno;
 	if (flag == FT_ERROR_CLEAR)
 		error = 0;
-	if ((flag == FT_ERROR_PRINT || flag == FT_ERROR_ERRNO) && error)
-		ft_putendl_fd(g_errno_str[error], 2);
+//	if ((flag == FT_ERROR_PRINT || flag == FT_ERROR_ERRNO) && error)
+//		ft_putendl_fd(g_errno_str[error], 2);
 	if (flag == FT_ERROR_CHECK || flag == FT_ERROR_PRINT ||
 			flag == FT_ERROR_ERRNO)
 		return (error);

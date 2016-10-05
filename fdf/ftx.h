@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/06 01:50:52 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/06 00:44:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,13 @@
 #  define MICE_SCROLL_UP 4
 #  define MICE_SCROLL_DOWN 5
 # elif OS == MACINTOCH
+#  define KEY_PAD_PLUS 69
+#  define KEY_PAD_MINUS 78
+#  define KEY_CTRL_LEFT 256
+#  define KEY_PAD_0 82
+#  define KEY_X 7
+#  define KEY_Y 16
+#  define KEY_Z 6
 #  define KEYMAPSIZE 280
 #  define KEY_EXIT 53
 #  define KEY_UP 126

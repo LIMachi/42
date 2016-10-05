@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 19:34:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/08/23 00:50:27 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/06 00:16:00 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_bitmap	*ft_bitmap_file_load(char *path)
 		< (int)sizeof(t_bitmap_file_header) || header.file_type != 0x4D42
 		|| (out = (t_bitmap*)malloc(sizeof(t_bitmap))) == NULL)
 		return (sf_bmp_file_load_error(&fd, out));
-	out->info = (t_dib_header){0};
+	out->info = (t_dib_header){.dib_size = 0};
 	i = (int)sizeof(DWORD);
 	if (ft_read(&fd, &(out->info.dib_size), i) < i
 		|| !(i = out->info.dib_size - sizeof(DWORD))
