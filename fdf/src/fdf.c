@@ -6,38 +6,104 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:21:53 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/06 00:46:49 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/08 06:38:53 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ftx.h>
 
+/*
+** map format [y][x][d]
+*/
+
+void			ft_free_object3d(t_object3d	*object)
+{
+	if (object == NULL)
+		return ;
+	if (object->points3d_original != NULL)
+		free(object->points3d_original);
+	if (object->colors != NULL)
+		free(object->colors);
+	if (object->points3d != NULL)
+		free(object->points3d);
+	if (object->points2d != NULL)
+		free(object->points2d);
+	if (object->lines != NULL)
+		free(object->lines);
+	free(object);
+	return (NULL);
+}
+
+t_object3d		*ft_new_object3d(t_vector position, int nb_points, int nb_lines)
+{
+	t_object3d	*out;
+
+	if ((out = (t_object3d*)malloc(sizeof(t_object3d))) == NULL)
+		return (NULL);
+	if ((out->points3d_original = (t_vector*)malloc(sizeof(t_vector) *
+			nb_points)) == NULL || (out->colors = (int*)malloc(sizeof(int) *
+			nb_points)) == NULL || (out->points3d = (t_vector*)malloc(sizeof(
+			t_vector) * nb_points)) == NULL || out->points2d =
+			(t_point*)malloc(sizeof(t_point) * nb_points)) == NULL ||
+			out->lines = (t_line_ref*)malloc(sizeof(t_line_ref)
+			* nb_lines)) == NULL)
+	{
+		ft_free_object3d(out);
+		return (NULL);
+	}
+	out->object.rotation_axis_x = (t_vector){1, 0, 0};
+	out->object.rotation_axis_y = (t_vector){0, 1, 0};
+	out->object.rotation_axis_z = (t_vector){0, 0, 1};
+	out->object.orientation_quaternion = (t_quaternion){1, 0, 0, 0};
+	out->object.position = position;
+	out->nb_points = nb_points;
+	out->nb_lines = nb_lines;
+	return (out);
+}
+
+t_object3d		*ft_object3d_from_fdf(int ***map, t_point size)
+{
+	t_object3d	*out;
+	t_point		pos;
+
+	if (size.x <= 0 || size.y <= 0 || map == NULL || *map == NULL ||
+		**map == NULL || (out = ft_new_object3d((t_vector){0, 0, 0}, size.x *
+		size.y, (size.x - 1) * size.y + (size.y - 1) * size.x)) == NULL)
+		return (NULL);
+	pos.y = -1;
+	while (++pos.y < size.y && (pos.x = -1))
+		while (++pos.x < size.x)
+		{
+			
+		}
+}
+
 void		ft_update_rotation_matrix(t_mat_r *mat)
 {
-	t_point3d	s;
-	t_point3d	c;
+	t_vector	s;
+	t_vector	c;
 
-	s = (t_point3d){SIN(mat->r.x), SIN(mat->r.y), SIN(mat->r.z)};
-	c = (t_point3d){COS(mat->r.x), COS(mat->r.y), COS(mat->r.z)};
+	s = (t_vector){SIN(mat->r.x), SIN(mat->r.y), SIN(mat->r.z)};
+	c = (t_vector){COS(mat->r.x), COS(mat->r.y), COS(mat->r.z)};
 	*mat = (t_mat_r){mat->r,
 		{{c.z * c.y, c.z * s.y * s.x - s.z * c.x, c.z * s.y * c.x - s.z * s.x},
 		{s.z * c.y, s.z * s.y * s.x + c.x * c.z, s.z * s.y * c.x - c.z * s.x},
 		{-s.y, s.x * c.y, c.x * c.y}}};
 }
 
-t_point3d	ft_matmultvect(t_mat_r *mat, t_point3d vect, t_point3d center)
+t_vector	ft_matmultvect(t_mat_r *mat, t_vector vect, t_vector center)
 {
-	t_point3d	tmp;
+	t_vector	tmp;
 
 	tmp = ft_pt3sub(vect, center);
-	return ((t_point3d){
+	return ((t_vector){
 		mat->m[0][0] * tmp.x + mat->m[1][0] * tmp.y + mat->m[2][0] * tmp.z
 		+ center.x, mat->m[0][1] * tmp.x + mat->m[1][1] * tmp.y + mat->m[2][1]
 		* tmp.z + center.y, mat->m[0][2] * tmp.x + mat->m[1][2] * tmp.y
 		+ mat->m[2][2] * tmp.z + center.z});
 }
 
-t_point	ft_3d_to_2d(t_point3d eye, t_point screen_center, t_point3d point, double zoom)
+t_point	ft_3d_to_2d(t_vector eye, t_point screen_center, t_vector point, double zoom)
 {
 	return ((t_point){zoom * (eye.z * (point.x - eye.x) / (eye.z + point.z) + eye.x) + screen_center.x,
 					zoom * (eye.z * (point.y - eye.y) / (eye.z + point.z) + eye.y) + screen_center.y});
@@ -141,20 +207,24 @@ int	ftx_update(void *ptr)
 }
 #endif
 
+#define SPEED 0.1
+
 int		fill_fdf(t_window *win, t_image *img)
 {
-	t_fdf		*fdf;
-	t_mlx_data	*data;
-	t_point3d	tmp;
-	t_point		pos;
-	double		tmpd;
-	int			up;
+	t_fdf			*fdf;
+	t_mlx_data		*data;
+	t_vector		tmp;
+	t_point			pos;
+	double			tmpd;
+	int				up;
+	t_quaternion	q;
 
 	data = ftx_data(GDX_ACCES);
 	fdf = (t_fdf*)(win->data);
 	if (data ->focused_window == win->id)
 	{
-		up = 0;
+		up = 1; //bug ici, non synchrone avec l'update d'écran
+/*
 		if (data->keymap[KEY_CTRL_LEFT])
 		{
 			tmpd = win->zoom;
@@ -164,39 +234,57 @@ int		fill_fdf(t_window *win, t_image *img)
 		}
 		if (data->keymap[KEY_X])
 		{
-			tmpd = fdf->rotation->r.x;
-			fdf->rotation->r.x += 0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]);
-			fdf->rotation->r.x = data->keymap[KEY_PAD_0] ? 0 : fdf->rotation->r.x;
-			if (tmpd != fdf->rotation->r.x)
-				up = 1;
+			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(1, 0, 0));
+			fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			up = 1;
 		}
 		if (data->keymap[KEY_Y])
 		{
-			tmpd = fdf->rotation->r.y;
-			fdf->rotation->r.y += 0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]);
-			fdf->rotation->r.y = data->keymap[KEY_PAD_0] ? 0 : fdf->rotation->r.y;
-			if (tmpd != fdf->rotation->r.y)
-				up = 1;
+			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(0, 1, 0));
+			fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			up = 1;
 		}
 		if (data->keymap[KEY_Z])
 		{
-			tmpd = fdf->rotation->r.z;
-			fdf->rotation->r.z += 0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]);
-			fdf->rotation->r.z = data->keymap[KEY_PAD_0] ? 0 : fdf->rotation->r.z;
-			if (tmpd != fdf->rotation->r.z)
-				up = 1;
+			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(0, 0, 1));
+			fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			up = 1;
 		}
+		if (data->keymap[KEY_SPACE] && (up = 1))
+			fdf->camera_pos.y += SPEED;
+		if (data->keymap[KEY_SHIFT_LEFT] && (up = 1))
+			fdf->camera_pos.y -= SPEED;
+		if (data->keymap[KEY_W] && (up = 1))
+			fdf->camera_pos.z -= SPEED;
+		if (data->keymap[KEY_S] && (up = 1))
+			fdf->camera_pos.z += SPEED;
+		if (data->keymap[KEY_D] && (up = 1))
+			fdf->camera_pos.x -= SPEED;
+		if (data->keymap[KEY_A] && (up = 1))
+			fdf->camera_pos.x += SPEED;
+		if (data->keymap[KEY_PAD_0] && (up = 1))
+		{
+			fdf->camera_pos = ft_vector(0, 0, 0);
+			fdf->rotation = ft_quat(1, 0, 0, 0);
+			win->zoom = 10;
+		}
+*/
 		if (up)
 		{
-			ft_update_rotation_matrix(fdf->rotation);
+			t_matrix *tmat = ft_quat_rotation_to_matrix(fdf->rotation);
 			pos.y = -1;
 			while (++pos.y < fdf->size.y && (pos.x = -1))
 				while (++pos.x < fdf->size.x)
 				{
-					tmp = ft_matmultvect(fdf->rotation, fdf->map3[pos.y][pos.x], fdf->camera_pos);
-					tmp = ft_pt3add(tmp, fdf->camera_pos);
-					fdf->map2[pos.y][pos.x] = ft_3d_to_2d((t_point3d){0, 0, 100}, ft_point(win->size.x / 2, win->size.y / 2), tmp, win->zoom);
+					tmp = fdf->map3[pos.y][pos.x];
+//					tmp = ft_vector_substract(tmp, fdf->camera_pos);
+					ft_matrix_multply_vector(&tmp, tmat);
+					tmp = ft_vector_add(tmp, fdf->camera_pos);
+//					tmp = ft_matmultvect(fdf->rotation, fdf->map3[pos.y][pos.x], fdf->camera_pos);
+//					tmp = ft_pt3add(tmp, fdf->camera_pos);
+					fdf->map2[pos.y][pos.x] = ft_3d_to_2d((t_vector){0, 0, 100}, ft_point(win->size.x / 2, win->size.y / 2), tmp, win->zoom);
 				}
+			ft_matrix_free(tmat);
 			pos.y = -1;
 			ftx_clear_img(img);
 			while (++pos.y < fdf->size.y && (pos.x = -1))
@@ -248,19 +336,20 @@ void	main_window_init(int ***map, t_point size)
 	fdf = (t_fdf*)ft_memalloc(sizeof(t_fdf));
 	fdf->map = map;
 	fdf->size = size;
-	fdf->map3 = (t_point3d**)ft_memalloc(sizeof(t_point3d*) * size.y);
+	fdf->map3 = (t_vector**)ft_memalloc(sizeof(t_vector*) * size.y);
 	fdf->map2 = (t_point**)ft_memalloc(sizeof(t_point*) * size.y);
 	i = -1;
 	while (++i < size.y)
 	{
-		fdf->map3[i] = (t_point3d*)ft_memalloc(sizeof(t_point3d) * size.x);
+		fdf->map3[i] = (t_vector*)ft_memalloc(sizeof(t_vector) * size.x);
 		fdf->map2[i] = (t_point*)ft_memalloc(sizeof(t_point) * size.x);
 		j = -1;
 		while (++j < size.x)
-			fdf->map3[i][j] = (t_point3d){j, i, map[i][j][0]};
+			fdf->map3[i][j] = (t_vector){j, i, map[i][j][0]};
 	}
-	fdf->rotation = (t_mat_r*)ft_memalloc(sizeof(t_mat_r));
-	fdf->eye = (t_point3d){0, 0, 7};
+	fdf->rotation = ft_quat(1, 0, 0, 0);
+	fdf->camera_pos = ft_vector(0, 0, 0);
+	fdf->eye = (t_vector){0, 0, 7};
 	window->data = (void*)fdf;
 	window->use_code = C_FDF;
 	ftx_add_window(window);

@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pt3.c                                           :+:      :+:    :+:   */
+/*   ft_cos.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/07/15 08:52:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 04:13:39 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/15 13:23:27 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/06 22:38:17 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_vector	ft_pt3add(t_vector a, t_vector b)
+#if defined(_MATH_H) && _MATH_H == 1
+
+double	ft_cos(double x)
 {
-	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
+	return (cos(x));
 }
 
-t_vector	ft_pt3sub(t_vector a, t_vector b)
+#else
+
+double	ft_cos(double x)
 {
-	return ((t_vector){a.x - b.x, a.y - b.y, a.z - b.z});
+	return (ft_sin(RADIAN(90 - DEGRE(x))));
 }
+
+#endif

@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pt3.c                                           :+:      :+:    :+:   */
+/*   ft_quat_norm.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/07/15 08:52:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 04:13:39 by hmartzol         ###   ########.fr       */
+/*   Created: 0000/00/00 00:00:00 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/06 23:55:24 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_vector	ft_pt3add(t_vector a, t_vector b)
+double		ft_quat_norm(const t_quaternion q)
 {
-	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
-}
-
-t_vector	ft_pt3sub(t_vector a, t_vector b)
-{
-	return ((t_vector){a.x - b.x, a.y - b.y, a.z - b.z});
+	return (ft_sqrtd(q.r * q.r + q.i * q.i + q.j * q.j + q.k * q.k));
 }

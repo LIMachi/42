@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pt3.c                                           :+:      :+:    :+:   */
+/*   ft_matrix_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/07/15 08:52:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 04:13:39 by hmartzol         ###   ########.fr       */
+/*   Created: 0000/00/00 00:00:00 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/06 23:25:54 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_vector	ft_pt3add(t_vector a, t_vector b)
+void		ft_matrix_free(t_matrix *m)
 {
-	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
-}
-
-t_vector	ft_pt3sub(t_vector a, t_vector b)
-{
-	return ((t_vector){a.x - b.x, a.y - b.y, a.z - b.z});
+	if (m == NULL)
+		return ;
+	if (m->mat)
+	{
+		ft_tabfree((void**)m->mat, m->size.y);
+		m->mat = NULL;
+	}
+	free(m);
 }

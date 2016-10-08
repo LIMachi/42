@@ -1,23 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pt3.c                                           :+:      :+:    :+:   */
+/*   ft_acos.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/07/15 08:52:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 04:13:39 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/15 13:23:27 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/08 04:53:02 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_vector	ft_pt3add(t_vector a, t_vector b)
+#if defined(_MATH_H) && _MATH_H == 1
+
+double	ft_acos(double x)
 {
-	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
+	return (acos(x));
 }
 
-t_vector	ft_pt3sub(t_vector a, t_vector b)
+#else
+
+/*
+** low precision acos (around 5th digit of frac)
+*/
+
+double	ft_acos(double x)
 {
-	return ((t_vector){a.x - b.x, a.y - b.y, a.z - b.z});
+	double n;
+	double out;
+
+	n = x < 0;
+	x = ABS(x);
+	out = -0.0187293;
+	out *= x;
+	out += 0.0742610;
+	out *= x;
+	out -= 0.2121144;
+	out *= x;
+	out += 1.5707288;
+	out *= ft_sqrtd(1.0 - x);
+	out -= 2 * n * out;
+	return (n * 3.14159265358979 + out);
 }
+
+#endif

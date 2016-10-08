@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pt3.c                                           :+:      :+:    :+:   */
+/*   ft_complex_multiply.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/07/15 08:52:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 04:13:39 by hmartzol         ###   ########.fr       */
+/*   Created: 0000/00/00 00:00:00 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/07 01:07:11 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_vector	ft_pt3add(t_vector a, t_vector b)
+t_complex		ft_complex_mulitply(const t_complex a, const t_complex b)
 {
-	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
-}
-
-t_vector	ft_pt3sub(t_vector a, t_vector b)
-{
-	return ((t_vector){a.x - b.x, a.y - b.y, a.z - b.z});
+	return ((t_complex){.r = a.r * b.r - a.i * b.i,
+						.i = a.r * b.i - b.r * a.i});
 }

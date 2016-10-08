@@ -6,7 +6,7 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/10/06 01:17:57 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/10/06 03:23:21 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,16 @@ INCDIR =
 LIBFT  = ../libft
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -DNORM42=1
+
+ifeq ($(DEFINES), )
+DEFINES = NORM42=1
+endif
+
+ifneq ($(DEFINES), )
+EFLAGS = $(patsubst %, -D"%", $(DEFINES))
+endif
+
+FLAGS = -Wall -Wextra -Werror $(EFLAGS)
 LIBS =
 
 OS = $(shell uname)
@@ -203,6 +212,9 @@ $(NAME): trash $(DEP) allobj
 	ar -rcs $(NAME) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB)
 	ranlib $(NAME)
 endif
+
+bonus:
+	make re -e "DEFINES = NORM42=0"
 
 ifneq ($(LIBFT), )
 .PHONY: libft

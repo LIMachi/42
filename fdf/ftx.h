@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/06 00:44:57 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/08 06:19:41 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,23 +168,52 @@ typedef struct			s_mice
 	t_point				drag;
 }						t_mice;
 
-typedef struct			s_mat_r
+typedef struct			s_object3d_base
 {
-	t_point3d			r;
-	double				m[3][3];
-}						t_mat_r;
+	t_vector			rotation_axis_x;
+	t_vector			rotation_axis_y;
+	t_vector			rotation_axis_z;
+	t_quaternion		orientation_quaternion;
+	t_vector			position;
+}						t_object3d_base;
 
-typedef struct			s_fdf
+typedef struct			s_camera
 {
-	int					***map;
-	t_point				size;
-	t_point3d			**map3;
-	t_point				**map2;
-	t_mat_r				*rotation;
-	t_point3d			eye;
-	t_point3d			camera_pos;
-	t_point3d			camera_line;
-}						t_fdf;
+	t_object3d_base		object;
+	t_vector			focal;
+	t_vector			focus;
+}						t_camera;
+
+typedef struct			s_line_ref
+{
+	int					start;
+	int					end;
+}						t_line_ref;
+
+typedef struct			s_object3d
+{
+	t_object3d_base		object;
+	int					nb_points;
+	t_vector			*points3d_original;
+	int					*colors;
+	t_vector			*points3d;
+	t_point				*points2d;
+	int					nb_lines;
+	t_line_ref			*lines;
+}						t_object3d;
+
+typedef struct			s_scene
+{
+	int					nb_cameras;
+	int					focused_camera;
+	t_camera			*cameras;
+	int					nb_object3d;
+	t_object3d			*objects3d;
+	t_point				render_size;
+	uint32_t			*colors;
+	double				*depth;
+	int					*controller;
+}						t_scene;
 
 typedef struct			s_mlx_data
 {
@@ -220,8 +249,8 @@ int						ftx_free_image(t_image *img);
 int						ftx_free_all_images(t_image *img);
 void					ftx_add_image(t_window *win, t_image *img, int id);
 
-t_point3d				ft_pt3sub(t_point3d a, t_point3d b);
-t_point3d				ft_pt3add(t_point3d a, t_point3d b);
+t_vector				ft_pt3sub(t_vector a, t_vector b);
+t_vector				ft_pt3add(t_vector a, t_vector b);
 
 t_point					ft_ptsub(t_point a, t_point b);
 t_point					ft_ptadd(t_point a, t_point b);

@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_point3d.c                                       :+:      :+:    :+:   */
+/*   ft_vector_angle.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/02/18 18:15:00 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/02/18 18:16:12 by hmartzol         ###   ########.fr       */
+/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/07 03:43:42 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_point3d	ft_point3d(double x, double y, double z)
+double			ft_vector_angle(const t_vector a, const t_vector b)
 {
-	t_point3d out;
+	double	vec_a_mag;
 
-	out.x = x;
-	out.y = y;
-	out.z = z;
-	return (out);
+	vec_a_mag = ft_vector_magnitude(a);
+	return (ft_acos(ft_vector_dot_product(a, b) / (vec_a_mag * vec_a_mag)));
 }

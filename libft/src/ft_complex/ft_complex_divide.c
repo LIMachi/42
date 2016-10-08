@@ -1,23 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pt3.c                                           :+:      :+:    :+:   */
+/*   ft_complex_divide.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/07/15 08:52:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 04:13:39 by hmartzol         ###   ########.fr       */
+/*   Created: 0000/00/00 00:00:00 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/06 23:37:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_vector	ft_pt3add(t_vector a, t_vector b)
+t_complex		ft_complex_divide(const t_complex a, const t_complex b)
 {
-	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
-}
+	double	t;
+	double	d;
 
-t_vector	ft_pt3sub(t_vector a, t_vector b)
-{
-	return ((t_vector){a.x - b.x, a.y - b.y, a.z - b.z});
+	if (ABS(b.r) >= ABS(b.i))
+	{
+		t = b.i / b.r;
+		d = 1 / (b.r + b.i * t);
+		return ((t_complex){.r = (a.r + a.i * t) * d,
+							.i = (a.i - a.r * t) * d});
+	}
+	else
+	{
+		t = b.r / b.i;
+		d = 1 / (b.i + b.r * t);
+		return ((t_complex){.r = (a.i + a.r * t) * d,
+							.i = (a.r - a.i * t) * d});
+	}
 }

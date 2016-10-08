@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:31:33 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/15 08:47:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/07 04:16:24 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 unsigned long long int	ft_bswap64(unsigned long long int x)
 {
-	if (FTF_ASM && FTF_BSWAPA)
+	if (ASM && BSWAPA)
 	{
 		__asm__("bswap %q0" : "=r" (x) : "0" (x));
 		return (x);
@@ -28,9 +28,9 @@ unsigned long long int	ft_bswap64(unsigned long long int x)
 
 unsigned long int	ft_bswap32(unsigned long int x)
 {
-	if (FTF_ASM == 1)
+	if (ASM == 1)
 	{
-		if (FTF_BSWAPA)
+		if (BSWAPA)
 			__asm__("bswap %0" : "=r" (x) : "0" (x));
 		else
 			__asm__ ("rorw $8, %w0;" "rorl $16, %0;" "rorw $8, %w0" : "=r" (x) \
@@ -43,7 +43,7 @@ unsigned long int	ft_bswap32(unsigned long int x)
 
 unsigned short int	ft_bswap16(unsigned short int x)
 {
-	if (FTF_ASM == 1)
+	if (ASM == 1)
 	{
 		__asm__ ("rorw $8, %w0" : "=r" (x) : "0" (x) : "cc");
 		return (x);

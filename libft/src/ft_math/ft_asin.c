@@ -1,32 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_sin.c                                           :+:      :+:    :+:   */
+/*   ft_asin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/15 13:06:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/02/15 14:08:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/08 04:53:01 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-double	ft_sin(double x)
-{
-	double	out;
-	double	t;
+#if defined(_MATH_H) && _MATH_H == 1
 
-	while (x > PI)
-		x -= 2 * PI;
-	while (x < -PI)
-		x += 2 * PI;
-	out = x;
-	x *= x;
-	out -= (t = out * x) / 6;
-	out += (t *= x) / 120;
-	out -= (t *= x) / 5040;
-	out += (t *= x) / 362880;
-	out -= (t *= x) / 39916800;
-	return (out + (t * x) / 6227020800);
+double	ft_asin(double x)
+{
+	return (asin(x));
 }
+
+#else
+
+/*
+** low precision asin (around 5th digit of frac)
+*/
+
+double	ft_asin(double x)
+{
+	double n;
+	double out;
+
+	n = (x < 0);
+	x = ABS(x);
+	out = -0.0187293;
+	out *= x;
+	out += 0.0742610;
+	out *= x;
+	out -= 0.2121144;
+	out *= x;
+	out += 1.5707288;
+	out = 3.14159265358979 * 0.5 - ft_sqrtd(1.0 - x) * out;
+	return (out - 2 * n * out);
+}
+
+#endif

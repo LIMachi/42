@@ -6,15 +6,23 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/08/23 00:40:56 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/08 04:49:56 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# define FTF_ASM 0
-# define FTF_BSWAPA 0
+/*
+** optimisation flags to replace code with macro, assembler or other code
+*/
+
+/*
+** # define OP 1
+*/
+# define ASM 0
+# define BSWAPA 0
+
 
 # if defined(__unix__) || defined(__unix) || defined(unix)
 #  define UNIX 1
@@ -60,14 +68,6 @@
 # include <errno.h>
 
 /*
-** OP is an optimisation flag to replace some code with macros
-*/
-
-/*
-** # define OP
-*/
-
-/*
 ** error related defines
 */
 
@@ -104,14 +104,32 @@
 
 # define ABS(x) ((x) < 0 ? -(x) : (x))
 # define SIGN(x) ((x) < 0 ? -1 : ((x) > 0))
+# define FRAC(x) ((x) - (int)(x))
+# define FLOOR(x) ((x) - FRAC(x))
+# define CEIL(x) ((x) - FRAC(x) + (FRAC(x) != 0))
+# define ROUND(x) ((x) - FRAC(x) + (FRAC(x) >= 0.5))
+# define INT(x) ((x) - FRAC(x))
+# define SQR(x) ((x) * (x))
+
+/*
+** mathematical precision defines
+*/
+
+# define DOUBLE_PRECISION 15
+# define FLOAT_PRECISION 7
 
 /*
 ** trigonometrical defines
 */
 
-# define PI (3.1415926535897932)
-# define RADIAN(x) (PI * (((double)(x)) / (double)180))
-# define DEGRE(x) ((double)180 * (((double)(x)) / PI))
+# define PI	(3.14159265358979323846)
+# define PI2 (1.57079632679489661923)
+# define PI4 (0.78539816339744830962)
+# define PIL (3.141592653589793238462643383279502884L)
+# define PI2L (1.570796326794896619231321691639751442L)
+# define PI4L (0.785398163397448309615660845819875721L)
+# define RADIAN(x) (PIL * (((long double)(x)) / 180.0L))
+# define DEGRE(x) (180.0L * (((long double)(x)) / PIL))
 
 typedef	struct	s_ft_fd
 {
@@ -157,12 +175,32 @@ typedef struct			s_point
 	int					y;
 }						t_point;
 
-typedef struct			s_point3d
+typedef struct			s_complex
+{
+	double				r;
+	double				i;
+}						t_complex;
+
+typedef struct			s_quaternion
+{
+	double				r;
+	double				i;
+	double				j;
+	double				k;
+}						t_quaternion;
+
+typedef struct			s_vector
 {
 	double				x;
 	double				y;
 	double				z;
-}						t_point3d;
+}						t_vector;
+
+typedef struct			s_matrix
+{
+	double				**mat;
+	t_point				size;
+}						t_matrix;
 
 /*
 ** stores the default alignement in a pile then set the alignement to 1
@@ -464,22 +502,28 @@ char					*ft_readfile(int fd);
 t_point					ft_ptinit(t_point *p, int x, int y);
 t_point					*ft_ptnew(int x, int y);
 t_point					ft_point(int x, int y);
-t_point3d				ft_point3d(double x, double y, double z);
 
 /*
-** trigonometrical related functions
+** math functions
 */
 
 double					ft_sin(double x);
 double					ft_cos(double x);
 double					ft_tan(double x);
+double					ft_asin(double x);
+double					ft_acos(double x);
+double					ft_pow10d(int p);
+float					ft_pow10f(int p);
+double					ft_sqrtd(double v);
+float					ft_sqrtf(float v);
+int						ft_sqrti(int v);
 
 /*
 ** bitmap related functions
 */
 
-t_ubmp			*ft_bmp_to_ubmp(t_bitmap *bitmap);
-t_bitmap		*ft_bitmap_file_load(char *path);
+t_ubmp					*ft_bmp_to_ubmp(t_bitmap *bitmap);
+t_bitmap				*ft_bitmap_file_load(char *path);
 
 /*
 ** wrapper functions for file acces
@@ -491,5 +535,83 @@ t_ft_fd					ft_reopen(t_ft_fd *fd);
 ssize_t					ft_write(t_ft_fd *fd, const void *buf, size_t count);
 ssize_t					ft_read(t_ft_fd *fd, void *buf, size_t count);
 off_t					ft_lseek(t_ft_fd *fd, off_t offset, int whence);
+
+/*
+** vector (double3) functions
+*/
+
+t_vector				ft_vector(const double x, const double y,
+													const double z);
+t_vector				ft_vector_negate(const t_vector v);
+t_vector				ft_vector_add(const t_vector a, const t_vector b);
+t_vector				ft_vector_substract(const t_vector a, const t_vector b);
+t_vector				ft_vector_scale(const t_vector v, const double s);
+double					ft_vector_magnitude(const t_vector v);
+t_vector				ft_vector_normalize(const t_vector v);
+double					ft_vector_distance(const t_vector a, const t_vector b);
+double					ft_vector_dot_product(const t_vector a,
+												const t_vector b);
+double					ft_vector_angle(const t_vector a, const t_vector b);
+t_vector				ft_vector_projection(const t_vector a,
+												const t_vector b);
+t_vector				ft_vector_cross_product(const t_vector a,
+												const t_vector b);
+
+/*
+** matrix functions
+*/
+
+t_matrix				*ft_matrix_new(const int x, const int y);
+void					ft_matrix_free(t_matrix *m);
+t_matrix				*ft_matrix_multply(const t_matrix *a,
+											const t_matrix *b);
+
+/*
+** complex (imaginary composed numbers) functions
+*/
+
+t_complex				ft_complex(const double r, const double i);
+t_complex				ft_complex_rotor(const double r);
+t_complex				ft_complex_add(const t_complex a, const t_complex b);
+t_complex				ft_complex_substract(const t_complex a,
+											const t_complex b);
+t_complex				ft_complex_scale(const t_complex c, const double s);
+t_complex				ft_complex_multiply(const t_complex a,
+											const t_complex b);
+double					ft_complex_norm(const t_complex c);
+t_complex				ft_complex_conjugate(const t_complex c);
+t_complex				ft_complex_divide(const t_complex a, const t_complex b);
+t_complex				ft_complex_power(const t_complex c, int power);
+t_complex				ft_complex_normalize(const t_complex c);
+
+/*
+** quaternion functions
+*/
+
+t_quaternion			ft_quat(const double r, const double i, const double j,
+																const double k);
+t_quaternion			ft_quat_add(const t_quaternion a, const t_quaternion b);
+t_quaternion			ft_quat_substract(const t_quaternion a,
+											const t_quaternion b);
+t_quaternion			ft_quat_multiply(const t_quaternion a,
+											const t_quaternion b);
+t_quaternion			ft_quat_conjugate(const t_quaternion q);
+double					ft_quat_norm(const t_quaternion q);
+t_quaternion			ft_quat_inverse(const t_quaternion q);
+t_quaternion			ft_quat_divide(const t_quaternion a,
+										const t_quaternion b);
+t_quaternion			ft_quat_scale(const t_quaternion q, const double s);
+t_quaternion			ft_quat_normalize(const t_quaternion q);
+double					ft_quat_dot_product(const t_quaternion a,
+											const t_quaternion b);
+t_quaternion			ft_quat_rotation_build(double angle,
+												const t_vector vector);
+
+/*
+** conversion functions
+*/
+
+t_matrix				*ft_quat_rotation_to_matrix(t_quaternion q);
+int						ft_matrix_multply_vector(t_vector *v, t_matrix *m);
 
 #endif

@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pt3.c                                           :+:      :+:    :+:   */
+/*   ft_complex_power.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/07/15 08:52:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 04:13:39 by hmartzol         ###   ########.fr       */
+/*   Created: 0000/00/00 00:00:00 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/10/06 23:40:06 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_vector	ft_pt3add(t_vector a, t_vector b)
+t_complex		ft_complex_power(const t_complex c, int power)
 {
-	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
-}
+	t_complex	t;
 
-t_vector	ft_pt3sub(t_vector a, t_vector b)
-{
-	return ((t_vector){a.x - b.x, a.y - b.y, a.z - b.z});
+	if (power == 0)
+		return ((t_complex){.r = 1, .i = 0});
+	if (power > 0)
+	{
+		t = c;
+		while (--power)
+			t = ft_complex_multiply(t, c);
+		return (t);
+	}
+	else
+	{
+		t = ft_complex_divide((t_complex){.r = 1, .i = 0}, c);
+		while (++power)
+			t = ft_complex_divide(t, c);
+		return (t);
+	}
 }
