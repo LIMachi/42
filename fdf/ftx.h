@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/08 06:19:41 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/09 08:20:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,12 @@
 #  define KEY_LEFT 123
 #  define KEY_DOWN 125
 #  define KEY_RIGHT 124
+#  define KEY_SHIFT_LEFT 257
+#  define KEY_W 13
+#  define KEY_S 1
+#  define KEY_A 0
+#  define KEY_D 2
+#  define KEY_SPACE 49
 # endif
 
 # define C_FDF 1
@@ -214,6 +220,18 @@ typedef struct			s_scene
 	double				*depth;
 	int					*controller;
 }						t_scene;
+
+typedef struct			s_fdf
+{
+	int					***map;
+	t_point				size;
+	t_vector			**map3;
+	t_point				**map2;
+	t_quaternion		rotation;
+	t_vector			eye;
+	t_vector			camera_pos;
+	t_vector			camera_line;
+}						t_fdf;
 
 typedef struct			s_mlx_data
 {
