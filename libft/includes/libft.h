@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/08 04:49:56 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/10 13:57:15 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,51 @@
 # define ASM 0
 # define BSWAPA 0
 
+# ifndef _ASM_GENERIC_ERRNO_BASE_H
+#  define _ASM_GENERIC_ERRNO_BASE_H
+#  define EPERM		1
+#  define ENOENT	2
+#  define ESRCH		3
+#  define EINTR		4
+#  define EIO		5
+#  define ENXIO		6
+#  define E2BIG		7
+#  define ENOEXEC	8
+#  define EBADF		9
+#  define ECHILD	10
+#  define EAGAIN	11
+#  define ENOMEM	12
+#  define EACCES	13
+#  define EFAULT	14
+#  define ENOTBLK	15
+#  define EBUSY		16
+#  define EEXIST	17
+#  define EXDEV		18
+#  define ENODEV	19
+#  define ENOTDIR	20
+#  define EISDIR	21
+#  define EINVAL	22
+#  define ENFILE	23
+#  define EMFILE	24
+#  define ENOTTY	25
+#  define ETXTBSY	26
+#  define EFBIG		27
+#  define ENOSPC	28
+#  define ESPIPE	29
+#  define EROFS		30
+#  define EMLINK	31
+#  define EPIPE		32
+#  define EDOM		33
+#  define ERANGE	34
+# endif
+
+# define MAXERRNOD 34
+
+/*
+** posix defines
+*/
+
+# define SSIZE_MAX 32767
 
 # if defined(__unix__) || defined(__unix) || defined(unix)
 #  define UNIX 1
@@ -60,22 +105,45 @@
 #  define O_BINARY 0
 # endif
 
-# include <string.h>
+//# include <string.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdlib.h>
-# include <limits.h>
-# include <errno.h>
+//# include <limits.h>
+//# include <errno.h>
 
 /*
-** error related defines
+** NULL defines
 */
 
-# define FT_ERROR_CHECK 1
-# define FT_ERROR_SET 2
-# define FT_ERROR_CLEAR 3
-# define FT_ERROR_PRINT 4
-# define FT_ERROR_ERRNO 5
+# ifdef NULL
+#  define CNULL (char*)NULL
+#  define UCNULL (unsigned char*)NULL
+#  define SNULL (short*)NULL
+#  define USNULL (unsigned short*)NULL
+#  define INULL (int*)NULL
+#  define UINULL (unsigned int*)NULL
+#  define LNULL (long*)NULL
+#  define ULNULL (unsigned long*)NULL
+#  define LLNULL (long long*)NULL
+#  define ULLNULL (unsigned long long*)NULL
+#  define FNULL (float*)NULL
+#  define DNULL (double*)NULL
+# else
+#  define NULL (void*)0
+#  define CNULL (char*)0
+#  define UCNULL (unsigned char*)0
+#  define SNULL (short*)0
+#  define USNULL (unsigned short*)0
+#  define INULL (int*)0
+#  define UINULL (unsigned int*)0
+#  define LNULL (long*)0
+#  define ULNULL (unsigned long*)0
+#  define LLNULL (long long*)0
+#  define ULLNULL (unsigned long long*)0
+#  define FNULL (float*)0
+#  define DNULL (double*)0
+# endif
 
 /*
 ** memory related defines
@@ -102,6 +170,8 @@
 ** simple matematical defines
 */
 
+# define MIN(x, y) ((x) > (y) ? (y) : (x))
+# define MAX(x, y) ((x) < (y) ? (y) : (x))
 # define ABS(x) ((x) < 0 ? -(x) : (x))
 # define SIGN(x) ((x) < 0 ? -1 : ((x) > 0))
 # define FRAC(x) ((x) - (int)(x))
@@ -144,26 +214,6 @@ typedef	struct	s_ft_fd
 */
 
 typedef int (*t_int_func_undef)();
-
-/*
-** structures of type linked list
-*/
-
-typedef struct			s_list
-{
-	void				*content;
-	size_t				content_size;
-	struct s_list		*next;
-}						t_list;
-
-typedef struct			s_alist
-{
-	int					id;
-	void				*content;
-	size_t				content_size;
-	struct s_alist		*last;
-	struct s_alist		*next;
-}						t_alist;
 
 /*
 ** structures of type coordinal points
@@ -268,20 +318,72 @@ typedef	struct	s_ubmp
 }				t_ubmp;
 
 /*
-** struct for a tree-like 2dlist
+** set of polymorphic list objects, each have 4 data container common, and
+** x more containers depending on the type of object.
+** -type (object_type) should be unique and constant for each type of list
+** -function (object_functions) should be a mask of up to 64 basic functions
+**   common to all/most types of objects
+** -data should be a void pointer containing any data set by and with the
+**  discretion of the user (list global function should not change data
+**  unless forced to)
+** -next (pointer) should be a pointer to the next object in the list
+**  (might be used without casting the object it is in, or casted to void)
+** note: each const variable in those structures should only modified
+** by functions, never by the user himself (but free should work on pointer
+** pointing to an object without errors)
 */
+
+# define OBJECT 0
+typedef struct			s_object
+{
+	const uint32_t		type;
+	const uint64_t		functions;
+	void				*data;
+	void				*next;
+}						t_object;
+
+# define OBJECT_LIST 1
+typedef struct			s_list
+{
+	const uint32_t		object_type;
+	const uint64_t		object_functions;
+	void				*data;
+	struct s_list		*next;
+	size_t				content_size;
+}						t_list;
+
+# define OBJECT_DLLIST 2
+typedef struct			s_alist
+{
+	const uint32_t		object_type;
+	const uint64_t		object_functions;
+	void				*data;
+	struct s_alist		*next;
+	struct s_alist		*prev;
+	int					id;
+	size_t				content_size;
+}						t_alist;
+
+# define OBJECT_XTREE 3
 typedef struct			s_xtree
 {
-	int					type;
-	int					security;
-	unsigned long long	id;
+	const uint32_t		object_type;
+	const uint64_t		object_functions;
 	void				*data;
-	struct s_xtree		**root;
 	struct s_xtree		*next;
 	struct s_xtree		*prev;
+	unsigned int		type;
+	unsigned int		security;
+	unsigned long long	id;
+	struct s_xtree		**root;
 	struct s_xtree		*up;
 	struct s_xtree		*down;
 }						t_xtree;
+
+void	*ft_constructor_object(void);
+void	*ft_constructor_list(void);
+void	*ft_constructor_dllist(void);
+void	*ft_constructor_xtree(void);
 
 # if !defined(__BYTE_ORDER__) || !defined(__ORDER_LITTLE_ENDIAN__) || !defined(__ORDER_BIG_ENDIAN__)
 #  error "Endian macros are undefined! (Check \"<COMPILER> -E -dM - < /dev/null | grep ORDER\")"
@@ -344,7 +446,29 @@ typedef struct			s_gnl_tcf
 	char				*str;
 }						t_gnl_tcf;
 
-int						ft_error(int flag, int data);
+/*
+** error related defines
+*/
+
+# define ERROR_CHECK	1
+# define ERROR_SET		2
+# define ERROR_CLEAR	3
+# define ERROR_PRINT	4
+# define ERROR_ERRNO	5
+
+/*
+** log related defines
+*/
+
+# define LOG_SET_PATH	1
+# define LOG_SET		2
+# define LOG_PRINT		4
+# define LOG_STORE		8
+# define LOG_END		16
+# define LOG			(LOG_SET | LOG_PRINT | LOG_STORE)
+
+int						ft_error(int flag, long data);
+char					*ft_log(int flag, char *data);
 
 int						get_next_line(const int fd, char **line);
 
@@ -353,7 +477,12 @@ int						get_next_line(const int fd, char **line);
 */
 
 int						ft_atoi(const char *str);
-char					*ft_itoa(int c);
+int						ft_atoi_extended(const char *str);
+int						ft_atoi_base(const char *str, const int size_base,
+															const char *base);
+char					*ft_itoa(int n);
+char					*ft_itoa_base(int n, const int size_base,
+															const char *base);
 
 /*
 ** memory acces and modification function
@@ -369,6 +498,7 @@ void					*ft_memcpy(void *dst, const void *src, size_t n);
 void					ft_memdel(void **ap);
 void					*ft_memmove(void *dst, const void *src, size_t len);
 void					*ft_memset(void *b, int c, size_t len);
+void					*ft_memdup(const void *src, size_t n);
 
 /*
 ** condition check functions, usually returns 1 on succes and 0 on failure
@@ -380,6 +510,9 @@ int						ft_isascii(int c);
 int						ft_isdigit(int c);
 int						ft_isprint(int c);
 int						ft_isspace(int c);
+int						ft_isupper(int c);
+int						ft_islower(int c);
+int						ft_ishexa(int c);
 
 /*
 ** file tree related function
@@ -486,8 +619,8 @@ int						ft_strcntw(char const *str);
 t_list					**ft_strlsplit(char *s, char c);
 int						ft_tolower(int c);
 int						ft_toupper(int c);
-char					*ft_lsttostr(t_list *lst);
 char					*ft_strnw(char *str);
+char					*ft_strerror(int error);
 
 /*
 ** files related functions
@@ -499,9 +632,15 @@ char					*ft_readfile(int fd);
 ** coordinal points related functions
 */
 
-t_point					ft_ptinit(t_point *p, int x, int y);
-t_point					*ft_ptnew(int x, int y);
-t_point					ft_point(int x, int y);
+t_point					*ft_point_init(t_point *p, const int x, const int y);
+t_point					*ft_point_new(const int x, const int y);
+t_point					ft_point(const int x, const int y);
+t_point					ft_point_substract(const t_point a, const t_point b);
+t_point					ft_point_add(const t_point a, const t_point b);
+int						ft_point_equal(const t_point a, const t_point b);
+double					ft_point_magnitude(const t_point point);
+t_point					ft_point_difference(const t_point a, const t_point b);
+double					ft_point_distance(const t_point a, const t_point b);
 
 /*
 ** math functions
@@ -556,15 +695,26 @@ t_vector				ft_vector_projection(const t_vector a,
 												const t_vector b);
 t_vector				ft_vector_cross_product(const t_vector a,
 												const t_vector b);
+t_vector				*ft_vector_new(const double x, const double y,
+																const double z);
+t_vector				*ft_vector_init(t_vector *vector, const double x,
+											const double y, const double z);
+int						ft_vector_equal(t_vector a, t_vector b);
+t_vector				ft_vector_difference(t_vector a, t_vector b);
 
 /*
 ** matrix functions
 */
 
 t_matrix				*ft_matrix_new(const int x, const int y);
+t_matrix				*ft_matrix_unit(const int size);
 void					ft_matrix_free(t_matrix *m);
 t_matrix				*ft_matrix_multply(const t_matrix *a,
 											const t_matrix *b);
+t_matrix				*ft_matrix_add(const t_matrix *a, const t_matrix *b);
+t_matrix				*ft_matrix_substract(const t_matrix *a,
+											const t_matrix *b);
+t_matrix				*ft_matrix_turn(const t_matrix *matrix);
 
 /*
 ** complex (imaginary composed numbers) functions
@@ -613,5 +763,14 @@ t_quaternion			ft_quat_rotation_build(double angle,
 
 t_matrix				*ft_quat_rotation_to_matrix(t_quaternion q);
 int						ft_matrix_multply_vector(t_vector *v, t_matrix *m);
+char					*ft_lsttostr(t_list *lst);
+
+/*
+** bit and byte manipulation functions
+*/
+
+unsigned short int		ft_bswap16(const unsigned short int x);
+unsigned long int		ft_bswap32(const unsigned long int x);
+unsigned long long int	ft_bswap64(const unsigned long long int x);
 
 #endif

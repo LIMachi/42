@@ -6,16 +6,15 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/10/07 03:48:06 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/10/09 09:22:23 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME =
+NAME = libft.a
 
-SRCDIR =
-OBJDIR =
-INCDIR =
-LIBFT  = 
+SRCDIR = sources
+INCDIR = includes
+LIBFT  =
 
 CC = gcc
 
@@ -77,9 +76,7 @@ endif
 
 INCLUDES = $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$')
 
-ifeq ($(OBJDIR), )
 OBJDIR = OBJ
-endif
 
 ifneq ($(INCLUDES), )
 MLXFOUND = $(shell grep '\#*include\ <mlx.h>' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
@@ -309,6 +306,10 @@ endif
 
 .PHONY: re
 re: fclean all
+
+.PHONY: norm
+norm:
+	norminette $(DOTC)
 
 auteur:
 	@echo "creating default auteur file"

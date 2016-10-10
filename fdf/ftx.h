@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/09 08:20:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/09 11:32:35 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,10 +176,10 @@ typedef struct			s_mice
 
 typedef struct			s_object3d_base
 {
-	t_vector			rotation_axis_x;
-	t_vector			rotation_axis_y;
-	t_vector			rotation_axis_z;
-	t_quaternion		orientation_quaternion;
+	t_vector			axis_x;
+	t_vector			axis_y;
+	t_vector			axis_z;
+	t_quaternion		orientation;
 	t_vector			position;
 }						t_object3d_base;
 
@@ -227,10 +227,11 @@ typedef struct			s_fdf
 	t_point				size;
 	t_vector			**map3;
 	t_point				**map2;
-	t_quaternion		rotation;
+	t_camera			camera;
+//	t_quaternion		rotation;
 	t_vector			eye;
-	t_vector			camera_pos;
-	t_vector			camera_line;
+//	t_vector			camera_pos;
+//	t_vector			camera_line;
 }						t_fdf;
 
 typedef struct			s_mlx_data

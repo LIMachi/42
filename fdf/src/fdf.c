@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:21:53 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/09 08:20:54 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/09 12:44:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ t_object3d		*ft_new_object3d(t_vector position, int nb_points, int nb_lines)
 		ft_free_object3d(out);
 		return (NULL);
 	}
-	out->object.rotation_axis_x = (t_vector){1, 0, 0};
-	out->object.rotation_axis_y = (t_vector){0, 1, 0};
-	out->object.rotation_axis_z = (t_vector){0, 0, 1};
-	out->object.orientation_quaternion = (t_quaternion){1, 0, 0, 0};
+	out->object.axis_x = (t_vector){1, 0, 0};
+	out->object.axis_y = (t_vector){0, 1, 0};
+	out->object.axis_z = (t_vector){0, 0, 1};
+	out->object.orientation = (t_quaternion){1, 0, 0, 0};
 	out->object.position = position;
 	out->nb_points = nb_points;
 	out->nb_lines = nb_lines;
@@ -183,7 +183,7 @@ int	ftx_update(void *ptr)
 }
 #endif
 
-#define SPEED 0.1
+#define SPEED 1
 
 int		fill_fdf(t_window *win, t_image *img)
 {
@@ -194,6 +194,7 @@ int		fill_fdf(t_window *win, t_image *img)
 	double			tmpd;
 	int				up;
 	t_quaternion	q;
+	t_quaternion	r;
 
 	data = ftx_data(GDX_ACCES);
 	fdf = (t_fdf*)(win->data);
@@ -207,53 +208,102 @@ int		fill_fdf(t_window *win, t_image *img)
 			if (tmpd != win->zoom)
 				up = 1;
 		}
+/*
 		if (data->keymap[KEY_X])
 		{
-			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(1, 0, 0));
-			fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			tmp = fdf->camera.object.rotation_axis_x;
+			r = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), tmp);
+			//fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			q = fdf->camera.object.orientation_quaternion;
+			fdf->camera.object.orientation_quaternion = ft_quat_multiply(q, r);
 			up = 1;
 		}
 		if (data->keymap[KEY_Y])
 		{
 			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(0, 1, 0));
-			fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			//fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			q = fdf->camera.object.orientation_quaternion;
+			fdf->camera.object.orientation_quaternion = ft_quat_multiply(q, r);
 			up = 1;
 		}
 		if (data->keymap[KEY_Z])
 		{
 			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(0, 0, 1));
-			fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			//fdf->rotation = ft_quat_multiply(fdf->rotation, q);
+			q = fdf->camera.object.orientation_quaternion;
+			fdf->camera.object.orientation_quaternion = ft_quat_multiply(q, r);
 			up = 1;
 		}
+*/
+		if (data->keymap[KEY_X] || data->keymap[KEY_Y] || data->keymap[KEY_Z])
+		{
+			if (data->keymap[KEY_X])
+//				tmp = fdf->camera.object.axis_x;
+				tmp = (t_vector){1, 0, 0};
+			if (data->keymap[KEY_Y])
+				//tmp = fdf->camera.object.axis_y;
+				tmp = (t_vector){0, 1, 0};
+			if (data->keymap[KEY_Z])
+				//tmp = fdf->camera.object.axis_z;
+				tmp = (t_vector){0, 0, 1};
+			r = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), tmp);
+			q = fdf->camera.object.orientation;
+			fdf->camera.object.orientation = ft_quat_multiply(q, r);
+			up = 1;
+		}
+	/*
 		if (data->keymap[KEY_SPACE] && (up = 1))
-			fdf->camera_pos.y += SPEED;
+			fdf->camera.object.position.y += SPEED;
 		if (data->keymap[KEY_SHIFT_LEFT] && (up = 1))
-			fdf->camera_pos.y -= SPEED;
+			fdf->camera.object.position.y -= SPEED;
 		if (data->keymap[KEY_W] && (up = 1))
-			fdf->camera_pos.z -= SPEED;
+			fdf->camera.object.position.z -= SPEED;
 		if (data->keymap[KEY_S] && (up = 1))
-			fdf->camera_pos.z += SPEED;
+			fdf->camera.object.position.z += SPEED;
 		if (data->keymap[KEY_D] && (up = 1))
-			fdf->camera_pos.x -= SPEED;
+			fdf->camera.object.position.x -= SPEED;
 		if (data->keymap[KEY_A] && (up = 1))
-			fdf->camera_pos.x += SPEED;
+			fdf->camera.object.position.x += SPEED;\
+	*/
+	///*
+		if (data->keymap[KEY_A] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_x, SPEED));
+		if (data->keymap[KEY_D] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_x, -SPEED));
+		if (data->keymap[KEY_SPACE] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_y, SPEED));
+		if (data->keymap[KEY_SHIFT_LEFT] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_y, -SPEED));
+		if (data->keymap[KEY_S] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_z, SPEED));
+		if (data->keymap[KEY_W] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_z, -SPEED));
+	//*/
 		if (data->keymap[KEY_PAD_0] && (up = 1))
 		{
-			fdf->camera_pos = ft_vector(0, 0, 0);
-			fdf->rotation = ft_quat(1, 0, 0, 0);
+			fdf->camera.object.position = ft_vector(0, 0, 0);
+			fdf->camera.object.orientation = ft_quat(1, 0, 0, 0);
 			win->zoom = 10;
 		}
 		if (up)
 		{
-			t_matrix *tmat = ft_quat_rotation_to_matrix(fdf->rotation);
+			t_matrix *tmat = ft_quat_rotation_to_matrix(fdf->camera.object.orientation);
+//			fdf->camera.object.axis_x = ft_vector(1, 0, 0);
+//			fdf->camera.object.axis_y = ft_vector(0, 1, 0);
+//			fdf->camera.object.axis_z = ft_vector(0, 0, 1);
+//			ft_matrix_multply_vector(&(fdf->camera.object.axis_x), tmat);
+//			ft_matrix_multply_vector(&(fdf->camera.object.axis_y), tmat);
+//			ft_matrix_multply_vector(&(fdf->camera.object.axis_z), tmat);
 			pos.y = -1;
 			while (++pos.y < fdf->size.y && (pos.x = -1))
 				while (++pos.x < fdf->size.x)
 				{
 					tmp = fdf->map3[pos.y][pos.x];
-//					tmp = ft_vector_substract(tmp, fdf->camera_pos);
+					tmp = ft_vector_substract(tmp, (t_vector){0, 0, -100});
+//					tmp = ft_vector_substract(tmp, fdf->camera.object.position);
 					ft_matrix_multply_vector(&tmp, tmat);
-					tmp = ft_vector_add(tmp, fdf->camera_pos);
+					tmp = ft_vector_add(tmp, (t_vector){0, 0, -100});
+					tmp = ft_vector_add(tmp, fdf->camera.object.position);
 //					tmp = ft_matmultvect(fdf->rotation, fdf->map3[pos.y][pos.x], fdf->camera_pos);
 //					tmp = ft_pt3add(tmp, fdf->camera_pos);
 					fdf->map2[pos.y][pos.x] = ft_3d_to_2d((t_vector){0, 0, 100}, ft_point(win->size.x / 2, win->size.y / 2), tmp, win->zoom);
@@ -321,8 +371,12 @@ void	main_window_init(int ***map, t_point size)
 		while (++j < size.x)
 			fdf->map3[i][j] = (t_vector){j, i, map[i][j][0]};
 	}
-	fdf->rotation = ft_quat(1, 0, 0, 0);
-	fdf->camera_pos = ft_vector(0, 0, 0);
+	fdf->camera.object.position = ft_vector(0, 0, 0);
+	fdf->camera.object.orientation = ft_quat(1, 0, 0, 0);
+	fdf->camera.object.axis_x = ft_vector(1, 0, 0);
+	fdf->camera.object.axis_y = ft_vector(0, 1, 0);
+	fdf->camera.object.axis_z = ft_vector(0, 0, 1);
+	window->zoom = 10;
 	fdf->eye = (t_vector){0, 0, 7};
 	window->data = (void*)fdf;
 	window->use_code = C_FDF;
