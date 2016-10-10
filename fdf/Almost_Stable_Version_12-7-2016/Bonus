@@ -1,0 +1,32 @@
+ok-Compatibility OS X / Linux: Use of preprocessing macros and optimised makefile
+ok-FPS/UPS stabilisator (using lib time): Obligatory for the Linux port
+ (since linux doesn't cap the number of update per second)
+ok-Multi-window: Each window is treated like a volatile object, they can be added
+ or removed with ease and safeness
+ok-Multi-image: Each window can have multiple images and blend them in a temporary
+ image (vbuffer) before showing them
+ok-Object oriented: Most windows and images can be linked together, and have
+ specific function pointers to fill/update them
+ok-Use of color: Colors are assigned in multiple fases - 1 when reading the .fdf
+ file: if no hexadecimal color is specified after a height, a palette will be
+ used, or if a hexadecimal code is found, it will use the code has color.
+ 2 - when rendering, checks the distance between the screen and object, and will
+ grey/blacken the object (fog)
+td-Multithread: For speed purpose, thread are often used (parsing of big files,
+ rotation of points, rendering, etc...)
+ok-Full 3D: This fdf uses accurate 3D rendering (rotation of objects around the
+ camera then projection to the screen)
+td-FP (First Person): You can roam in the fdf maps like in a First Person game
+ (just bind the keys to walk, jump, fly, hover, etc...)
+td-Configuration File: This fdf commes with a default configuration, but you are
+ free to change it via the "in game" menu or via the config file
+td-Interactive .fdf search: You can load a .fdf file using a built-in tree file
+ search (note: might have unexpected result on protected files/folders)
+td-Face-filling / Texture-mapping: You can toggle the way the inner faces of the
+ poligon of the map you are using renders: no inner, one single color/gradient,
+ or a texture (.xpm file)
+td-Debug terminal: A secondary window will be opened on startup with a "nice
+ looking" and minimalistic terminal, you can use it to send commands to the fdf
+ or look at the debug (you can toggle multiple levels of verbose using the
+ buttons at the top of the window)
+td-Can use .bmp and .xpm files as textures (32,24,16,15 bits .bmp, and XPM3 .xpm)
