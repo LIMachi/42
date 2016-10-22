@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:21:53 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/09 12:44:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/22 05:22:23 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,59 @@ int	ftx_update(void *ptr)
 
 #define SPEED 1
 
+/*
+** the order of rotation applied is roll yaw pitch (or z y x)
+*/
+
+/*
+t_quaternion	cam_rotate(t_quaternion origin, double yaw, double pitch, double roll)
+{
+	t_quaternion	rotation;
+	t_vector		up;
+	t_vector		look;
+	t_vector		forward;
+	t_vector		side;
+	t_matrix		*tmp_mat;
+
+	up = ft_vector(0, 1, 0); //need to be corrected
+	tmp_mat = ft_quat_rotation_to_matrix(origin);
+	look = ft_vector(0, 0, 1);
+	ft_matrix_multply_vector(&look, tmp_mat);
+	ft_matrix_free(tmp_mat);
+	forward = ft_vector_normalize(ft_vector(look.x, 0, look.z));
+	side = ft_vector_cross_product(up, forward);
+	rotation = origin;
+	rotation = ft_quat_multiply(ft_quat_rotation_build(roll, forward),
+																	rotation);
+	rotation = ft_quat_multiply(ft_quat_rotation_build(yaw, up), rotation);
+	rotation = ft_quat_multiply(ft_quat_rotation_build(pitch, side),
+																	rotation);
+	return (rotation);
+}
+*/
+/*
+t_quaternion	cam_rotate(t_quaternion origin, double pitch, double roll, double yaw)
+{
+double cr, cp, cy, sr, sp, sy, cpcy, spsy;
+t_quaternion out;
+(void)origin;
+// calculate trig identities
+cr = ft_cos(roll/2);
+cp = ft_cos(pitch/2);
+cy = ft_cos(yaw/2);
+sr = ft_sin(roll/2);
+sp = ft_sin(pitch/2);
+sy = ft_sin(yaw/2);
+
+cpcy = cp * cy;
+spsy = sp * sy;
+out.r = cr * cpcy + sr * spsy;
+out.i = sr * cpcy - cr * spsy;
+out.j = cr * sp * cy + sr * cp * sy;
+out.k = cr * cp * sy - sr * sp * cy;
+return (out);
+}
+*/
 int		fill_fdf(t_window *win, t_image *img)
 {
 	t_fdf			*fdf;
@@ -208,50 +261,64 @@ int		fill_fdf(t_window *win, t_image *img)
 			if (tmpd != win->zoom)
 				up = 1;
 		}
-/*
+///*
 		if (data->keymap[KEY_X])
 		{
-			tmp = fdf->camera.object.rotation_axis_x;
+//			tmp = fdf->camera.object.axis_x;
+			tmp = ft_vector(1, 0, 0);
 			r = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), tmp);
 			//fdf->rotation = ft_quat_multiply(fdf->rotation, q);
-			q = fdf->camera.object.orientation_quaternion;
-			fdf->camera.object.orientation_quaternion = ft_quat_multiply(q, r);
+			q = fdf->camera.object.orientation;
+			fdf->camera.object.orientation = ft_quat_multiply(q, r);
+//			fdf->camera.yaw += 0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]);
 			up = 1;
 		}
+		else
 		if (data->keymap[KEY_Y])
 		{
-			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(0, 1, 0));
+//			tmp = fdf->camera.object.axis_y;
+			tmp = ft_vector(0, 1, 0);
+			r = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), tmp);
 			//fdf->rotation = ft_quat_multiply(fdf->rotation, q);
-			q = fdf->camera.object.orientation_quaternion;
-			fdf->camera.object.orientation_quaternion = ft_quat_multiply(q, r);
+			q = fdf->camera.object.orientation;
+			fdf->camera.object.orientation = ft_quat_multiply(q, r);
+//			fdf->camera.pitch += 0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]);
 			up = 1;
 		}
+		else
 		if (data->keymap[KEY_Z])
 		{
-			q = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), ft_vector(0, 0, 1));
+//			tmp = fdf->camera.object.axis_z;
+			tmp = ft_vector(0, 0, 1);
+			r = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), tmp);
 			//fdf->rotation = ft_quat_multiply(fdf->rotation, q);
-			q = fdf->camera.object.orientation_quaternion;
-			fdf->camera.object.orientation_quaternion = ft_quat_multiply(q, r);
+			q = fdf->camera.object.orientation;
+			fdf->camera.object.orientation = ft_quat_multiply(q, r);
+//			fdf->camera.roll += 0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]);
 			up = 1;
 		}
-*/
+//*/
+/*
 		if (data->keymap[KEY_X] || data->keymap[KEY_Y] || data->keymap[KEY_Z])
 		{
 			if (data->keymap[KEY_X])
-//				tmp = fdf->camera.object.axis_x;
-				tmp = (t_vector){1, 0, 0};
+				tmp = fdf->camera.object.axis_x;
+//				tmp = (t_vector){1, 0, 0};
+			else
 			if (data->keymap[KEY_Y])
-				//tmp = fdf->camera.object.axis_y;
-				tmp = (t_vector){0, 1, 0};
+				tmp = fdf->camera.object.axis_y;
+//				tmp = (t_vector){0, 1, 0};
+			else
 			if (data->keymap[KEY_Z])
-				//tmp = fdf->camera.object.axis_z;
-				tmp = (t_vector){0, 0, 1};
+				tmp = fdf->camera.object.axis_z;
+//				tmp = (t_vector){0, 0, 1};
 			r = ft_quat_rotation_build(0.05 * (data->keymap[KEY_PAD_PLUS] - data->keymap[KEY_PAD_MINUS]), tmp);
 			q = fdf->camera.object.orientation;
 			fdf->camera.object.orientation = ft_quat_multiply(q, r);
 			up = 1;
 		}
-	/*
+*/
+/*
 		if (data->keymap[KEY_SPACE] && (up = 1))
 			fdf->camera.object.position.y += SPEED;
 		if (data->keymap[KEY_SHIFT_LEFT] && (up = 1))
@@ -263,47 +330,66 @@ int		fill_fdf(t_window *win, t_image *img)
 		if (data->keymap[KEY_D] && (up = 1))
 			fdf->camera.object.position.x -= SPEED;
 		if (data->keymap[KEY_A] && (up = 1))
-			fdf->camera.object.position.x += SPEED;\
-	*/
-	///*
-		if (data->keymap[KEY_A] && (up = 1))
-			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_x, SPEED));
+			fdf->camera.object.position.x += SPEED;
+*/
+///*
 		if (data->keymap[KEY_D] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_x, SPEED));
+		if (data->keymap[KEY_A] && (up = 1))
 			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_x, -SPEED));
-		if (data->keymap[KEY_SPACE] && (up = 1))
-			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_y, SPEED));
 		if (data->keymap[KEY_SHIFT_LEFT] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_y, SPEED));
+		if (data->keymap[KEY_SPACE] && (up = 1))
 			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_y, -SPEED));
-		if (data->keymap[KEY_S] && (up = 1))
-			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_z, SPEED));
 		if (data->keymap[KEY_W] && (up = 1))
+			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_z, SPEED));
+		if (data->keymap[KEY_S] && (up = 1))
 			fdf->camera.object.position = ft_vector_add(fdf->camera.object.position, ft_vector_scale(fdf->camera.object.axis_z, -SPEED));
-	//*/
+//*/
 		if (data->keymap[KEY_PAD_0] && (up = 1))
 		{
 			fdf->camera.object.position = ft_vector(0, 0, 0);
 			fdf->camera.object.orientation = ft_quat(1, 0, 0, 0);
+			fdf->camera.object.axis_x = ft_vector(1, 0, 0);
+			fdf->camera.object.axis_y = ft_vector(0, 1, 0);
+			fdf->camera.object.axis_z = ft_vector(0, 0, 1);
+			fdf->camera.yaw = 0;
+			fdf->camera.pitch = 0;
+			fdf->camera.roll = 0;
 			win->zoom = 10;
 		}
 		if (up)
 		{
-			t_matrix *tmat = ft_quat_rotation_to_matrix(fdf->camera.object.orientation);
-//			fdf->camera.object.axis_x = ft_vector(1, 0, 0);
-//			fdf->camera.object.axis_y = ft_vector(0, 1, 0);
-//			fdf->camera.object.axis_z = ft_vector(0, 0, 1);
-//			ft_matrix_multply_vector(&(fdf->camera.object.axis_x), tmat);
-//			ft_matrix_multply_vector(&(fdf->camera.object.axis_y), tmat);
-//			ft_matrix_multply_vector(&(fdf->camera.object.axis_z), tmat);
+			t_matrix *tmat = NULL;
+///*
+			if ((data->keymap[KEY_X] || data->keymap[KEY_Y] || data->keymap[KEY_Z]) && (data->keymap[KEY_PAD_MINUS] || data->keymap[KEY_PAD_PLUS]))
+			{
+//				fdf->camera.object.orientation = ft_quat_inverse(cam_rotate(ft_quat(1, 0, 0, 0), fdf->camera.yaw, fdf->camera.pitch, fdf->camera.roll));
+				q = ft_quat_inverse(fdf->camera.object.orientation);
+				tmat = ft_quat_rotation_to_matrix(fdf->camera.object.orientation);
+				fdf->camera.object.axis_x = ft_vector(1, 0, 0);
+				fdf->camera.object.axis_y = ft_vector(0, 1, 0);
+				fdf->camera.object.axis_z = ft_vector(0, 0, 1);
+				ft_matrix_multply_vector(&(fdf->camera.object.axis_x), tmat);
+				ft_matrix_multply_vector(&(fdf->camera.object.axis_y), tmat);
+				ft_matrix_multply_vector(&(fdf->camera.object.axis_z), tmat);
+				ft_matrix_free(tmat);
+			}
+			else
+				q = ft_quat_inverse(fdf->camera.object.orientation);
+//*/
+//			q = fdf->camera.object.orientation = cam_rotate(ft_quat(1, 0, 0, 0), fdf->camera.yaw, fdf->camera.pitch, fdf->camera.roll);
+			tmat = ft_quat_rotation_to_matrix(q);
 			pos.y = -1;
 			while (++pos.y < fdf->size.y && (pos.x = -1))
 				while (++pos.x < fdf->size.x)
 				{
 					tmp = fdf->map3[pos.y][pos.x];
 					tmp = ft_vector_substract(tmp, (t_vector){0, 0, -100});
-//					tmp = ft_vector_substract(tmp, fdf->camera.object.position);
+					tmp = ft_vector_substract(tmp, fdf->camera.object.position);
 					ft_matrix_multply_vector(&tmp, tmat);
 					tmp = ft_vector_add(tmp, (t_vector){0, 0, -100});
-					tmp = ft_vector_add(tmp, fdf->camera.object.position);
+//					tmp = ft_vector_add(tmp, fdf->camera.object.position);
 //					tmp = ft_matmultvect(fdf->rotation, fdf->map3[pos.y][pos.x], fdf->camera_pos);
 //					tmp = ft_pt3add(tmp, fdf->camera_pos);
 					fdf->map2[pos.y][pos.x] = ft_3d_to_2d((t_vector){0, 0, 100}, ft_point(win->size.x / 2, win->size.y / 2), tmp, win->zoom);
@@ -329,10 +415,30 @@ int		fill_info(t_window *win, t_image *img)
 {
 	void *tmp;
 
+	t_camera cam = ((t_fdf*)(win->data))->camera;
+
 	ftx_clear_img(img);
 	ftx_print_str(img, ft_point(1, 1), WHITE, tmp = ft_itoa(win->fps));
-	img->update = 1;
 	free(tmp);
+
+	ftx_print_str(img, ft_point(1, 11), WHITE, "x - yaw: ");
+	ftx_print_str(img, ft_point(70, 11), WHITE, tmp = ft_itoa(DEGRE(cam.yaw)));
+	free(tmp);
+
+	ftx_print_str(img, ft_point(1, 21), WHITE, "y - pitch: ");
+	ftx_print_str(img, ft_point(70, 21), WHITE, tmp = ft_itoa(DEGRE(cam.pitch)));
+	free(tmp);
+
+	ftx_print_str(img, ft_point(1, 31), WHITE, "z - roll: ");
+	ftx_print_str(img, ft_point(70, 31), WHITE, tmp = ft_itoa(DEGRE(cam.roll)));
+	free(tmp);
+
+	ftx_print_str(img, ft_point(1, 41), WHITE, "pos: ");
+	ftx_print_str(img, ft_point(50, 41), WHITE, tmp = ft_itoa(cam.object.position.x)); free(tmp);
+	ftx_print_str(img, ft_point(70, 41), WHITE, tmp = ft_itoa(cam.object.position.y)); free(tmp);
+	ftx_print_str(img, ft_point(90, 41), WHITE, tmp = ft_itoa(cam.object.position.z)); free(tmp);
+
+	img->update = 1;
 	return (0);
 }
 
@@ -376,6 +482,9 @@ void	main_window_init(int ***map, t_point size)
 	fdf->camera.object.axis_x = ft_vector(1, 0, 0);
 	fdf->camera.object.axis_y = ft_vector(0, 1, 0);
 	fdf->camera.object.axis_z = ft_vector(0, 0, 1);
+	fdf->camera.yaw = 0;
+	fdf->camera.pitch = 0;
+	fdf->camera.roll = 0;
 	window->zoom = 10;
 	fdf->eye = (t_vector){0, 0, 7};
 	window->data = (void*)fdf;
@@ -497,6 +606,7 @@ int		main(int argc, char **argv)
 	t_point	t;
 	int		fd;
 
+	ft_init();
 	if (argc < 2)
 	{
 		write(1, "Usage: ", 7);

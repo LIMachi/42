@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:10:16 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/15 09:15:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/10 15:29:29 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@ int	ftx_keypress_hook(int key, void *p)
 	t_mlx_data	*data;
 
 	data = ftx_data(GDX_ACCES);
-	ft_putnbr(((t_window*)p)->id);
-	ft_putstr(" - Keypress: ");
-	ft_putnbr(key);
-	ft_putchar('\n');
+	free(ft_log(ft_itoa(((t_window*)p)->id)));
+	(void)ft_log(" - Keypress: ");
+	free(ft_log(ft_itoa(key)));
+	(void)ft_log("\n");
+
 	if (key == KEY_EXIT)
 	{
 		ftx_data(GDX_FREE);
+		ft_end();
 		exit(0);
 	}
 	data->keymap[key] = 1;
@@ -60,10 +62,10 @@ int	ftx_keyrelease_hook(int key, void *p)
 	t_mlx_data	*data;
 
 	data = ftx_data(GDX_ACCES);
-	ft_putnbr(((t_window*)p)->id);
-	ft_putstr(" - Keyrelease: ");
-	ft_putnbr(key);
-	ft_putchar('\n');
+	free(ft_log(ft_itoa(((t_window*)p)->id)));
+	(void)ft_log(" - Keyrelease: ");
+	free(ft_log(ft_itoa(key)));
+	(void)ft_log("\n");
 	data->keymap[key] = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 23:15:40 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/10 11:56:05 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/14 14:36:53 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	sf_lseek(t_ft_fd *fd, off_t offset, char readbuff[BUFF_SIZE])
 				break ;
 		}
 		if (r == -1)
-			return (ft_error(ERROR_ERRNO, 0) * 0 - 1);
+			return (ft_error(0, NULL) - 1);
 		t += r;
 	}
 	return (t);
@@ -48,7 +48,7 @@ off_t			ft_lseek(t_ft_fd *fd, off_t offset, int whence)
 
 	off = lseek(fd->fd, offset, whence);
 	if (off < 0)
-		ft_error(ERROR_ERRNO, 0);
+		ft_error(0, "lseek call made by ft_lseek failled: ");
 	fd->pos = off;
 	return (off);
 }
@@ -64,7 +64,7 @@ off_t			ft_lseek(t_ft_fd *fd, off_t offset, int whence)
 		while ((out = ft_read(fd, readbuff, offset > BUFF_SIZE ? BUFF_SIZE :
 																	offset)))
 			if (out == -1)
-				return (ft_error(ERROR_ERRNO, 0) * 0 - 1);
+				return (ft_error(0, NULL) - 1);
 	if (whence == SEEK_SET || whence == SEEK_CUR || whence == SEEK_END)
 	{
 		if (offset < fd->pos)
@@ -74,7 +74,7 @@ off_t			ft_lseek(t_ft_fd *fd, off_t offset, int whence)
 		out = sf_lseek(fd, offset, readbuff);
 	}
 	else
-		return (ft_error(ERROR_SET, EINVAL) * 0 - 1);
+		return (ft_error(EINVAL, NULL) - 1);
 	return (out);
 }
 #endif

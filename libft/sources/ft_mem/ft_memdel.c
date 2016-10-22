@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/02/08 19:06:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/14 13:57:12 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,6 @@ void	ft_memdel(void **ap)
 {
 	if (ap == NULL || *ap == NULL)
 		return ;
-	free(*ap);
+	ft_free(*ap);
 	*ap = NULL;
 }

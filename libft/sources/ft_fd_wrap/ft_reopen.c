@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 23:52:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/10 11:55:36 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/14 14:40:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,20 @@ t_ft_fd	ft_reopen(t_ft_fd *fd)
 {
 	if (!fd || fd->path == NULL)
 	{
-		ft_error(ERROR_SET, EBADF);
+		ft_error(EBADF, "ft_reopen call failled: ");
 		return ((t_ft_fd){-1, 0, NULL, 0});
 	}
 	if (close(fd->fd) == -1)
 	{
-		ft_error(ERROR_ERRNO, 0);
+		ft_error(0, "close call made by ft_reopen failled: ");
 		return ((t_ft_fd){-1, 0, NULL, 0});
 	}
 	if (fd->flags | O_CREAT)
 		fd->flags ^= O_CREAT;
 	if ((fd->fd = open(fd->path, fd->flags)) < 0)
 	{
-		free(fd->path);
-		ft_error(ERROR_ERRNO, 0);
+		ft_error(0, "open call made by reopen failled: ");
+		ft_free(fd->path);
 		return ((t_ft_fd){-1, 0, NULL, 0});
 	}
 	return (*fd);

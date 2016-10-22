@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/09 11:32:35 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/19 22:55:49 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,9 @@ typedef struct			s_camera
 	t_object3d_base		object;
 	t_vector			focal;
 	t_vector			focus;
+	double				yaw;
+	double				pitch;
+	double				roll;
 }						t_camera;
 
 typedef struct			s_line_ref
