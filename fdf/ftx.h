@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/19 22:55:49 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/31 14:03:34 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,7 @@
 #  include <stdio.h> //
 # endif
 //# include <stdint.h>
-# include <math.h>
-
-# define SIN(x) sin(x)
-# define COS(x) cos(x)
+//# include <math.h>
 
 # define GDX_NEW 1
 # define GDX_FREE 2
@@ -172,7 +169,32 @@ typedef struct			s_mice
 	int					flags;
 	t_point				pos;
 	t_point				drag;
+	t_point				joystick;
 }						t_mice;
+
+/*
+** note: the frustrum is defined not by planes but by points equal to the center
+** of the planes and normals starting from said points and perpendicular to
+** the virtual plane they are starting.
+** the frustrum is rotated with the same method of the camera is attached to.
+** usually, all points should be with a positive value on the z component.
+*/
+
+typedef struct			s_frustrum
+{
+	t_vector			near_point;
+	t_vector			near_normal;
+	t_vector			far_point;
+	t_vector			far_normal;
+	t_vector			top_point;
+	t_vector			top_normal;
+	t_vector			bottom_point;
+	t_vector			bottom_normal;
+	t_vector			right_point;
+	t_vector			right_normal;
+	t_vector			left_point;
+	t_vector			left_normal;
+}						t_frustrum;
 
 typedef struct			s_object3d_base
 {
@@ -187,10 +209,8 @@ typedef struct			s_camera
 {
 	t_object3d_base		object;
 	t_vector			focal;
-	t_vector			focus;
-	double				yaw;
-	double				pitch;
-	double				roll;
+	t_frustrum			frustrum_origin;
+	t_frustrum			frustrum;
 }						t_camera;
 
 typedef struct			s_line_ref
@@ -201,27 +221,34 @@ typedef struct			s_line_ref
 
 typedef struct			s_object3d
 {
-	t_object3d_base		object;
-	int					nb_points;
-	t_vector			*points3d_original;
-	int					*colors;
-	t_vector			*points3d;
-	t_point				*points2d;
-	int					nb_lines;
-	t_line_ref			*lines;
+	t_object3d_base		object;				//object structure (position, rotation, axis, etc)
+	int					nb_points;			//number of referenced
+	t_vector			*points3d_original;	//
+//	int					*vectors;			//references to vectors
+	int					*colors;			//references to palette
+	t_vector			*points3d;			//
+	t_point				*points2d;			//
+	int					nb_lines;			//number of lines referenced
+	t_line_ref			*lines;				//
+//	int					*lines;				//references to lines
 }						t_object3d;
 
 typedef struct			s_scene
 {
-	int					nb_cameras;
-	int					focused_camera;
-	t_camera			*cameras;
-	int					nb_object3d;
-	t_object3d			*objects3d;
-	t_point				render_size;
-	uint32_t			*colors;
-	double				*depth;
-	int					*controller;
+	int					nb_cameras;		//current number of charged cameras
+	int					focused_camera;	//current focused camera (wich will be used for the render)
+	t_camera			*cameras;		//list of cameras
+	int					nb_object3d;	//current number of object3d (cameras not counted)
+	t_object3d			*objects3d;		//list of object3d
+	t_vector			*original;		//list of vectors (will not be rotated or transformed)
+	int					*visibility;	//code used to test if a vector is totally, partially or not visible
+	t_vector			*transformed;	//list of vectors (result of rotated and transformed of original by current camera)
+	int					max_vectors;	//current maximum storage of vectors in original and transformed
+	t_ubmp				*render;		//image obtained by rendering vectors transformed to ubmp
+	int					*palette;		//palette of colors, to change a large set of colors
+	int					max_palette;	//current maximum of colors in palette
+	double				**depth;		//zbuffer (the size of this list is equal to render)
+	int					**controller;	//controller buffer (same has zbuffer)
 }						t_scene;
 
 typedef struct			s_fdf
@@ -230,6 +257,7 @@ typedef struct			s_fdf
 	t_point				size;
 	t_vector			**map3;
 	t_point				**map2;
+	double				**zbuffer;
 	t_camera			camera;
 //	t_quaternion		rotation;
 	t_vector			eye;

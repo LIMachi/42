@@ -6,24 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/18 10:36:24 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/18 11:58:46 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/29 06:04:13 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-** for void *malloc(size_t size), free(void *ptr)
-*/
-#include <stdlib.h>
-
-/*
-** for int open(const char *pathname, int flags)
-*/
-#include <fcntl.h>
-
-/*
-** for int close(int fd), ssize_t read(int fd, void *buf, size_t count)
-*/
-#include <unistd.h>
+#include <libft.h>
 
 /*
 ** for S_ISREG(m), int stat(const char *pathname, struct stat *buf), struct stat
@@ -44,27 +31,27 @@
 
 int	ft_bonus_read(const char *filepath, char **out)
 {
-	int			fd;
+	t_ft_fd		fd;
 	struct stat	st;
 
 	if (filepath == NULL || out == NULL || (stat(filepath, &st)) == -1
 		|| !S_ISREG(st.st_mode) || st.st_size < 1
-		|| (fd = open(filepath, O_RDONLY)) == -1)
+		|| (fd = ft_open(filepath, O_RDONLY)).fd == -1)
 		return (-1);
-	if ((*out = (char*)malloc(sizeof(char) * st.st_size)) == NULL)
+	if ((*out = (char*)ft_malloc(sizeof(char) * st.st_size)) == NULL)
 	{
-		close(fd);
-		return (-1);
-	}
-	if (read(fd, *out, st.st_size) == -1)
-	{
-		close(fd);
-		free(*out);
+		ft_close(&fd);
 		return (-1);
 	}
-	if (close(fd) == -1)
+	if (ft_read(&fd, *out, st.st_size) == -1)
 	{
-		free(*out);
+		ft_close(&fd);
+		ft_free(*out);
+		return (-1);
+	}
+	if (ft_close(&fd) == -1)
+	{
+		ft_free(*out);
 		return (-1);
 	}
 	return (st.st_size);

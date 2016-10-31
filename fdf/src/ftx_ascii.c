@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:54:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/16 03:47:17 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/29 06:07:30 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void			ftx_print_char(t_image *img, t_point pos, int color, char c)
 	while (++y < 11 && (x = -1))
 		while (++x < 5)
 			if (tmp & ((mask << (4 - x)) << 5 * (10 - y)))
-				ftx_putpixelimg(img, ft_ptadd(pos, ft_point(x, y)), color);
+				ftx_putpixelimg(img, ft_point_add(pos, ft_point(x, y)), color);
 }
 
 void			ftx_print_str(t_image *img, t_point pos, int color, char *str)

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/09 14:00:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:09:59 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/25 21:15:44 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ static int			sf_read_until_char(int fd, char c, char **before,
 		if ((t2 = ft_strjoin(t1, buff)) == NULL)
 			return (-1);
 		if (t1 != NULL)
-			free(t1);
+			ft_free(t1);
 		if ((t1 = t2) && ft_strchr(t1, c) != NULL && ft_strchr(t1, c) != t1)
 		{
 			*before = ft_strsub(t1, 0, ft_strchr(t1, c) - t1);
 			if ((l = ft_strlen(t1) - (ft_strchr(t1, c) - t1 - 1)) > 0)
 				*after = ft_strsub(t1, ft_strchr(t1, c) - t1 + 1, l);
-			free(t1);
+			ft_free(t1);
 			return (1);
 		}
 	}
@@ -53,7 +53,7 @@ static int			sf_get_next_line(const int fd, char **line,
 		return (-1);
 	if ((r = sf_read_until_char(fd, '\n', tmp_ptr, tcf[fd].ptr)) == -1)
 	{
-		free(tmp_ptr);
+		ft_free(tmp_ptr);
 		return (-1);
 	}
 	r = r || (*tmp_ptr != NULL);
@@ -62,8 +62,8 @@ static int			sf_get_next_line(const int fd, char **line,
 	{
 		tmp_str = *line;
 		*line = ft_strjoin(tmp_str, *tmp_ptr);
-		free(tmp_str);
-		free(tmp_ptr);
+		ft_free(tmp_str);
+		ft_free(tmp_ptr);
 	}
 	else
 		*line = *tmp_ptr;

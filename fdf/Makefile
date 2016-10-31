@@ -6,7 +6,7 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/10/09 10:36:30 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/10/22 16:20:55 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ CC = gcc
 OS = $(shell uname)
 
 ifeq ($(DEFINES), )
-ifeq ($(OS),Linux)
+ifeq ($(OS),Linux) #force the disabling of the norm on linux for stability purpose
 DEFINES = NORM42=0
 endif
 ifeq ($(OS),Darwin)
