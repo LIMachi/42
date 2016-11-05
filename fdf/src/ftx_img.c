@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:05:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/29 06:06:37 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/31 16:18:37 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 ** }
 */
 
-void	ftx_putpixelimg(t_image *img, t_point pos, int color)
+void		ftx_putpixelimg(t_image *img, t_point pos, int color)
 {
 	if (!((img->endian == 0) ^ (LOCAL_ENDIAN == BIG_ENDIAN)))
 		img->data[pos.y * img->size.x + pos.x] = ft_bswap32(color);
@@ -58,19 +58,19 @@ void		ftx_put_img_to_img(t_image *out, t_image *img, unsigned int mask)
 		mask = ft_bswap32(mask);
 	limit.x = (d.x + img->size.x >= out->size.x) ? out->size.x : img->size.x;
 	limit.y = (d.y + img->size.y >= out->size.y) ? out->size.y : img->size.y;
-	pos.y = ((d.y > 0) ? - 1 : -d.y - 1);
-	while (++pos.y < limit.y && !(0 & (pos.x = ((d.x > 0) ? - 1 : -d.x - 1))))
+	pos.y = ((d.y > 0) ? -1 : -d.y - 1);
+	while (++pos.y < limit.y && !(0 & (pos.x = ((d.x > 0) ? -1 : -d.x - 1))))
 		while (++pos.x < limit.x)
 		{
-				t = (unsigned int)img->data[pos.y * img->size.x + pos.x];
-				if (out->endian != img->endian)
-					t = ft_bswap32(t);
-				if (mask == NOMASK || t != mask)
-					out->data[(pos.y + d.y) * out->size.x + pos.x + d.x] = t;
+			t = (unsigned int)img->data[pos.y * img->size.x + pos.x];
+			if (out->endian != img->endian)
+				t = ft_bswap32(t);
+			if (mask == NOMASK || t != mask)
+				out->data[(pos.y + d.y) * out->size.x + pos.x + d.x] = t;
 		}
 }
 
-void	ftx_clear_img(t_image *img)
+void		ftx_clear_img(t_image *img)
 {
 	int x;
 	int y;
@@ -88,7 +88,7 @@ void	ftx_clear_img(t_image *img)
 	}
 }
 
-void	ftx_fill_image(t_image *img)
+void		ftx_fill_image(t_image *img)
 {
 	int x;
 	int y;

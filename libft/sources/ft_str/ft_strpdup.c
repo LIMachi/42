@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pile_pull_fifo.c                                :+:      :+:    :+:   */
+/*   ft_strpdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/14 13:22:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:58:18 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/03 17:05:41 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/03 17:05:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_pile_fifo	*ft_pile_pull_fifo(t_pile_fifo *pile, void *data)
+char	*ft_strpdup(const char *s, const char *e)
 {
-	if (pile == NULL)
+	char	*out;
+	size_t	size;
+
+	if (s == NULL || e == NULL || s > e)
 		return (NULL);
-	if (pile->head == 0)
+	size = (size_t)(e - s);
+	if ((out = (char*)malloc(++size * sizeof(char))) == NULL)
 		return (NULL);
-	if (pile->head == pile->tail)
-		return (NULL);
-	if (data == NULL)
-		data = pile->data[pile->tail++];
-	pile->data[pile->tail - 1] = NULL;
-	if (pile->tail == pile->size)
-		pile->tail = 0;
-	return (pile);
+	out[--size] = '\0';
+	while (size--)
+		out[size] = s[size];
+	return (out);
 }

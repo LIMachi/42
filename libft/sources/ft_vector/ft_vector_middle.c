@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pile_pull_fifo.c                                :+:      :+:    :+:   */
+/*   ft_vector_middle.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/14 13:22:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:58:18 by hmartzol         ###   ########.fr       */
+/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/01 16:01:40 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_pile_fifo	*ft_pile_pull_fifo(t_pile_fifo *pile, void *data)
+t_vector	ft_vector_middle(const t_vector a, const t_vector b)
 {
-	if (pile == NULL)
-		return (NULL);
-	if (pile->head == 0)
-		return (NULL);
-	if (pile->head == pile->tail)
-		return (NULL);
-	if (data == NULL)
-		data = pile->data[pile->tail++];
-	pile->data[pile->tail - 1] = NULL;
-	if (pile->tail == pile->size)
-		pile->tail = 0;
-	return (pile);
+	return ((t_vector){(b.x + a.x) / 2, (b.y + a.y) / 2, (b.z + a.z) / 2});
 }

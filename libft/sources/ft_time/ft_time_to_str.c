@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/10 16:28:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/10 18:10:36 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 15:08:49 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*sf_time_to_str_weekday(t_time time, int verbose)
 {
-	char	*str;
+	char				*str;
 	static const char	*ref[7][2] = {
 		{TIME_DEFAULT_WEEKDAY_0, TIME_SHORT_WEEKDAY_0},
 		{TIME_DEFAULT_WEEKDAY_1, TIME_SHORT_WEEKDAY_1},
@@ -34,7 +34,7 @@ char	*sf_time_to_str_weekday(t_time time, int verbose)
 
 char	*sf_time_to_str_month(t_time time, int verbose)
 {
-	char	*str;
+	char				*str;
 	static const char	*ref[12][2] = {
 		{TIME_DEFAULT_MONTH_0, TIME_SHORT_MONTH_0},
 		{TIME_DEFAULT_MONTH_1, TIME_SHORT_MONTH_1},
@@ -60,11 +60,9 @@ char	*sf_time_to_str_month(t_time time, int verbose)
 char	*ft_time_to_str(t_time time, int verbose)
 {
 	char	buffer[256];
-	char	*ptr;
 
 	ft_bzero(buffer, 256);
-	if (verbose & TIME_YEAR)
-		free((void*)(0 * (long)ft_strcat(buffer, ptr = ft_itoa(time.year))
-				| (long)ptr));
+	(void)time;
+	(void)verbose;
 	return (ft_strdup(buffer));
 }

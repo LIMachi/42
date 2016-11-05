@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pile_pull_fifo.c                                :+:      :+:    :+:   */
+/*   color_multiply.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/14 13:22:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:58:18 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/01 16:23:28 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/02 08:39:30 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_pile_fifo	*ft_pile_pull_fifo(t_pile_fifo *pile, void *data)
+int		color_multiply(int color, double mult)
 {
-	if (pile == NULL)
-		return (NULL);
-	if (pile->head == 0)
-		return (NULL);
-	if (pile->head == pile->tail)
-		return (NULL);
-	if (data == NULL)
-		data = pile->data[pile->tail++];
-	pile->data[pile->tail - 1] = NULL;
-	if (pile->tail == pile->size)
-		pile->tail = 0;
-	return (pile);
+	double red;
+	double green;
+	double blue;
+
+	red = (double)((color & 0x00FF0000) >> 16);
+	green = (double)((color & 0x0000FF00) >> 8);
+	blue = (double)(color & 0x000000FF);
+	red = MIN(red * mult, 255);
+	green = MIN(green * mult, 255);
+	blue = MIN(blue * mult, 255);
+	return ((color & 0xFF000000) | (((int)red) << 16) | (((int)green) << 8) |
+															(int)blue);
 }

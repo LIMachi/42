@@ -1,29 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pile_pull_fifo.c                                :+:      :+:    :+:   */
+/*   ftx_pixel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/14 13:22:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:58:18 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/02 12:48:34 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/02 12:48:48 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <ftx.h>
 
-t_pile_fifo	*ft_pile_pull_fifo(t_pile_fifo *pile, void *data)
+void	ftx_pixel(t_image *img, int x, int y, int color)
 {
-	if (pile == NULL)
-		return (NULL);
-	if (pile->head == 0)
-		return (NULL);
-	if (pile->head == pile->tail)
-		return (NULL);
-	if (data == NULL)
-		data = pile->data[pile->tail++];
-	pile->data[pile->tail - 1] = NULL;
-	if (pile->tail == pile->size)
-		pile->tail = 0;
-	return (pile);
+	if (img == NULL || x < 0 || x >= img->size.x || y < 0
+		|| y >= img->size.y)
+		return ;
+	ftx_putpixelimg(img, ft_point(x, y), color);
 }

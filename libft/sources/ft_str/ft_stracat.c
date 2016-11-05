@@ -1,29 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pile_pull_fifo.c                                :+:      :+:    :+:   */
+/*   ft_stracat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/14 13:22:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:58:18 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/03 17:03:10 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/03 17:03:28 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_pile_fifo	*ft_pile_pull_fifo(t_pile_fifo *pile, void *data)
+char	*ft_stracat(char *str1, char *str2)
 {
-	if (pile == NULL)
+	size_t	size;
+	char	*out;
+	char	*ptr;
+
+	if (str1 == NULL && str2 == NULL)
 		return (NULL);
-	if (pile->head == 0)
+	if (str1 == NULL)
+		return (ft_strndup(str2, ft_strlen(str2)));
+	if (str2 == NULL)
+		return (ft_strndup(str1, ft_strlen(str1)));
+	size = ft_strlen(str1) + ft_strlen(str2) + 1;
+	if ((out = (char*)malloc(size * sizeof(char))) == NULL)
 		return (NULL);
-	if (pile->head == pile->tail)
-		return (NULL);
-	if (data == NULL)
-		data = pile->data[pile->tail++];
-	pile->data[pile->tail - 1] = NULL;
-	if (pile->tail == pile->size)
-		pile->tail = 0;
-	return (pile);
+	ptr = out;
+	while (*str1)
+		*ptr++ = *str1++;
+	while (*str2)
+		*ptr++ = *str2++;
+	*ptr = '\0';
+	return (out);
 }

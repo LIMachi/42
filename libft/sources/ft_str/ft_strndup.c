@@ -1,29 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pile_pull_fifo.c                                :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/14 13:22:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:58:18 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/03 17:02:21 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/03 17:02:38 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_pile_fifo	*ft_pile_pull_fifo(t_pile_fifo *pile, void *data)
+#if defined(NORM_42) && (NORM_42 < 1)
+
+char	*ft_strndup(const char *s, size_t n)
 {
-	if (pile == NULL)
+	char	*out;
+
+	if (s == NULL)
 		return (NULL);
-	if (pile->head == 0)
+	if ((out = (char*)malloc(++n * sizeof(char))) == NULL)
 		return (NULL);
-	if (pile->head == pile->tail)
-		return (NULL);
-	if (data == NULL)
-		data = pile->data[pile->tail++];
-	pile->data[pile->tail - 1] = NULL;
-	if (pile->tail == pile->size)
-		pile->tail = 0;
-	return (pile);
+	out[--n] = '\0';
+	while (n--)
+		out[n] = s[n];
+	return (out);
 }
+
+#else
+
+char	*ft_strndup(const char *s, size_t n)
+{
+	char	*out;
+
+	if ((out = (char*)malloc(++n * sizeof(char))) == NULL)
+		return (NULL);
+	out[--n] = '\0';
+	while (n--)
+		out[n] = s[n];
+	return (out);
+}
+
+#endif

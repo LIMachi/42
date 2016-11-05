@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pile_pull_fifo.c                                :+:      :+:    :+:   */
+/*   ft_3d_to_2d.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/14 13:22:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:58:18 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/01 16:13:33 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/01 16:13:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_pile_fifo	*ft_pile_pull_fifo(t_pile_fifo *pile, void *data)
+t_point	ft_3d_to_2d(t_vector focal, t_point screen_center, t_vector vertex)
 {
-	if (pile == NULL)
-		return (NULL);
-	if (pile->head == 0)
-		return (NULL);
-	if (pile->head == pile->tail)
-		return (NULL);
-	if (data == NULL)
-		data = pile->data[pile->tail++];
-	pile->data[pile->tail - 1] = NULL;
-	if (pile->tail == pile->size)
-		pile->tail = 0;
-	return (pile);
+	double tmp;
+
+	if (focal.z + vertex.z > -0.001 && focal.z + vertex.z < 0.001)
+		return (ft_point(0x7FFFFFFF, 0x7FFFFFFF));
+	tmp = focal.z / (focal.z + vertex.z);
+	return (ft_point(vertex.x * tmp + screen_center.x,
+				vertex.y * tmp + screen_center.y));
 }

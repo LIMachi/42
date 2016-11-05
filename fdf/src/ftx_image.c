@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:33:15 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/15 08:36:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/31 16:16:53 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,13 @@ t_image	*ftx_new_image(t_point size)
 	if ((img = (t_image*)ft_memalloc(sizeof(t_image))) == NULL)
 		return (NULL);
 	img->size = size;
-	error = !ftx_data(GDX_ACCES) || !(mlx = ftx_data(GDX_ACCES)->mlx);
-	error = error || !(img->ptr = mlx_new_image(mlx, size.x, size.y));
-	error = error || !(img->data = (int *)mlx_get_data_addr(img->ptr,
-		&(img->bpp), &(img->size_line), &(img->endian)));
+	error = 1;
+	if (ftx_data(GDX_ACCES))
+		if ((mlx = ftx_data(GDX_ACCES)->mlx))
+			if ((img->ptr = mlx_new_image(mlx, size.x, size.y)))
+				if ((img->data = (int *)mlx_get_data_addr(img->ptr,
+		&(img->bpp), &(img->size_line), &(img->endian))))
+					error = 0;
 	if (error)
 	{
 		if (img->ptr)
@@ -73,9 +76,8 @@ int		ftx_free_image(t_image *img)
 		else
 			img->next->prev = NULL;
 	}
-	else
-		if (img->prev)
-			img->prev->next = NULL;
+	else if (img->prev)
+		img->prev->next = NULL;
 	free(img);
 	return (0);
 }

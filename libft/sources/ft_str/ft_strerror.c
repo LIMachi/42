@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:11:02 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 15:07:04 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,21 @@
 
 char	*ft_strerror(int error)
 {
-	static const char *strerror_ref[MAXERRNOD + 1] = {
-		[EPERM] = "Operation not permitted",
-		[ENOENT] = "No such file or directory", [ESRCH] = "No such process",
-		[EINTR] = "Interrupted system call", [EIO] = "I/O error",
-		[ENXIO] = "No such device or address",
-		[E2BIG] = "Argument list too long", [ENOEXEC] = "Exec format error",
-		[EBADF] = "Bad file number", [ECHILD] = "No child processes",
-		[EAGAIN] = "Try again", [ENOMEM] = "Out of memory",
-		[EACCES] = "Permission denied", [EFAULT] = "Bad address",
-		[ENOTBLK] = "Block device required",
-		[EBUSY] = "Device or resource busy", [EEXIST] = "File exists",
-		[EXDEV] = "Cross-device link", [ENODEV] = "No such device",
-		[ENOTDIR] = "Not a directory", [EISDIR] = "Is a directory",
-		[EINVAL] = "Invalid argument", [ENFILE] = "File table overflow",
-		[EMFILE] = "Too many open files", [ENOTTY] = "Not a typewriter",
-		[ETXTBSY] = "Text file busy", [EFBIG] = "File too large",
-		[ENOSPC] = "No space left on device", [ESPIPE] = "Illegal seek",
-		[EROFS] = "Read-only file system", [EMLINK] = "Too many links",
-		[EPIPE] = "Broken pipe", [EDOM] = "Math argument out of domain of func",
-		[ERANGE] = "Math result not representable"
-	};
+	static const char *strerror_ref[35] = {"No error",
+		"Operation not permitted", "No such file or directory",
+		"No such process", "Interrupted system call", "I/O error",
+		"No such device or address", "Argument list too long",
+		"Exec format error", "Bad file number", "No child processes",
+		"Try again", "Out of memory", "Permission denied", "Bad address",
+		"Block device required", "Device or resource busy", "File exists",
+		"Cross-device link", "No such device", "Not a directory",
+		"Is a directory", "Invalid argument", "File table overflow",
+		"Too many open files", "Not a typewriter", "Text file busy",
+		"File too large", "No space left on device", "Illegal seek",
+		"Read-only file system", "Too many links", "Broken pipe",
+		"Math argument out of domain of func", "Math result not representable"};
 
-	if (error <= MAXERRNOD)
+	if (error <= 34)
 		return ((char*)strerror_ref[error]);
 	else
 		return ("Unknown error");
