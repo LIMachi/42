@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:19:22 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/15 09:23:35 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/29 06:00:43 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_mlx_data	*ftx_data(int flag)
 		if (intern != NULL)
 			return (NULL);
 		else
-			intern = (t_mlx_data *)malloc(sizeof(t_mlx_data));
+			intern = (t_mlx_data *)ft_malloc(sizeof(t_mlx_data));
 	}
 	if (flag & GDX_FREE && intern != NULL)
 		ft_memdel((void**)&intern);

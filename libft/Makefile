@@ -6,7 +6,7 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/10/09 09:22:23 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/10/21 22:38:12 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ LIBFT  =
 CC = gcc
 
 ifeq ($(DEFINES), )
-DEFINES = NORM42=1
+DEFINES = NORM42=0
 endif
 
 ifneq ($(DEFINES), )

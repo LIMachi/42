@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/10 13:57:15 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/31 13:09:18 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@
 */
 # define ASM 0
 # define BSWAPA 0
+
+/*
+** standard errno defines
+*/
 
 # ifndef _ASM_GENERIC_ERRNO_BASE_H
 #  define _ASM_GENERIC_ERRNO_BASE_H
@@ -64,13 +68,44 @@
 # define MAXERRNOD 34
 
 /*
-** posix defines
+** standard unions for BIG/LITTLE endian compatibility
+*/
+
+typedef union	u_float4c
+{
+	float		f;
+	char		c[4];
+}				t_float4c;
+
+typedef union	u_double8c
+{
+	double		d;
+	char		c[8];
+}				t_double8c;
+
+typedef	union	u_ldouble16c
+{
+	long double	ld;
+	char		c[16];
+}				t_ldouble16c;
+
+/*
+** pseudo posix defines
 */
 
 # define SSIZE_MAX 32767
 
 # if defined(__unix__) || defined(__unix) || defined(unix)
 #  define UNIX 1
+# endif
+
+# if !defined(__BYTE_ORDER__) || !defined(__ORDER_LITTLE_ENDIAN__)
+#  error "Endian macros are undefined!"
+#  error "(Check \"<COMPILER> -E -dM - < /dev/null | grep ORDER\")"
+# endif
+# if !defined(__ORDER_BIG_ENDIAN__)
+#  error "Endian macros are undefined!"
+#  error "(Check \"<COMPILER> -E -dM - < /dev/null | grep ORDER\")"
 # endif
 
 # define BIG_ENDIAN __ORDER_BIG_ENDIAN__
@@ -92,8 +127,6 @@
 #  define OS LINUX
 # endif
 
-# include <stdint.h>
-
 /*
 ** windows compatibility
 */
@@ -105,12 +138,10 @@
 #  define O_BINARY 0
 # endif
 
-//# include <string.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdlib.h>
-//# include <limits.h>
-//# include <errno.h>
+# include <stdint.h>
 
 /*
 ** NULL defines
@@ -154,6 +185,7 @@
 # define MEM_G MEM_M MEM_K
 # define MEM_T MEM_G MEM_K
 # define BUFF_SIZE 1 MEM_K
+# define PAGE_SIZE 1 MEM_G
 
 /*
 ** debug and protection related defines
@@ -162,7 +194,6 @@
 # define ERROR_MODE 0
 # define DEBUG_MODE 0
 # define FD_LIMIT 12288
-# define GLOBAL_ALLOC 2 MEM_M
 
 # define XT_RDONLY 1
 
@@ -174,7 +205,7 @@
 # define MAX(x, y) ((x) < (y) ? (y) : (x))
 # define ABS(x) ((x) < 0 ? -(x) : (x))
 # define SIGN(x) ((x) < 0 ? -1 : ((x) > 0))
-# define FRAC(x) ((x) - (int)(x))
+# define FRAC(x) ((x) - (long long)(x))
 # define FLOOR(x) ((x) - FRAC(x))
 # define CEIL(x) ((x) - FRAC(x) + (FRAC(x) != 0))
 # define ROUND(x) ((x) - FRAC(x) + (FRAC(x) >= 0.5))
@@ -189,17 +220,101 @@
 # define FLOAT_PRECISION 7
 
 /*
-** trigonometrical defines
+** math defines
 */
 
-# define PI	(3.14159265358979323846)
-# define PI2 (1.57079632679489661923)
-# define PI4 (0.78539816339744830962)
-# define PIL (3.141592653589793238462643383279502884L)
-# define PI2L (1.570796326794896619231321691639751442L)
-# define PI4L (0.785398163397448309615660845819875721L)
-# define RADIAN(x) (PIL * (((long double)(x)) / 180.0L))
-# define DEGRE(x) (180.0L * (((long double)(x)) / PIL))
+# if __GNUC_PREREQ(3,3)
+#  define NAN	(__builtin_nanf (""))
+# else
+#  if LOCAL_ENDIAN == BIG_ENDIAN
+#   define __QNAN_BYTES		{0x7f, 0xc0, 0, 0}
+#  endif
+#  if LOCAL_ENDIAN == LITTLE_ENDIAN
+#   define __QNAN_BYTES		{0, 0, 0xc0, 0x7f}
+#  endif
+#  define NAN	(((t_float4c)__QNAN_BYTES).f)
+# endif
+
+# if __GNUC_PREREQ(3,3)
+#  define HUGE_VALF	(__builtin_huge_valf())
+# elif __GNUC_PREREQ(2,96)
+#  define HUGE_VALF	(__extension__ 0x1.0p255f)
+# else
+#  if LOCAL_ENDIAN == BIG_ENDIAN
+#   define __HUGE_VALF_BYTES	{0x7f, 0x80, 0, 0}
+#  endif
+#  if LOCAL_ENDIAN == LITTLE_ENDIAN
+#   define __HUGE_VALF_BYTES	{0, 0, 0x80, 0x7f}
+#  endif
+#  define HUGE_VALF	(((t_float4c){__HUGE_VALF_BYTES}).f)
+# endif
+
+# if __GNUC_PREREQ(3,3)
+#  define HUGE_VAL	(__builtin_huge_val())
+# elif __GNUC_PREREQ(2,96)
+#  define HUGE_VAL	(__extension__ 0x1.0p2047)
+# else
+#  if LOCAL_ENDIAN == BIG_ENDIAN
+#   define __HUGE_VAL_BYTES	{0x7f, 0xf0, 0, 0, 0, 0, 0, 0}
+#  endif
+#  if LOCAL_ENDIAN == LITTLE_ENDIAN
+#   define __HUGE_VAL_BYTES	{0, 0, 0, 0, 0, 0, 0xf0, 0x7f}
+#  endif
+#  define HUGE_VAL	(((t_double8c)__HUGE_VAL_BYTES).d)
+# endif
+
+# if __GNUC_PREREQ(3,3)
+#  define HUGE_VALL	(__builtin_huge_vall())
+# elif __GNUC_PREREQ(2,96)
+#  define HUGE_VALL	(__extension__ 0x1.0p32767L)
+# else
+#  define __HUGE_VALL_BYTES	{ 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0 }
+#  define HUGE_VALL	(((t_ldouble16c)__HUGE_VALL_BYTES).ld)
+# endif
+
+# if __GNUC_PREREQ(3,3)
+#  define INFINITY	(__builtin_inff())
+# else
+#  define INFINITY	HUGE_VALF
+# endif
+
+# define M_E			2.7182818284590452354
+# define M_LOG2E		1.4426950408889634074
+# define M_LOG10E		0.43429448190325182765
+# define M_LN2			0.69314718055994530942
+# define M_LN10			2.30258509299404568402
+# define M_PI			3.14159265358979323846
+# define M_PI_2			1.57079632679489661923
+# define M_PI_4			0.78539816339744830962
+# define M_PI_180		0.01745329251994329547
+# define M_1_PI			0.31830988618379067154
+# define M_2_PI			0.63661977236758134308
+# define M_180_PI		57.29577951308232286464
+# define M_2_SQRTPI		1.12837916709551257390
+# define M_SQRT2		1.41421356237309504880
+# define M_SQRT1_2		0.70710678118654752440
+# define M_EL			2.718281828459045235360287471352662498L
+# define M_LOG2EL		1.442695040888963407359924681001892137L
+# define M_LOG10EL		0.434294481903251827651128918916605082L
+# define M_LN2L			0.693147180559945309417232121458176568L
+# define M_LN10L		2.302585092994045684017991454684364208L
+# define M_PIL			3.141592653589793238462643383279502884L
+# define M_PI_2L		1.570796326794896619231321691639751442L
+# define M_PI_4L		0.785398163397448309615660845819875721L
+# define M_PI_180L		0.017453292519943295769139146242365789L
+# define M_1_PIL		0.318309886183790671537767526745028724L
+# define M_2_PIL		0.636619772367581343075535053490057448L
+# define M_180_PIL		57.295779513082320876654618402312735270L
+# define M_2_SQRTPIL	1.128379167095512573896158903121545172L
+# define M_SQRT2L		1.414213562373095048801688724209698079L
+# define M_SQRT1_2L		0.707106781186547524400844362104849039L
+# define RADIAN(x) (M_PI_180 * (x))
+# define DEGRE(x) (M_180_PI * (x))
+
+/*
+** extended fd structure, used in wrapers ft_open, ft_close, ft_write, ft_read,
+** ft_lseek
+*/
 
 typedef	struct	s_ft_fd
 {
@@ -208,6 +323,20 @@ typedef	struct	s_ft_fd
 	char		*path;
 	int			flags;
 }				t_ft_fd;
+
+/*
+** page structure, only to be used by ft_malloc_pgc, ft_free_pgc, ft_realloc_pgc
+*/
+
+typedef struct	s_page_3gs
+{
+	void	*p0;
+	void	*p1;
+	void	*p2;
+	void	*stack;
+	int		stack_free_pos;
+	int		stack_used_pos;
+}				t_page_3gs;
 
 /*
 ** typedef of a classic int function pointer with undefined parameters
@@ -225,11 +354,19 @@ typedef struct			s_point
 	int					y;
 }						t_point;
 
+/*
+** structure to manipulate complex numbers
+*/
+
 typedef struct			s_complex
 {
 	double				r;
 	double				i;
 }						t_complex;
+
+/*
+** structure to manipulate quaternion
+*/
 
 typedef struct			s_quaternion
 {
@@ -239,12 +376,20 @@ typedef struct			s_quaternion
 	double				k;
 }						t_quaternion;
 
+/*
+** structure to manipulate vectors and 3d coordinates
+*/
+
 typedef struct			s_vector
 {
 	double				x;
 	double				y;
 	double				z;
 }						t_vector;
+
+/*
+** structure to manipulate nm size matrixes
+*/
 
 typedef struct			s_matrix
 {
@@ -253,10 +398,38 @@ typedef struct			s_matrix
 }						t_matrix;
 
 /*
+** structure to manipulate first in last out piles
+*/
+
+typedef struct	s_pile_filo
+{
+	void				**data;
+	unsigned int		size;
+	unsigned int		head;
+}				t_pile_filo;
+
+/*
+** structure to manipulate first in first out piles (or also named files)
+*/
+
+typedef struct	s_pile_fifo
+{
+	void				**data;
+	unsigned int		size;
+	unsigned int		head;
+	unsigned int		tail;
+}				t_pile_fifo;
+
+/*
 ** stores the default alignement in a pile then set the alignement to 1
 ** changing the alignement might change the padding of struct/union/enum/etc
 */
-#pragma pack(push, 1)
+
+# pragma pack(push, 1)
+
+/*
+** file header of a standard bitmap
+*/
 
 typedef struct	s_bitmap_file_header
 {
@@ -265,6 +438,10 @@ typedef struct	s_bitmap_file_header
 	DWORD		reserved;
 	DWORD		offset;
 }				t_bitmap_file_header;
+
+/*
+** standard bitmap header
+*/
 
 typedef struct	s_dib_header
 {
@@ -297,7 +474,12 @@ typedef struct	s_dib_header
 /*
 ** restores the padding/alignement from the last call of #pragma pack(push)
 */
-#pragma pack(pop)
+
+# pragma pack(pop)
+
+/*
+** pair of bitmap header and raw data
+*/
 
 typedef struct	s_bitmap
 {
@@ -385,11 +567,7 @@ void	*ft_constructor_list(void);
 void	*ft_constructor_dllist(void);
 void	*ft_constructor_xtree(void);
 
-# if !defined(__BYTE_ORDER__) || !defined(__ORDER_LITTLE_ENDIAN__) || !defined(__ORDER_BIG_ENDIAN__)
-#  error "Endian macros are undefined! (Check \"<COMPILER> -E -dM - < /dev/null | grep ORDER\")"
-# endif
-
-# if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+# if LOCAL_ENDIAN == LITTLE_ENDIAN
 #  define DBG_SUBT1 uint16_t
 #  define DBG_SUBT2 int16_t
 #  define FIX_INT sub.f2
@@ -398,14 +576,14 @@ void	*ft_constructor_xtree(void);
 #   define INTFIX(x) (x << 16)
 #   define FIXINT(x) (x >> 16)
 #  endif
-# elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+# elif LOCAL_ENDIAN == BIG_ENDIAN
 #  define DBG_SUBT1 int16_t
 #  define DBG_SUBT2 uint16_t
 #  define FIX_INT sub.f1
 #  define FIX_FRAC sub.f2
 #  ifdef OP
-#   define INTFIX(x) (x >> 16)
-#   define FIXINT(x) (x << 16)
+#   define INTFIX(x) ((x) >> 16)
+#   define FIXINT(x) ((x) << 16)
 #  endif
 # else
 #  error "Unknown Endian! (Check BYTE_ORDER definition)"
@@ -436,6 +614,86 @@ typedef struct			s_fixpoint
 	t_fix				y;
 }						t_fixpoint;
 
+# define TIME_DEFAULT_WEEKDAY_0 "Sunday"
+# define TIME_DEFAULT_WEEKDAY_1 "Monday"
+# define TIME_DEFAULT_WEEKDAY_2 "Tuesday"
+# define TIME_DEFAULT_WEEKDAY_3 "Wednesday"
+# define TIME_DEFAULT_WEEKDAY_4 "Thursday"
+# define TIME_DEFAULT_WEEKDAY_5 "Friday"
+# define TIME_DEFAULT_WEEKDAY_6 "Saturday"
+
+# define TIME_SHORT_WEEKDAY_0 "Sun"
+# define TIME_SHORT_WEEKDAY_1 "Mon"
+# define TIME_SHORT_WEEKDAY_2 "Tue"
+# define TIME_SHORT_WEEKDAY_3 "Wed"
+# define TIME_SHORT_WEEKDAY_4 "Thu"
+# define TIME_SHORT_WEEKDAY_5 "Fri"
+# define TIME_SHORT_WEEKDAY_6 "Sat"
+
+# define TIME_DEFAULT_MONTH_0  "January"
+# define TIME_DEFAULT_MONTH_1  "February"
+# define TIME_DEFAULT_MONTH_2  "March"
+# define TIME_DEFAULT_MONTH_3  "April"
+# define TIME_DEFAULT_MONTH_4  "May"
+# define TIME_DEFAULT_MONTH_5  "June"
+# define TIME_DEFAULT_MONTH_6  "July"
+# define TIME_DEFAULT_MONTH_7  "August"
+# define TIME_DEFAULT_MONTH_8  "September"
+# define TIME_DEFAULT_MONTH_9  "October"
+# define TIME_DEFAULT_MONTH_10 "November"
+# define TIME_DEFAULT_MONTH_11 "December"
+
+# define TIME_SHORT_MONTH_0  "Jan"
+# define TIME_SHORT_MONTH_1  "Feb"
+# define TIME_SHORT_MONTH_2  "Mar"
+# define TIME_SHORT_MONTH_3  "Apr"
+# define TIME_SHORT_MONTH_4  "May"
+# define TIME_SHORT_MONTH_5  "Jun"
+# define TIME_SHORT_MONTH_6  "Jul"
+# define TIME_SHORT_MONTH_7  "Aug"
+# define TIME_SHORT_MONTH_8  "Sep"
+# define TIME_SHORT_MONTH_9  "Oct"
+# define TIME_SHORT_MONTH_10 "Nov"
+# define TIME_SHORT_MONTH_11 "Dec"
+
+# define TIME_VALUES_MASK				0x00000FFF
+# define TIME_YEAR						0x00000001
+# define TIME_MONTH						0x00000002
+# define TIME_MONTH_NAME				0x00000004
+# define TIME_MONTH_BOTH				0x00000006
+# define TIME_WEEK						0x00000008
+# define TIME_WEEKDAY					0x00000010
+# define TIME_WEEKDAY_NAME				0x00000020
+# define TIME_WEEKDAY_BOTH				0x00000030
+# define TIME_DAY						0x00000040
+# define TIME_HOUR						0x00000080
+# define TIME_MINUTE					0x00000100
+# define TIME_SECOND					0x00000200
+# define TIME_MILISECOND				0x00000400
+# define TIME_NANOSECOND				0x00000800
+# define TIME_VALUES_DEFAULT_DATE		0x00000065
+# define TIME_VALUES_DEFAULT_TIME		0x00000380
+# define TIME_VALUES_DEFAULT_EXTENDED	0x00000780
+# define TIME_FORMAT_MASK				0xFFFFF000
+# define TIME_FORMAT_DEFAULT			0x00001000
+# define TIME_FORMAT_SHORT				0x00002000
+
+typedef struct			s_time
+{
+	long			year;
+	long			month;
+	long			week;
+	long			weekday;
+	long			day;
+	long			hour;
+	long			minute;
+	long			second;
+	long			milisecond;
+	long			nanosecond;
+}						t_time;
+
+char					*ft_time_to_str(t_time time, int verbose);
+
 /*
 ** structure used by the get_next_line function
 */
@@ -445,30 +703,6 @@ typedef struct			s_gnl_tcf
 	char				**ptr;
 	char				*str;
 }						t_gnl_tcf;
-
-/*
-** error related defines
-*/
-
-# define ERROR_CHECK	1
-# define ERROR_SET		2
-# define ERROR_CLEAR	3
-# define ERROR_PRINT	4
-# define ERROR_ERRNO	5
-
-/*
-** log related defines
-*/
-
-# define LOG_SET_PATH	1
-# define LOG_SET		2
-# define LOG_PRINT		4
-# define LOG_STORE		8
-# define LOG_END		16
-# define LOG			(LOG_SET | LOG_PRINT | LOG_STORE)
-
-int						ft_error(int flag, long data);
-char					*ft_log(int flag, char *data);
 
 int						get_next_line(const int fd, char **line);
 
@@ -488,6 +722,8 @@ char					*ft_itoa_base(int n, const int size_base,
 ** memory acces and modification function
 */
 
+void					*ft_malloc(size_t size);
+void					*ft_free(void *ptr);
 void					ft_bzero(void *s, size_t n);
 void					*ft_memalloc(size_t size);
 void					*ft_memccpy(void *dst, const void *src, int c,
@@ -663,6 +899,8 @@ int						ft_sqrti(int v);
 
 t_ubmp					*ft_bmp_to_ubmp(t_bitmap *bitmap);
 t_bitmap				*ft_bitmap_file_load(char *path);
+int						ft_bitmap_file_save(char *path, t_bitmap *bmp);
+t_bitmap				*ft_ubmp_to_bmp(t_ubmp *ubmp);
 
 /*
 ** wrapper functions for file acces
@@ -762,7 +1000,8 @@ t_quaternion			ft_quat_rotation_build(double angle,
 */
 
 t_matrix				*ft_quat_rotation_to_matrix(t_quaternion q);
-int						ft_matrix_multply_vector(t_vector *v, t_matrix *m);
+t_vector				ft_matrix_multply_vector(const t_vector v,
+												const t_matrix *m);
 char					*ft_lsttostr(t_list *lst);
 
 /*
@@ -772,5 +1011,76 @@ char					*ft_lsttostr(t_list *lst);
 unsigned short int		ft_bswap16(const unsigned short int x);
 unsigned long int		ft_bswap32(const unsigned long int x);
 unsigned long long int	ft_bswap64(const unsigned long long int x);
+
+/*
+** piles functions
+*/
+t_pile_filo				*ft_pile_new_filo(unsigned int size);
+int						ft_pile_is_empty_filo(t_pile_filo *pile);
+t_pile_filo				*ft_pile_push_filo(t_pile_filo *pile, void* data);
+t_pile_filo				*ft_pile_look_filo(t_pile_filo *pile, void* data);
+t_pile_filo				*ft_pile_pull_filo(t_pile_filo *pile, void* data);
+void					ft_pile_free_filo(t_pile_filo *pile);
+
+t_pile_fifo				*ft_pile_new_fifo(unsigned int size);
+int						ft_pile_is_empty_fifo(t_pile_fifo *pile);
+t_pile_fifo				*ft_pile_push_fifo(t_pile_fifo *pile, void* data);
+t_pile_fifo				*ft_pile_look_fifo(t_pile_fifo *pile, void* data);
+t_pile_fifo				*ft_pile_pull_fifo(t_pile_fifo *pile, void* data);
+void					ft_pile_free_fifo(t_pile_fifo *pile);
+
+/*
+** error related defines (passed to ft_global_error)
+*/
+
+# define ERROR_CHECK	1
+# define ERROR_SET		2
+# define ERROR_CLEAR	3
+# define ERROR_PRINT	4
+# define ERROR_ERRNO	5
+
+/*
+** the following defines are single flags, they can't be mixed with standard
+** flags or with each other (passed to ft_error)
+*/
+
+# define ERROR_SILENT_ON	-1
+# define ERROR_SILENT_OFF	-2
+# define ERROR_GET_SILENT	-3
+
+/*
+** log related defines (passed to ft_global_log)
+*/
+
+# define LOG_SET_PATH		1
+# define LOG_SET			2
+# define LOG_PRINT			4
+# define LOG_STORE			8
+# define LOG_END			16
+# define LOG				(LOG_SET | LOG_PRINT | LOG_STORE)
+# define DEFAULT_LOG_PATH	"./log.txt"
+
+int						ft_global_error(int flag, long data);
+long					ft_error(long error, char *string);
+char					*ft_global_log(int flag, char *data);
+char					*ft_log(char *str);
+
+/*
+** initialiser function, set default global data ()
+*/
+
+void					ft_init(void);
+
+/*
+** closing function used to free all global data
+*/
+
+void					ft_end(void);
+
+/*
+** pseudo malloc trickery
+*/
+
+t_page_3gs				ft_page(void);
 
 #endif

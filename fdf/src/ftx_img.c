@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:05:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/15 09:12:18 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/29 06:06:37 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,10 @@
 
 void	ftx_putpixelimg(t_image *img, t_point pos, int color)
 {
-	if (!((img->endian == 0) ^ (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)))
-		color = ft_bswap32(color);
-	img->data[pos.y * img->size.x + pos.x] = color;
+	if (!((img->endian == 0) ^ (LOCAL_ENDIAN == BIG_ENDIAN)))
+		img->data[pos.y * img->size.x + pos.x] = ft_bswap32(color);
+	else
+		img->data[pos.y * img->size.x + pos.x] = color;
 }
 
 void		ftx_put_img_to_img(t_image *out, t_image *img, unsigned int mask)
@@ -49,7 +50,7 @@ void		ftx_put_img_to_img(t_image *out, t_image *img, unsigned int mask)
 
 	if (out == NULL || img == NULL)
 		return ;
-	d = ft_ptsub(img->pos, out->pos);
+	d = ft_point_substract(img->pos, out->pos);
 	if (d.x >= out->size.x || d.x >= out->size.x || d.x + img->size.x < 0 ||
 		d.y + img->size.y < 0)
 		return ;
