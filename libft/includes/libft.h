@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/03 18:09:27 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/05 19:14:20 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,14 +141,16 @@ typedef	union			u_ldouble16c
 # define FREEBSD 4
 # define WINDOWS 8
 
-# if defined(__WINDOWS__)
-#  define OS WINDOWS
-# elif defined(__MACH__) || defined(__APPLE__)
-#  define OS MACINTOCH
-# elif defined (__FreeBSD__)
-#  define OS FREEBSD
-# else
-#  define OS LINUX
+# ifndef OS
+#  if defined(__WINDOWS__)
+#   define OS WINDOWS
+#  elif defined(__MACH__) || defined(__APPLE__)
+#   define OS MACINTOCH
+#  elif defined (__FreeBSD__)
+#   define OS FREEBSD
+#  else
+#   define OS LINUX
+#  endif
 # endif
 
 /*
