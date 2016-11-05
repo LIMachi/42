@@ -6,13 +6,14 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/25 20:09:26 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 14:52:49 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
 #ifdef _ERRNO_H
+
 int	ft_global_error(int flag, long data)
 {
 	static int	error = 0;
@@ -36,7 +37,9 @@ int	ft_global_error(int flag, long data)
 	}
 	return (error);
 }
+
 #else
+
 int	ft_global_error(int flag, long data)
 {
 	static int	error = 0;

@@ -1,0 +1,8 @@
+Credentials cache: API:15599
+        Principal: hmartzol@42.FR
+
+  Issued                Expires               Principal
+Sep  1 22:32:35 2015  Sep  2 08:32:35 2015  krbtgt/42.FR@42.FR
+Sep  1 22:32:38 2015  Sep  2 08:32:35 2015  nfs/zfs-student-1.42.fr@42.FR
+Sep  1 22:32:38 2015  Sep  2 08:32:35 2015  nfs/zfs-student-3.42.fr@42.FR
+Sep  1 22:37:00 2015  Sep  2 08:32:35 2015  host/vogsphere-frontend-normal-1.42.fr@42.FR

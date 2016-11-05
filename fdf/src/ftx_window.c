@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:31:07 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/07/15 08:37:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/31 16:39:54 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_window	*ftx_get_window(int id)
 	return (NULL);
 }
 
-int		ftx_free_all_windows(t_window *win)
+int			ftx_free_all_windows(t_window *win)
 {
 	void		*mlx;
 	t_window	*tmp;
@@ -54,12 +54,12 @@ int		ftx_free_all_windows(t_window *win)
 			ftx_free_image(win->vbuffer);
 		if (win->images)
 			ftx_free_all_images(win->images);
-		free(win);
+		ft_free(win);
 	}
 	return (0);
 }
 
-int		ftx_free_window(t_window *win)
+int			ftx_free_window(t_window *win)
 {
 	void	*mlx;
 
@@ -81,10 +81,9 @@ int		ftx_free_window(t_window *win)
 		else
 			win->next->prev = NULL;
 	}
-	else
-		if (win->prev)
-			win->prev->next = NULL;
-	free(win);
+	else if (win->prev)
+		win->prev->next = NULL;
+	ft_free(win);
 	return (0);
 }
 
@@ -96,28 +95,28 @@ t_window	*ftx_new_window(t_point size, char *name, int wfps)
 
 	if ((window = (t_window*)ft_memalloc(sizeof(t_window))) == NULL)
 		return (NULL);
-	error = !ftx_data(GDX_ACCES) || !(mlx = ftx_data(GDX_ACCES)->mlx);
-	error = error || !(window->win = mlx_new_window(mlx, size.x, size.y, name));
-	if (!error)
-		window->size = size;
-	error = error || !(window->vbuffer = ftx_new_image(size));
+	error = 1;
+	if (ftx_data(GDX_ACCES))
+		if ((mlx = ftx_data(GDX_ACCES)->mlx))
+			if ((window->win = mlx_new_window(mlx, size.x, size.y, name)))
+				if ((window->vbuffer = ftx_new_image(size)))
+					error = 0;
 	if (!error)
 	{
+		window->size = size;
 		window->wfps = wfps;
 		window->zoom = 1;
 	}
 	else
 	{
-		if (window->win)
-			mlx_destroy_window(mlx, window->win);
-		if (window->vbuffer)
-			ftx_free_image(window->vbuffer);
+		(void)(window->win && mlx_destroy_window(mlx, window->win));
+		(void)(window->vbuffer && !ftx_free_image(window->vbuffer));
 		ft_memdel((void**)window);
 	}
 	return (window);
 }
 
-int		ftx_add_window(t_window *win)
+int			ftx_add_window(t_window *win)
 {
 	t_mlx_data	*data;
 	t_window	*tmp;

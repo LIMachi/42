@@ -6,17 +6,33 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 23:15:40 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:36:53 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 14:50:11 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-static int	sf_lseek(t_ft_fd *fd, off_t offset, char readbuff[BUFF_SIZE])
+#ifdef USE_LSEEK
+
+off_t				ft_lseek(t_ft_fd *fd, off_t offset, int whence)
 {
-	int	r;
-	int t;
-	char zero;
+	off_t	off;
+
+	off = lseek(fd->fd, offset, whence);
+	if (off < 0)
+		ft_error(0, "lseek call made by ft_lseek failled: ");
+	fd->pos = off;
+	return (off);
+}
+
+#else
+
+inline static int	sf_lseek(t_ft_fd *fd, off_t offset,
+							char readbuff[BUFF_SIZE])
+{
+	int		r;
+	int		t;
+	char	zero;
 
 	r = 1;
 	t = 0;
@@ -41,19 +57,7 @@ static int	sf_lseek(t_ft_fd *fd, off_t offset, char readbuff[BUFF_SIZE])
 	return (t);
 }
 
-#ifdef USE_LSEEK
-off_t			ft_lseek(t_ft_fd *fd, off_t offset, int whence)
-{
-	off_t	off;
-
-	off = lseek(fd->fd, offset, whence);
-	if (off < 0)
-		ft_error(0, "lseek call made by ft_lseek failled: ");
-	fd->pos = off;
-	return (off);
-}
-#else
-off_t			ft_lseek(t_ft_fd *fd, off_t offset, int whence)
+off_t				ft_lseek(t_ft_fd *fd, off_t offset, int whence)
 {
 	char	readbuff[BUFF_SIZE];
 	off_t	out;

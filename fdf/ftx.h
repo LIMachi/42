@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 14:03:34 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 14:41:07 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,8 @@
 #  include <time.h>
 # endif
 # if DEBUG == 1
-#  include <stdio.h> //
+#  include <stdio.h>
 # endif
-//# include <stdint.h>
-//# include <math.h>
 
 # define GDX_NEW 1
 # define GDX_FREE 2
@@ -45,6 +43,8 @@
 # define CIAN 0x00FFFF
 # define YELLOW 0xFFFF00
 # define MAGENTA 0xFF00FF
+
+# define SPEED 1
 
 # if OS == LINUX
 #  define KEYMAPSIZE 65535
@@ -120,6 +120,8 @@
 #  define KEY_A 0
 #  define KEY_D 2
 #  define KEY_SPACE 49
+#  define KEY_E 14
+#  define KEY_Q 12
 # endif
 
 # define C_FDF 1
@@ -221,34 +223,32 @@ typedef struct			s_line_ref
 
 typedef struct			s_object3d
 {
-	t_object3d_base		object;				//object structure (position, rotation, axis, etc)
-	int					nb_points;			//number of referenced
-	t_vector			*points3d_original;	//
-//	int					*vectors;			//references to vectors
-	int					*colors;			//references to palette
-	t_vector			*points3d;			//
-	t_point				*points2d;			//
-	int					nb_lines;			//number of lines referenced
-	t_line_ref			*lines;				//
-//	int					*lines;				//references to lines
+	t_object3d_base		object;
+	int					nb_points;
+	t_vector			*points3d_original;
+	int					*colors;
+	t_vector			*points3d;
+	t_point				*points2d;
+	int					nb_lines;
+	t_line_ref			*lines;
 }						t_object3d;
 
 typedef struct			s_scene
 {
-	int					nb_cameras;		//current number of charged cameras
-	int					focused_camera;	//current focused camera (wich will be used for the render)
-	t_camera			*cameras;		//list of cameras
-	int					nb_object3d;	//current number of object3d (cameras not counted)
-	t_object3d			*objects3d;		//list of object3d
-	t_vector			*original;		//list of vectors (will not be rotated or transformed)
-	int					*visibility;	//code used to test if a vector is totally, partially or not visible
-	t_vector			*transformed;	//list of vectors (result of rotated and transformed of original by current camera)
-	int					max_vectors;	//current maximum storage of vectors in original and transformed
-	t_ubmp				*render;		//image obtained by rendering vectors transformed to ubmp
-	int					*palette;		//palette of colors, to change a large set of colors
-	int					max_palette;	//current maximum of colors in palette
-	double				**depth;		//zbuffer (the size of this list is equal to render)
-	int					**controller;	//controller buffer (same has zbuffer)
+	int					nb_cameras;
+	int					focused_camera;
+	t_camera			*cameras;
+	int					nb_object3d;
+	t_object3d			*objects3d;
+	t_vector			*original;
+	int					*visibility;
+	t_vector			*transformed;
+	int					max_vectors;
+	t_ubmp				*render;
+	int					*palette;
+	int					max_palette;
+	double				**depth;
+	int					**controller;
 }						t_scene;
 
 typedef struct			s_fdf
@@ -259,10 +259,7 @@ typedef struct			s_fdf
 	t_point				**map2;
 	double				**zbuffer;
 	t_camera			camera;
-//	t_quaternion		rotation;
 	t_vector			eye;
-//	t_vector			camera_pos;
-//	t_vector			camera_line;
 }						t_fdf;
 
 typedef struct			s_mlx_data
@@ -282,10 +279,146 @@ typedef struct			s_vtff_la_norme_0
 	t_point				b;
 	t_point				d;
 	t_point				s;
-	t_fix				cr[2];
-	t_fix				cg[2];
-	t_fix				cb[2];
+	double				cr[2];
+	double				cg[2];
+	double				cb[2];
 }						t_vtff_la_norme_0;
+
+/*
+** a button is an interactive immage (can be clicked, toggle, holded, slided,
+** etc)
+*/
+
+/*
+** s_button (type = 0, unknown button type) is a cast to get common values from
+** any type of button and easily race a multi-type linked list of buttons (note
+** that the more buttons there is in a window, the longer will the update be)
+*/
+
+# define BUTTON 0
+
+typedef struct			s_button
+{
+	const uint8_t		type;
+	t_point				position;
+	t_point				hitbox;
+	struct s_button		*prev_button;
+	struct s_button		*next_button;
+}						t_button;
+
+/*
+** t_button_click (type = 1) send an update to trigger when released
+*/
+
+# define BUTTON_CLICK 1
+
+typedef struct			s_button_click
+{
+	const uint8_t		type;
+	t_point				position;
+	t_point				hitbox;
+	t_button			*prev_button;
+	t_button			*next_button;
+	t_ubmp				*released;
+	t_ubmp				*hover;
+	t_ubmp				*click;
+	t_int_func_undef	trigger;
+}						t_button_click;
+
+/*
+** t_button_maintain (type = 2) send an update to trigger has long has it is
+** maintained
+*/
+
+# define BUTTON_MAINTAIN 2
+
+typedef struct			s_button_maintain
+{
+	const uint8_t		type;
+	t_point				position;
+	t_point				hitbox;
+	t_button			*prev_button;
+	t_button			*next_button;
+	t_ubmp				*released;
+	t_ubmp				*hover;
+	t_ubmp				*maintained;
+	t_int_func_undef	trigger;
+}						t_button_maintain;
+
+/*
+** t_button_toggle (type = 3) change state when released and send an update to
+** the corresponding function for his new state
+*/
+
+# define BUTTON_TOGGLE 3
+
+typedef struct			s_button_toggle
+{
+	const uint8_t		type;
+	t_point				position;
+	t_point				hitbox;
+	t_button			*prev_button;
+	t_button			*next_button;
+	t_ubmp				*off;
+	t_ubmp				*hover_off;
+	t_ubmp				*hover_on;
+	t_ubmp				*on;
+	uint8_t				state;
+	t_int_func_undef	toggled_on;
+	t_int_func_undef	toggled_off;
+}						t_button_toggle;
+
+/*
+** t_button_slider (type = 4) whil triger slider_moved if a click or maintained
+** slide is made in his hitbox and will send the position of the slider to
+** slider_moved
+*/
+
+# define BUTTON_SLIDER 4
+
+typedef struct			s_button_slider
+{
+	const uint8_t		type;
+	t_point				position;
+	t_point				hitbox;
+	t_button			*prev_button;
+	t_button			*next_button;
+	t_ubmp				*back;
+	t_ubmp				*slider;
+	uint8_t				constraints;
+	t_point				slider_position;
+	t_int_func_undef	slider_moved;
+}						t_button_slider;
+
+/*
+** t_button_text_box (type = 5) is particular, it will catch keyboard updates
+** and write the input to a box, waiting to get an "enter key" signal to send
+** the stored text to his function. a click update will change the position
+** of the cursor, and so the way the text is input
+*/
+
+# define BUTTON_TEXT_BOX 5
+
+typedef struct			s_button_text_box
+{
+	const uint8_t		type;
+	t_point				position;
+	t_point				hitbox;
+	t_button			*prev_button;
+	t_button			*next_button;
+	t_ubmp				*back;
+	t_ubmp				*back_hover;
+	char				*str;
+	char				cursor_symbol;
+	uint32_t			color;
+	t_point				cursor_position;
+	uint32_t			max_text;
+	t_int_func_undef	get_text;
+}						t_button_text_box;
+
+/*
+** t_font				*font;
+*/
 
 t_window				*ftx_get_window(int id);
 int						ftx_free_all_windows(t_window *win);
@@ -334,16 +467,37 @@ int						sf_clip(t_point *a, t_point *b, t_point c, t_point d);
 int						sf_color_mix(int s, int e, t_fix f);
 void					ftx_putpixelimg(t_image *img, t_point pos, int color);
 int						ft_ptequal(t_point a, t_point b);
-t_point					*sf_iintersection(t_point a, t_point b, t_point c, t_point d);
+t_point					*sf_iintersection(t_point a, t_point b, t_point c,
+																t_point d);
 void					ftx_pixel(t_image *img, int x, int y, int color);
-void					ftx_horizontal_line(t_image *img, t_point a, t_point b, t_point color);
-void					ftx_vertical_line(t_image *img, t_point a, t_point b, t_point color);
-void					ftx_line(t_image *img, t_point a, t_point b, t_point color);
+void					ftx_horizontal_line(t_image *img, t_point a, t_point b,
+																t_point color);
+void					ftx_vertical_line(t_image *img, t_point a, t_point b,
+																t_point color);
+void					ftx_line(t_image *img, t_point a, t_point b,
+																t_point color);
 t_mlx_data				*ftx_data(int flag);
-unsigned long long int	ft_bswap64(unsigned long long int x);
-unsigned long int		ft_bswap32(unsigned long int x);
-unsigned short int		ft_bswap16(unsigned short int x);
 
 char					**read_xpm3(const char *path);
+
+t_point					ft_3d_to_2d(t_vector focal, t_point screen_center,
+															t_vector vertex);
+
+int						color_multiply(int color, double mult);
+
+int						fill_info(t_window *win, t_image *img);
+
+void					main_window_init(int ***map, t_point size);
+
+t_frustrum				ft_frustrum(t_point dl, t_point ur, t_point nf,
+															t_vector focal);
+void					fdf_parse_file(int ***map, int fd, int default_color);
+int						ft_is_in_frustrum(t_frustrum frustrum, t_vector vertex);
+t_point					fdf_parse_file0(char *filename);
+int						fill_fdf(t_window *win, t_image *img);
+int						ftx_update(void *ptr);
+void					ftx_error(char *str);
+void					sf_update(int up, t_fdf *fdf, t_image *img,
+													t_window *win);
 
 #endif

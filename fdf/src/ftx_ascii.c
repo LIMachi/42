@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:54:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/29 06:07:30 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/10/31 16:07:06 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static t_point	sf_cursor_move_right(t_point cursor, int movex, int imgx,
 	if (cursor.x + movex > imgx)
 		return (ft_point(startx, cursor.y + CRSIZE));
 	cursor.x += movex;
-	return cursor;
+	return (cursor);
 }
 
 /*
@@ -84,11 +84,12 @@ t_point			ft_get_width(char c)
 
 void			ftx_print_char(t_image *img, t_point pos, int color, char c)
 {
-	int 		x;
-	int 		y;
+	int			x;
+	int			y;
 	t_mlx_data	*data;
 	int64_t		mask;
 	int64_t		tmp;
+
 	if ((data = ftx_data(GDX_ACCES)) == NULL)
 		return ;
 	y = -1;

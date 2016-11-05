@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 19:34:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/06 00:16:00 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 14:46:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-static void	*sf_bmp_file_load_error(t_ft_fd *fd, t_bitmap *out)
+static void				*sf_bmp_file_load_error(t_ft_fd *fd, t_bitmap *out)
 {
 	if (out)
 	{
@@ -24,7 +24,7 @@ static void	*sf_bmp_file_load_error(t_ft_fd *fd, t_bitmap *out)
 	return (NULL);
 }
 
-static t_bitmap	*sf_bitmap_file_load(t_bitmap *out, int i, t_ft_fd *fd,
+inline static t_bitmap	*sf_bitmap_file_load(t_bitmap *out, int i, t_ft_fd *fd,
 										t_bitmap_file_header header)
 {
 	if (!(out->bmp = (unsigned char*)malloc(sizeof(unsigned char*) *
@@ -40,7 +40,7 @@ static t_bitmap	*sf_bitmap_file_load(t_bitmap *out, int i, t_ft_fd *fd,
 	return (out);
 }
 
-t_bitmap	*ft_bitmap_file_load(char *path)
+t_bitmap				*ft_bitmap_file_load(char *path)
 {
 	t_ft_fd					fd;
 	t_bitmap_file_header	header;

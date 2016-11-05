@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 19:43:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/08/22 21:20:29 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 14:50:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static uint32_t	sf_apply_mask(uint32_t value, uint32_t mask)
 static	void	sf_bmp_to_ubmp(t_bitmap *bitmap, t_ubmp *out, t_point p, int x)
 {
 	int	t1;
-	int t2;
+	int	t2;
 	int	y;
 
 	t1 = (bitmap->info.height - p.y - 1) * bitmap->info.width + p.x;
@@ -69,7 +69,7 @@ t_ubmp			*ft_bmp_to_ubmp(t_bitmap *bitmap)
 {
 	t_ubmp	*out;
 	t_point	p;
-	int x;
+	int		x;
 
 	if (bitmap == NULL || ((out = (t_ubmp*)malloc(sizeof(t_ubmp))) == NULL))
 		return (NULL);
@@ -85,5 +85,5 @@ t_ubmp			*ft_bmp_to_ubmp(t_bitmap *bitmap)
 	while (--p.y >= 0 && (p.x = -1))
 		while (++p.x < x / (bitmap->info.bit_count >> 3))
 			sf_bmp_to_ubmp(bitmap, out, p, x);
-	return out;
+	return (out);
 }

@@ -6,18 +6,36 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:11:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/03 17:02:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
+#if defined(NORM_42) && (NORM_42 < 1)
+
 size_t	ft_strlen(const char *s)
 {
-	size_t out;
+	size_t	len;
 
-	out = 0;
-	while (s[out])
-		++out;
-	return (out);
+	if (s == NULL)
+		return (0);
+	len = 0;
+	while (s[len])
+		++len;
+	return (len);
 }
+
+#else
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	len;
+
+	len = 0;
+	while (s[len])
+		++len;
+	return (len);
+}
+
+#endif

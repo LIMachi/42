@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/14 13:21:22 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:50:14 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 14:57:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-t_pile_fifo	*ft_pile_push_fifo(t_pile_fifo *pile, void* data)
+t_pile_fifo	*ft_pile_push_fifo(t_pile_fifo *pile, void *data)
 {
 	if (pile == NULL)
 		return (NULL);

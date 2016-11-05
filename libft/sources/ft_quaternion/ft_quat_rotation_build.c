@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 0000/00/00 00:00:00 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/07 03:46:05 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/02 14:58:56 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 ** normalize the vector if needed, math and logic optimised by me
 ** return -42 in the r component if an error (null vector) occur
 */
+
 t_quaternion			ft_quat_rotation_build(double angle,
 												const t_vector vector)
 {

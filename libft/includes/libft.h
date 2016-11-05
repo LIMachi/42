@@ -6,12 +6,18 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 13:09:18 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/05 19:14:20 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
+# include <limits.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <stdlib.h>
+# include <stdint.h>
 
 /*
 ** optimisation flags to replace code with macro, assembler or other code
@@ -71,29 +77,38 @@
 ** standard unions for BIG/LITTLE endian compatibility
 */
 
-typedef union	u_float4c
+typedef union			u_float4c
 {
 	float		f;
 	char		c[4];
-}				t_float4c;
+}						t_float4c;
 
-typedef union	u_double8c
+typedef union			u_double8c
 {
 	double		d;
 	char		c[8];
-}				t_double8c;
+}						t_double8c;
 
-typedef	union	u_ldouble16c
+typedef	union			u_ldouble16c
 {
 	long double	ld;
 	char		c[16];
-}				t_ldouble16c;
+}						t_ldouble16c;
 
 /*
 ** pseudo posix defines
 */
 
-# define SSIZE_MAX 32767
+# if !(defined (READ_MAX) && (READ_MAX <= (4294967296ULL)))
+#  ifdef READ_MAX
+#   undef READ_MAX
+#  endif
+#  if defined(SSIZE_MAX) && (SSIZE_MAX <= (4294967296ULL))
+#   define READ_MAX SSIZE_MAX
+#  else
+#   define READ_MAX (4294967295UL)
+#  endif
+# endif
 
 # if defined(__unix__) || defined(__unix) || defined(unix)
 #  define UNIX 1
@@ -108,6 +123,15 @@ typedef	union	u_ldouble16c
 #  error "(Check \"<COMPILER> -E -dM - < /dev/null | grep ORDER\")"
 # endif
 
+# ifdef BIG_ENDIAN
+#  undef BIG_ENDIAN
+# endif
+# ifdef LITTLE_ENDIAN
+#  undef LITTLE_ENDIAN
+# endif
+# ifdef LOCAL_ENDIAN
+#  undef LOCAL_ENDIAN
+# endif
 # define BIG_ENDIAN __ORDER_BIG_ENDIAN__
 # define LITTLE_ENDIAN __ORDER_LITTLE_ENDIAN__
 # define LOCAL_ENDIAN __BYTE_ORDER__
@@ -117,14 +141,16 @@ typedef	union	u_ldouble16c
 # define FREEBSD 4
 # define WINDOWS 8
 
-# if defined(__WINDOWS__)
-#  define OS WINDOWS
-# elif defined(__MACH__) || defined(__APPLE__)
-#  define OS MACINTOCH
-# elif defined (__FreeBSD__)
-#  define OS FREEBSD
-# else
-#  define OS LINUX
+# ifndef OS
+#  if defined(__WINDOWS__)
+#   define OS WINDOWS
+#  elif defined(__MACH__) || defined(__APPLE__)
+#   define OS MACINTOCH
+#  elif defined (__FreeBSD__)
+#   define OS FREEBSD
+#  else
+#   define OS LINUX
+#  endif
 # endif
 
 /*
@@ -137,11 +163,6 @@ typedef	union	u_ldouble16c
 #  define LONG uint32_t
 #  define O_BINARY 0
 # endif
-
-# include <unistd.h>
-# include <fcntl.h>
-# include <stdlib.h>
-# include <stdint.h>
 
 /*
 ** NULL defines
@@ -193,7 +214,10 @@ typedef	union	u_ldouble16c
 
 # define ERROR_MODE 0
 # define DEBUG_MODE 0
-# define FD_LIMIT 12288
+
+# ifndef FD_LIMIT
+#  define FD_LIMIT 12288
+# endif
 
 # define XT_RDONLY 1
 
@@ -223,60 +247,33 @@ typedef	union	u_ldouble16c
 ** math defines
 */
 
-# if __GNUC_PREREQ(3,3)
-#  define NAN	(__builtin_nanf (""))
-# else
-#  if LOCAL_ENDIAN == BIG_ENDIAN
-#   define __QNAN_BYTES		{0x7f, 0xc0, 0, 0}
-#  endif
-#  if LOCAL_ENDIAN == LITTLE_ENDIAN
-#   define __QNAN_BYTES		{0, 0, 0xc0, 0x7f}
-#  endif
-#  define NAN	(((t_float4c)__QNAN_BYTES).f)
+# if LOCAL_ENDIAN == BIG_ENDIAN
+#  define __QNAN_BYTES		{0x7f, 0xc0, 0, 0}
 # endif
+# if LOCAL_ENDIAN == LITTLE_ENDIAN
+#  define __QNAN_BYTES		{0, 0, 0xc0, 0x7f}
+# endif
+# define NAN	(((t_float4c){.c = __QNAN_BYTES}).f)
+# if LOCAL_ENDIAN == BIG_ENDIAN
+#  define __HUGE_VALF_BYTES	{0x7f, 0x80, 0, 0}
+# endif
+# if LOCAL_ENDIAN == LITTLE_ENDIAN
+#  define __HUGE_VALF_BYTES	{0, 0, 0x80, 0x7f}
+# endif
+# define HUGE_VALF	(((t_float4c){.c = __HUGE_VALF_BYTES}).f)
 
-# if __GNUC_PREREQ(3,3)
-#  define HUGE_VALF	(__builtin_huge_valf())
-# elif __GNUC_PREREQ(2,96)
-#  define HUGE_VALF	(__extension__ 0x1.0p255f)
-# else
-#  if LOCAL_ENDIAN == BIG_ENDIAN
-#   define __HUGE_VALF_BYTES	{0x7f, 0x80, 0, 0}
-#  endif
-#  if LOCAL_ENDIAN == LITTLE_ENDIAN
-#   define __HUGE_VALF_BYTES	{0, 0, 0x80, 0x7f}
-#  endif
-#  define HUGE_VALF	(((t_float4c){__HUGE_VALF_BYTES}).f)
+# if LOCAL_ENDIAN == BIG_ENDIAN
+#  define __HUGE_VAL_BYTES	{0x7f, 0xf0, 0, 0, 0, 0, 0, 0}
 # endif
+# if LOCAL_ENDIAN == LITTLE_ENDIAN
+#  define __HUGE_VAL_BYTES	{0, 0, 0, 0, 0, 0, 0xf0, 0x7f}
+# endif
+# define HUGE_VAL	(((t_double8c){.c = __HUGE_VAL_BYTES}).d)
 
-# if __GNUC_PREREQ(3,3)
-#  define HUGE_VAL	(__builtin_huge_val())
-# elif __GNUC_PREREQ(2,96)
-#  define HUGE_VAL	(__extension__ 0x1.0p2047)
-# else
-#  if LOCAL_ENDIAN == BIG_ENDIAN
-#   define __HUGE_VAL_BYTES	{0x7f, 0xf0, 0, 0, 0, 0, 0, 0}
-#  endif
-#  if LOCAL_ENDIAN == LITTLE_ENDIAN
-#   define __HUGE_VAL_BYTES	{0, 0, 0, 0, 0, 0, 0xf0, 0x7f}
-#  endif
-#  define HUGE_VAL	(((t_double8c)__HUGE_VAL_BYTES).d)
-# endif
+# define __HUGE_VALL_BYTES	{ 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0 }
+# define HUGE_VALL	(((t_ldouble16c){.c = __HUGE_VALL_BYTES}).ld)
 
-# if __GNUC_PREREQ(3,3)
-#  define HUGE_VALL	(__builtin_huge_vall())
-# elif __GNUC_PREREQ(2,96)
-#  define HUGE_VALL	(__extension__ 0x1.0p32767L)
-# else
-#  define __HUGE_VALL_BYTES	{ 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0 }
-#  define HUGE_VALL	(((t_ldouble16c)__HUGE_VALL_BYTES).ld)
-# endif
-
-# if __GNUC_PREREQ(3,3)
-#  define INFINITY	(__builtin_inff())
-# else
-#  define INFINITY	HUGE_VALF
-# endif
+# define INFINITY	HUGE_VALF
 
 # define M_E			2.7182818284590452354
 # define M_LOG2E		1.4426950408889634074
@@ -316,19 +313,19 @@ typedef	union	u_ldouble16c
 ** ft_lseek
 */
 
-typedef	struct	s_ft_fd
+typedef	struct			s_ft_fd
 {
 	int			fd;
 	int			pos;
 	char		*path;
 	int			flags;
-}				t_ft_fd;
+}						t_ft_fd;
 
 /*
 ** page structure, only to be used by ft_malloc_pgc, ft_free_pgc, ft_realloc_pgc
 */
 
-typedef struct	s_page_3gs
+typedef struct			s_page_3gs
 {
 	void	*p0;
 	void	*p1;
@@ -336,13 +333,13 @@ typedef struct	s_page_3gs
 	void	*stack;
 	int		stack_free_pos;
 	int		stack_used_pos;
-}				t_page_3gs;
+}						t_page_3gs;
 
 /*
 ** typedef of a classic int function pointer with undefined parameters
 */
 
-typedef int (*t_int_func_undef)();
+typedef int				(*t_int_func_undef)();
 
 /*
 ** structures of type coordinal points
@@ -401,24 +398,24 @@ typedef struct			s_matrix
 ** structure to manipulate first in last out piles
 */
 
-typedef struct	s_pile_filo
+typedef struct			s_pile_filo
 {
 	void				**data;
 	unsigned int		size;
 	unsigned int		head;
-}				t_pile_filo;
+}						t_pile_filo;
 
 /*
 ** structure to manipulate first in first out piles (or also named files)
 */
 
-typedef struct	s_pile_fifo
+typedef struct			s_pile_fifo
 {
 	void				**data;
 	unsigned int		size;
 	unsigned int		head;
 	unsigned int		tail;
-}				t_pile_fifo;
+}						t_pile_fifo;
 
 /*
 ** stores the default alignement in a pile then set the alignement to 1
@@ -431,19 +428,19 @@ typedef struct	s_pile_fifo
 ** file header of a standard bitmap
 */
 
-typedef struct	s_bitmap_file_header
+typedef struct			s_bitmap_file_header
 {
 	WORD		file_type;
 	DWORD		file_size;
 	DWORD		reserved;
 	DWORD		offset;
-}				t_bitmap_file_header;
+}						t_bitmap_file_header;
 
 /*
 ** standard bitmap header
 */
 
-typedef struct	s_dib_header
+typedef struct			s_dib_header
 {
 	DWORD		dib_size;
 	LONG		width;
@@ -469,7 +466,7 @@ typedef struct	s_dib_header
 	DWORD		icc_profile_data;
 	DWORD		icc_profile_size;
 	DWORD		reserved;
-}				t_dib_header;
+}						t_dib_header;
 
 /*
 ** restores the padding/alignement from the last call of #pragma pack(push)
@@ -481,11 +478,11 @@ typedef struct	s_dib_header
 ** pair of bitmap header and raw data
 */
 
-typedef struct	s_bitmap
+typedef struct			s_bitmap
 {
-	t_dib_header	info;
-	unsigned char*	bmp;
-}				t_bitmap;
+	t_dib_header		info;
+	unsigned char		*bmp;
+}						t_bitmap;
 
 /*
 ** ubmp stands for uncompressed bitmap, size should contain the size in pixels
@@ -493,11 +490,11 @@ typedef struct	s_bitmap
 ** (left to right and top to bottom)
 */
 
-typedef	struct	s_ubmp
+typedef	struct			s_ubmp
 {
-	t_point		size;
-	int			*data;
-}				t_ubmp;
+	t_point				size;
+	int					*data;
+}						t_ubmp;
 
 /*
 ** set of polymorphic list objects, each have 4 data container common, and
@@ -516,6 +513,7 @@ typedef	struct	s_ubmp
 */
 
 # define OBJECT 0
+
 typedef struct			s_object
 {
 	const uint32_t		type;
@@ -525,6 +523,7 @@ typedef struct			s_object
 }						t_object;
 
 # define OBJECT_LIST 1
+
 typedef struct			s_list
 {
 	const uint32_t		object_type;
@@ -535,6 +534,7 @@ typedef struct			s_list
 }						t_list;
 
 # define OBJECT_DLLIST 2
+
 typedef struct			s_alist
 {
 	const uint32_t		object_type;
@@ -547,6 +547,7 @@ typedef struct			s_alist
 }						t_alist;
 
 # define OBJECT_XTREE 3
+
 typedef struct			s_xtree
 {
 	const uint32_t		object_type;
@@ -562,10 +563,10 @@ typedef struct			s_xtree
 	struct s_xtree		*down;
 }						t_xtree;
 
-void	*ft_constructor_object(void);
-void	*ft_constructor_list(void);
-void	*ft_constructor_dllist(void);
-void	*ft_constructor_xtree(void);
+void					*ft_constructor_object(void);
+void					*ft_constructor_list(void);
+void					*ft_constructor_dllist(void);
+void					*ft_constructor_xtree(void);
 
 # if LOCAL_ENDIAN == LITTLE_ENDIAN
 #  define DBG_SUBT1 uint16_t
@@ -707,6 +708,12 @@ typedef struct			s_gnl_tcf
 int						get_next_line(const int fd, char **line);
 
 /*
+** int manipulation functions
+*/
+
+void					ft_int_swap(int *a, int *b);
+
+/*
 ** type conversion function
 */
 
@@ -828,7 +835,6 @@ int						ft_strcmp(char *s1, char *s2);
 char					*ft_strcpy(char *dst, const char *src);
 void					ft_strdel(char **as);
 char					*ft_strdup(const char *s1);
-char					*ft_strndup(const char *s1, const int end);
 int						ft_strequ(char const *s1, char const *s2);
 void					ft_striter(char *s, void (*f)(char *));
 void					ft_striteri(char *s, void (*f)(unsigned int, char *));
@@ -857,6 +863,9 @@ int						ft_tolower(int c);
 int						ft_toupper(int c);
 char					*ft_strnw(char *str);
 char					*ft_strerror(int error);
+char					*ft_stracat(char *str1, char *str2);
+char					*ft_strndup(const char *s, size_t n);
+char					*ft_strpdup(const char *s, const char *e);
 
 /*
 ** files related functions
@@ -877,6 +886,7 @@ int						ft_point_equal(const t_point a, const t_point b);
 double					ft_point_magnitude(const t_point point);
 t_point					ft_point_difference(const t_point a, const t_point b);
 double					ft_point_distance(const t_point a, const t_point b);
+t_point					ft_point_middle(const t_point a, const t_point b);
 
 /*
 ** math functions
@@ -939,6 +949,8 @@ t_vector				*ft_vector_init(t_vector *vector, const double x,
 											const double y, const double z);
 int						ft_vector_equal(t_vector a, t_vector b);
 t_vector				ft_vector_difference(t_vector a, t_vector b);
+t_vector				ft_vector_middle(const t_vector a, const t_vector b);
+t_vector				ft_vector_from_a_to_b(t_vector a, t_vector b);
 
 /*
 ** matrix functions
@@ -994,14 +1006,19 @@ double					ft_quat_dot_product(const t_quaternion a,
 											const t_quaternion b);
 t_quaternion			ft_quat_rotation_build(double angle,
 												const t_vector vector);
+inline int				ft_quat_equal(const t_quaternion a,
+									const t_quaternion b);
 
 /*
 ** conversion functions
 */
 
-t_matrix				*ft_quat_rotation_to_matrix(t_quaternion q);
+t_matrix				*ft_quat_rotation_to_matrix(t_matrix *mat,
+													t_quaternion q);
 t_vector				ft_matrix_multply_vector(const t_vector v,
 												const t_matrix *m);
+t_vector				*ft_matrix_multply_vector_array(t_vector *va,
+										size_t size, const t_matrix *m);
 char					*ft_lsttostr(t_list *lst);
 
 /*
@@ -1017,16 +1034,16 @@ unsigned long long int	ft_bswap64(const unsigned long long int x);
 */
 t_pile_filo				*ft_pile_new_filo(unsigned int size);
 int						ft_pile_is_empty_filo(t_pile_filo *pile);
-t_pile_filo				*ft_pile_push_filo(t_pile_filo *pile, void* data);
-t_pile_filo				*ft_pile_look_filo(t_pile_filo *pile, void* data);
-t_pile_filo				*ft_pile_pull_filo(t_pile_filo *pile, void* data);
+t_pile_filo				*ft_pile_push_filo(t_pile_filo *pile, void *data);
+t_pile_filo				*ft_pile_look_filo(t_pile_filo *pile, void *data);
+t_pile_filo				*ft_pile_pull_filo(t_pile_filo *pile, void *data);
 void					ft_pile_free_filo(t_pile_filo *pile);
 
 t_pile_fifo				*ft_pile_new_fifo(unsigned int size);
 int						ft_pile_is_empty_fifo(t_pile_fifo *pile);
-t_pile_fifo				*ft_pile_push_fifo(t_pile_fifo *pile, void* data);
-t_pile_fifo				*ft_pile_look_fifo(t_pile_fifo *pile, void* data);
-t_pile_fifo				*ft_pile_pull_fifo(t_pile_fifo *pile, void* data);
+t_pile_fifo				*ft_pile_push_fifo(t_pile_fifo *pile, void *data);
+t_pile_fifo				*ft_pile_look_fifo(t_pile_fifo *pile, void *data);
+t_pile_fifo				*ft_pile_pull_fifo(t_pile_fifo *pile, void *data);
 void					ft_pile_free_fifo(t_pile_fifo *pile);
 
 /*

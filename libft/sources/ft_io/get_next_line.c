@@ -6,92 +6,99 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/09 14:00:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/25 21:15:44 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/03 19:16:31 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <libft.h>
 
-static int			sf_read_until_char(int fd, char c, char **before,
-					char **after)
+inline static int	sf_ruco(const int fd, int c, char **container)
 {
-	char	buff[BUFF_SIZE + 1];
-	char	*t1;
-	char	*t2;
+	char	buffer[BUFF_SIZE];
 	int		r;
-	int		l;
+	char	*tmp;
 
-	t1 = NULL;
-	while ((r = read(fd, buff, BUFF_SIZE)) > 0)
+	if (container == NULL || *container != NULL)
+		return (-1 | ft_error(EINVAL, "invalid container passed to sf_ruco "));
+	while ((r = read(fd, buffer, BUFF_SIZE)) > 0)
 	{
-		buff[r] = 0;
-		if ((t2 = ft_strjoin(t1, buff)) == NULL)
-			return (-1);
-		if (t1 != NULL)
-			ft_free(t1);
-		if ((t1 = t2) && ft_strchr(t1, c) != NULL && ft_strchr(t1, c) != t1)
-		{
-			*before = ft_strsub(t1, 0, ft_strchr(t1, c) - t1);
-			if ((l = ft_strlen(t1) - (ft_strchr(t1, c) - t1 - 1)) > 0)
-				*after = ft_strsub(t1, ft_strchr(t1, c) - t1 + 1, l);
-			ft_free(t1);
-			return (1);
-		}
+		buffer[r] = '\0';
+		tmp = ft_stracat(*container, buffer);
+		if (*container != NULL)
+			ft_free(*container);
+		*container = tmp;
+		if (ft_strchr(buffer, c))
+			break ;
 	}
-	*before = t1;
-	return (r);
+	if (r == -1)
+		return (-1 | ft_error(0, "sf_ruco's call to read failed: "));
+	if (r == 0 && *container == NULL)
+		return (0);
+	return (1);
 }
 
-static int			sf_get_next_line(const int fd, char **line,
-					t_gnl_tcf tcf[FD_LIMIT])
+inline static int	sf_gnl_0(const int fd, char *tab[FD_LIMIT])
 {
-	char	*tmp_str;
-	char	**tmp_ptr;
 	int		r;
+	char	*ptr0;
+	char	*ptr1;
 
-	if ((tmp_ptr = (char **)ft_memalloc(sizeof(char *))) == NULL)
-		return (-1);
-	if ((r = sf_read_until_char(fd, '\n', tmp_ptr, tcf[fd].ptr)) == -1)
+	if (tab[fd] == NULL || ft_strchr(tab[fd], '\n') == NULL)
 	{
-		ft_free(tmp_ptr);
-		return (-1);
+		ptr0 = NULL;
+		if ((r = sf_ruco(fd, '\n', &ptr0)) == -1)
+			return (-1);
+		if (r == 0 && tab[fd] == NULL)
+			return (0);
+		if ((ptr1 = ft_stracat(tab[fd], ptr0)) == NULL)
+			return (-1);
+		if (r == 1)
+			ft_free(ptr0);
+		if (tab[fd] != NULL)
+			ft_free(tab[fd]);
+		tab[fd] = ptr1;
 	}
-	r = r || (*tmp_ptr != NULL);
-	tcf[fd].str = *tcf[fd].ptr;
-	if (*line != NULL)
+	return (1);
+}
+
+inline static int	sf_gnl_1(const int fd, char **line, char *tab[FD_LIMIT])
+{
+	char	*ptr0;
+	char	*ptr1;
+
+	if ((ptr0 = ft_strchr(tab[fd], '\n')) == NULL)
 	{
-		tmp_str = *line;
-		*line = ft_strjoin(tmp_str, *tmp_ptr);
-		ft_free(tmp_str);
-		ft_free(tmp_ptr);
+		if ((*line = ft_strndup(tab[fd], ft_strlen(tab[fd]))) == NULL)
+			return (-1);
+		ft_free(tab[fd]);
+		tab[fd] = NULL;
+		return (1);
 	}
-	else
-		*line = *tmp_ptr;
-	r = r || ((*line != NULL) && (**line != 0));
-	return (r);
+	if ((*line = ft_strpdup(tab[fd], ptr0++)) == NULL)
+		return (-1);
+	if ((ptr1 = ft_strpdup(ptr0, ft_strchr(ptr0, '\0'))) == NULL)
+		return (-1);
+	ft_free(tab[fd]);
+	tab[fd] = ptr1;
+	return (1);
 }
 
 int					get_next_line(const int fd, char **line)
 {
-	static t_gnl_tcf	tcf[FD_LIMIT] = {{.ptr = NULL, .str = NULL}};
-	char				*tmp_str;
+	static char		*tab[FD_LIMIT] = {0};
+	int				r;
 
-	if (fd < 0 || fd > FD_LIMIT || line == NULL
-		|| BUFF_SIZE < 0 || BUFF_SIZE > SSIZE_MAX)
-		return (-1);
-	*line = NULL;
-	if (tcf[fd].str != NULL && tcf[fd].ptr != NULL)
-	{
-		if ((tmp_str = ft_strchr(tcf[fd].str, '\n')) != NULL)
-		{
-			*line = ft_strsub(tcf[fd].str, 0, tmp_str - tcf[fd].str);
-			tcf[fd].str = tmp_str + 1;
-			return (1);
-		}
-		*line = ft_strdup(tcf[fd].str);
-		ft_memdel((void **)tcf[fd].ptr);
-	}
-	else if ((tcf[fd].ptr = (char **)ft_memalloc(sizeof(char *))) == NULL)
-		return (-1);
-	return (sf_get_next_line(fd, line, tcf));
+	if (fd < 0)
+		return (-1 | ft_error(ENOENT, "incorect fd passed to get_next_line"));
+	if (fd >= FD_LIMIT)
+		return (-1 | ft_error(EBADF, "incorect fd passed to get_next_line"));
+	if (line == NULL)
+		return (-1 | ft_error(EINVAL, "**line in get_next_line is NULL "));
+	if (*line != NULL)
+		return (-1 | ft_error(EINVAL, "*line in get_next_line is not NULL "));
+	if (BUFF_SIZE > READ_MAX)
+		return (-1 | ft_error(ENOMEM, "BUFF_SIZE in get_next_line too big "));
+	if ((r = sf_gnl_0(fd, tab)) != 1)
+		return (r);
+	return (sf_gnl_1(fd, line, tab));
 }

@@ -6,7 +6,7 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/10/22 16:20:55 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/11/02 11:22:54 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -316,3 +316,7 @@ re: fclean all
 auteur:
 	@echo "creating default auteur file"
 	echo "hmartzol" > auteur
+
+.PHONY: test
+test: $(NAME)
+	./$(NAME) ./resources/test_maps/42.fdf
