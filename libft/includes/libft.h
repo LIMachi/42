@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 13:09:18 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/07 14:46:54 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ typedef	union	u_ldouble16c
 # define MEM_T MEM_G MEM_K
 # define BUFF_SIZE 1 MEM_K
 # define PAGE_SIZE 1 MEM_G
+# define READBUFF 4 MEM_K
 
 /*
 ** debug and protection related defines

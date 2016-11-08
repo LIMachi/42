@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 14:03:34 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/07 14:56:06 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,8 @@
 #  include <time.h>
 # endif
 # if DEBUG == 1
-#  include <stdio.h> //
+#  include <stdio.h>
 # endif
-//# include <stdint.h>
-//# include <math.h>
 
 # define GDX_NEW 1
 # define GDX_FREE 2
@@ -47,18 +45,9 @@
 # define MAGENTA 0xFF00FF
 
 # if OS == LINUX
+
 #  define KEYMAPSIZE 65535
-#  define KEY_EXIT 65307
-#  define KEY_UP 65362
-#  define KEY_LEFT 65361
-#  define KEY_DOWN 65364
-#  define KEY_RIGHT 65363
-#  define KEY_PAD_PLUS 65451
-#  define KEY_PAD_MINUS 65453
-#  define KEY_ENTER 65293
-#  define KEY_PAD_0 65438
-#  define KEY_CTRL_RIGHT 65508
-#  define KEY_CTRL_LEFT 65507
+
 #  define KEY_SPACE 32
 #  define KEY_0 48
 #  define KEY_1 49
@@ -96,31 +85,58 @@
 #  define KEY_X 120
 #  define KEY_Y 121
 #  define KEY_Z 122
+#  define KEY_ENTER 65293
+
+#  define KEY_EXIT 65307
+#  define KEY_CTRL_RIGHT 65508
+#  define KEY_CTRL_LEFT 65507
 #  define KEY_SHIFT_LEFT 65505
 #  define KEY_SHIFT_RIGHT 65506
-#  define MICE_SCROLL_UP 4
-#  define MICE_SCROLL_DOWN 5
+
+#  define KEY_UP 65362
+#  define KEY_LEFT 65361
+#  define KEY_DOWN 65364
+#  define KEY_RIGHT 65363
+
+#  define KEY_PAD_PLUS 65451
+#  define KEY_PAD_MINUS 65453
+#  define KEY_PAD_0 65438
+
 # elif OS == MACINTOCH
-#  define KEY_PAD_PLUS 69
-#  define KEY_PAD_MINUS 78
-#  define KEY_CTRL_LEFT 256
-#  define KEY_PAD_0 82
+
+#  define KEYMAPSIZE 280
+
 #  define KEY_X 7
 #  define KEY_Y 16
 #  define KEY_Z 6
-#  define KEYMAPSIZE 280
-#  define KEY_EXIT 53
-#  define KEY_UP 126
-#  define KEY_LEFT 123
-#  define KEY_DOWN 125
-#  define KEY_RIGHT 124
-#  define KEY_SHIFT_LEFT 257
 #  define KEY_W 13
 #  define KEY_S 1
 #  define KEY_A 0
 #  define KEY_D 2
 #  define KEY_SPACE 49
+
+#  define KEY_EXIT 53
+#  define KEY_SHIFT_LEFT 257
+
+#  define KEY_UP 126
+#  define KEY_LEFT 123
+#  define KEY_DOWN 125
+#  define KEY_RIGHT 124
+
+#  define KEY_PAD_PLUS 69
+#  define KEY_PAD_MINUS 78
+#  define KEY_CTRL_LEFT 256
+#  define KEY_PAD_0 82
+
 # endif
+
+# define MICE_LEFT 1
+# define MICE_CENTER 2
+# define MICE_RIGHT 3
+# define MICE_SCROLL_UP 4
+# define MICE_SCROLL_DOWN 5
+# define MICE_EXTRA_0 8
+# define MICE_EXTRA_1 9
 
 # define C_FDF 1
 # define C_TERM 2

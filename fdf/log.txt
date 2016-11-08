@@ -3094,3 +3094,25 @@ New log started
 Log ended
 New log started
 Log ended
+New log started
+Log ended
+New log started
+Log ended
+New log started
+1 - Keyrelease: 65293
+1 - Keypress: 65307
+Log ended
+New log started
+1 - Keyrelease: 65293
+1 - Keypress: 65307
+Log ended
+New log started
+1 - Keyrelease: 65293
+1 - Keypress: 65319
+1 - Keyrelease: 65319
+1 - Keypress: 0
+1 - Keyrelease: 0
+1 - Keypress: 0
+1 - Keyrelease: 0
+1 - Keypress: 65307
+Log ended

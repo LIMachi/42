@@ -6,13 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/08 21:03:26 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:09:57 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/01 21:01:17 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
-
-#define READBUFF 80
 
 char	*ft_readfile(int fd)
 {
@@ -26,12 +24,12 @@ char	*ft_readfile(int fd)
 	file = NULL;
 	while ((r = read(fd, buff, READBUFF)))
 	{
-		if ((t_str = (char *)malloc(sizeof(char) * (r + size))) == NULL)
+		if ((t_str = (char *)ft_malloc(sizeof(char) * (r + size))) == NULL)
 			return (NULL);
 		if (file != NULL)
 		{
 			ft_strcpy(t_str, file);
-			free(file);
+			ft_free(file);
 		}
 		ft_memcpy(t_str + size - 1, buff, r);
 		file = t_str;
