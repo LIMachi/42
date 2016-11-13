@@ -6,11 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:54:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 16:07:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/09 16:44:12 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 static int64_t	sf_code_to_ascii(unsigned char code)
 {
@@ -86,7 +86,7 @@ void			ftx_print_char(t_image *img, t_point pos, int color, char c)
 {
 	int			x;
 	int			y;
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 	int64_t		mask;
 	int64_t		tmp;
 
@@ -121,4 +121,34 @@ void			ftx_print_str(t_image *img, t_point pos, int color, char *str)
 			cursor = ft_point(1, cursor.y + CRSIZE);
 		else
 			cursor = sf_cursor_move_right(cursor, 6, img->size.x, 1);
+}
+
+void			ftx_print_nbr(t_image *img, t_point pos, int color, int nbr)
+{
+	t_point			cursor;
+	int				l;
+	unsigned int	i;
+
+	if (!(img && pos.x > 0 && pos.x < img->size.x && pos.y > 0 &&
+		pos.y < img->size.y))
+		return ;
+	if (nbr < 0)
+	{
+		ftx_print_char(img, pos, color, '-');
+		cursor = sf_cursor_move_right(pos, 6, img->size.x, 1);
+		i = (unsigned int)-(long)nbr;
+	}
+	else
+	{
+		cursor = pos;
+		i = (unsigned int)nbr;
+	}
+	l = 0;
+	while (i /= 10)
+		++l;
+	while (l >= 0)
+	{
+		ftx_print_char(img, cursor, color, (nbr / ft_powi(10, l--)) % 10 + '0');
+		cursor = sf_cursor_move_right(cursor, 6, img->size.x, 1);
+	}
 }

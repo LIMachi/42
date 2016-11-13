@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/02 08:44:01 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 08:55:28 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 18:11:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 #if NORM42 == 0
 
-static int	ftx_update0(t_window *tmpwin, int f, struct timespec time)
+static int	ftx_update0(t_window *tmpwin, int f, struct timespec time,
+															void *mlx)
 {
 	t_image	*tmpimg;
 
@@ -32,9 +33,10 @@ static int	ftx_update0(t_window *tmpwin, int f, struct timespec time)
 			ftx_put_img_to_img(tmpwin->vbuffer, tmpimg, 0);
 		tmpimg = tmpimg->next;
 	}
-	mlx_put_image_to_window(((t_mlx_data*)ptr)->mlx, tmpwin->win,
+	mlx_put_image_to_window(mlx, tmpwin->win,
 		tmpwin->vbuffer->ptr, tmpwin->vbuffer->pos.x,
 		tmpwin->vbuffer->pos.y);
+	return (0);
 }
 
 int			ftx_update(void *ptr)
@@ -59,7 +61,7 @@ int			ftx_update(void *ptr)
 			}
 			else
 				tmpwin->frames++;
-			ftx_update0(tmpwin, f, time);
+			ftx_update0(tmpwin, f, time, ((t_mlx_data*)ptr)->mlx);
 		}
 		tmpwin = tmpwin->next;
 	}

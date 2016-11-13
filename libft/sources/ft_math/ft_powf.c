@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   ft_powf.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 04:59:44 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/09 16:48:33 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/09 16:50:22 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-/*
-** try to find str2 in str1, will return a pointer to the occurence of str2 in
-** str1 if found, and NULL if str2 is not found
-*/
-
-char	*ft_strstr(char *str1, char *str2)
+float	ft_powf(float nbr, int exp)
 {
-	char *p_tmp;
+	float	out;
 
-	if (!*str2)
-		return (str1);
-	p_tmp = str1;
-	while ((p_tmp = ft_strchr(p_tmp, (int)*str2)))
-	{
-		if (!ft_memcmp(str2, p_tmp, ft_strlen(str2)))
-			return (p_tmp);
-		++p_tmp;
-	}
-	return (NULL);
+	out = 1.0f;
+	while (exp > 0 && --exp)
+		out *= nbr;
+	while (exp < 0 && ++exp)
+		out /= nbr;
+	return (out);
 }

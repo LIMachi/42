@@ -1,322 +1,92 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/11/05 19:00:43 by hmartzol         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#name of the author of the executable
+AUTHOR = hmartzol
 
-NAME =
+#name of compiled file
+NAME = fractol
 
-SRCDIR =
-OBJDIR =
-INCDIR =
-LIBFT  = ../libft
+#path to folder containing source files, project header and resulting objects
+SRCDIR = ./src
+INCDIR = ./inc
+OBJDIR = ./OBJ
 
-CC = gcc
+#name of files to compile without the extension
+ITEMS = ft_fractol \
+		ftocl_data \
+		ftocl_make_program \
+		ftocl_end
 
-OS = $(shell uname)
+#gcc/clang flags
+CFLAGS = -Wall -Wextra -Werror
 
-ifeq ($(DEFINES), )
-ifeq ($(OS),Linux) #force the disabling of the norm on linux for stability purpose
-DEFINES = NORM42=0
-endif
-ifeq ($(OS),Darwin)
-DEFINES = NORM42=1
-endif
-endif
+#variables for Linux
+ifeq ($(shell uname),Linux)
 
-ifneq ($(DEFINES), )
-EFLAGS = $(patsubst %, -D"%", $(DEFINES))
+#path to external includes
+PINC = ../libft/includes ../libftx/inc ../minilibx_X11
+#path to libs to compile
+CLIB = ../libft ../libftx ../minilibx_X11
+#exact path of lib files to add in source
+LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_X11/libmlx.a
+#args passed to gcc depending on the os
+ARGS = -Wno-deprecated -Wno-deprecated-declarations -lOpenCL -ICL -lXext -lX11
+
 endif
 
-FLAGS = -Wall -Wextra -Werror $(EFLAGS)
-LIBS =
+#variables for Max
+ifeq ($(shell uname),Darwin)
 
+#path to external includes
+PINC = ../libft/includes ../libftx/inc ../minilibx_X11
+#path to libs to compile
+CLIB = ../libft ../libftx
+#exact path of lib files to add in source
+LIB = ../libftx/libftx.a ../libft/libft.a
+#args passed to gcc depending on the os
+ARGS = -framework OpenCL -framework OpenGL -framework AppKit -lmlx
 
-ifeq ($(SRCDIR), )
-ifneq ($(wildcard src/.), )
-SRCDIR = src
-else
-SRCDIR = .
-endif
-endif
-
-DOTC = $(shell find $(SRCDIR) -maxdepth 1 -type f | grep -e '\.c$$')
-
-MAINP = main(
-ifneq ($(DOTC), )
-MAINFOUND = $(shell grep -l -e"$(MAINP)" $(DOTC))
 endif
 
-ifeq ($(INCDIR), )
-ifneq ($(wildcard includes/.), )
-INCDIR = includes
-else
-ifneq ($(wildcard include/.), )
-INCDIR = include
-else
-ifneq ($(wildcard inc/.), )
-INCDIR = inc
-else
-INCDIR = .
-endif
-endif
-endif
-endif
+################################################################################
+################################################################################
+################                                                ################
+################   don't change anything past this commentary   ################
+################                                                ################
+################################################################################
+################################################################################
 
-ifeq ($(NAME), )
-ifneq ($(MAINFOUND), )
-NAME = $(notdir $(basename $(MAINFOUND)))
-else
-ifneq ($(shell find $(INCDIR) -type f | grep -e '\.h$$'), )
-NAME = $(notdir $(basename $(shell find includes -type f | grep -e '\.h$$' | head))).a
-else
-NAME = $(shell pwd | rev | cut -f 1 -d '/' | rev).a
-endif
-endif
-endif
+DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
+DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
 
-INCLUDES = $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$')
+INCLUDES = $(patsubst %, -I%, $(INCDIR)) $(patsubst %, -I%, $(PINC))
 
-ifeq ($(OBJDIR), )
-OBJDIR = OBJ
-endif
+.PHONY: all libs clean fclean re norm
 
-ifneq ($(INCLUDES), )
-MLXFOUND = $(shell grep '\#*include\ <mlx.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(MLXFOUND), )
-MLXFOUND = $(shell grep '\#*include\ \"mlx.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(MLXFOUND), )
-MLXFOUND = $(shell grep '\#*include\ <mlx.h>' $(DOTC))
-ifeq ($(MLXFOUND), )
-MLXFOUND = $(shell grep '\#*include\ \"mlx.h\"' $(DOTC))
-endif
-endif
+all: $(NAME)
 
-ifneq ($(INCLUDES), )
-MATHFOUND = $(shell grep '\#*include\ <math.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(MATHFOUND), )
-MATHFOUND = $(shell grep '\#*include\ \"math.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(MATHFOUND), )
-MATHFOUND = $(shell grep '\#*include\ <math.h>' $(DOTC))
-ifeq ($(MATHFOUND), )
-MATHFOUND = $(shell grep '\#*include\ \"math.h\"' $(DOTC))
-endif
-endif
-ifneq ($(MATHFOUND), )
-MATHLIB = -lm
-endif
-
-ifneq ($(INCLUDES), )
-PTHFOUND = $(shell grep '\#*include\ <pthread.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(PTHFOUND), )
-PTHFOUND = $(shell grep '\#*include\ \"pthread.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(PTHFOUND), )
-PTHFOUND = $(shell grep '\#*include\ <pthread.h>' $(DOTC))
-ifeq ($(PTHFOUND), )
-PTHFOUND = $(shell grep '\#*include\ \"pthread.h\"' $(DOTC))
-endif
-endif
-ifneq ($(PTHFOUND), )
-PTHLIB = -lpthread
-endif
-
-ifeq ($(OS),Linux)
-TASKS = $(shell 1 + $(shell grep -c ^processor /proc/cpuinfo))
-ifneq ($(MLXFOUND), )
-ifneq ($(wildcard minilibx_X11/.),)
-MLX = minilibx_X11
-LMLX = libmlx.a
-MLXFLAGS = -lXext -lX11 ../minilibx_X11/libmlx.a
-IMLX = -I../minilibx_X11
-else
-MLXFLAGS = -lXext -lX11 -lmlx
-endif
-endif
-endif
-ifeq ($(OS),Darwin)
-TASKS = $(shell 1 + $(shell system_profiler | awk '/Number Of CPUs/{print $4}{next;}'))
-ifneq ($(MLXFOUND), )
-ifneq ($(wildcard minilibx/.),)
-MLX = minilibx
-LMLX = libmlx.a
-MLXFLAGS = -framework OpenGL -framework AppKit ../minilibx/libmlx.a
-IMLX = -I../minilibx
-else
-MLXFLAGS = -framework OpenGL -framework AppKit -lmlx
-endif
-endif
-endif
-
-OBJ = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(DOTC))
-
-ifneq ($(NAME), libft.a)
-ifneq ($(INCLUDES), )
-LFTFOUND = $(shell grep '\#*include\ <libft.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(LFTFOUND), )
-LFTFOUND = $(shell grep '\#*include\ \"libft.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(LFTFOUND), )
-LFTFOUND = $(shell grep '\#*include\ <libft.h>' $(DOTC))
-ifeq ($(LFTFOUND), )
-LFTFOUND = $(shell grep '\#*include\ \"libft.h\"' $(DOTC))
-endif
-endif
-ifneq ($(LFTFOUND), )
-ifeq ($(LIBFT), )
-LIBFT = libft
-endif
-ifneq ($(wildcard $(LIBFT)/.), )
-LLIBFT = libft.a
-LFLAGS = $(LIBFT)/libft.a
-ifneq ($(wildcard $(LIBFT)/includes/.), )
-ILIBFT = -I$(LIBFT)/includes
-else
-ifneq ($(wildcard $(LIBFT)/include/.), )
-ILIBFT = -I$(LIBFT)/include
-else
-ifneq ($(wildcard $(LIBFT)/inc/.), )
-ILIBFT = -I$(LIBFT)/inc
-else
-ILIBFT = -I$(LIBFT)
-endif
-endif
-endif
-LDEP = libft
-endif
-endif
-endif
-
-ifneq ($(MLXFOUND), )
-DEP = $(LDEP) mlx
-endif
-
-INCLUDES = $(shell find $(INCDIR) $(MLX) $(LIBFT) -maxdepth 1 -type f | grep -e '\.h$$')
-
-.PHONY: all
-all: auteur $(NAME)
-
-ifneq ($(MAINFOUND), )
-$(NAME): trash $(DEP) allobj
-	@echo "compiling executable"
-	$(CC) $(FLAGS) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
-else
-$(NAME): trash $(DEP) allobj
-	@echo "compiling library"
-	ar -rcs $(NAME) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB)
-	ranlib $(NAME)
-endif
-
-bonus:
-	make re -e "DEFINES = NORM42=0"
-
-ifneq ($(LIBFT), )
-.PHONY: libft
-libft:
-	@echo "making libft"
-	test '$(LIBFT)' != '' && make -C $(LIBFT) --no-print-directory
-endif
-
-ifneq ($(MLXFOUND), )
-.PHONY: mlx
-ifneq ($(MLX), )
-mlx:
-	@echo "making mlx"
-	test '$(MLX)' != '' && make -C $(MLX) --no-print-directory
-else
-mlx:
-	@echo "using standard mlx"
-endif
-endif
-
-.PHONY: allobj
-allobj:
-	@echo "making objects"
-	make makeobj -j$(NPROCS) AOBJ="$(OBJ)" --no-print-directory #--silent
-
-.PHONY: makeobj
-makeobj: $(OBJDIR) $(AOBJ)
-	@echo "objects made"
+libs:
+	$(foreach V, $(CLIB), make -C $(V);)
 
 $(OBJDIR):
-	@echo "creating dir $(OBJDIR)"
-	mkdir $(OBJDIR)
+	mkdir -p $(OBJDIR)
+
+$(NAME): $(OBJDIR) auteur libs $(DOTO)
+	gcc $(FLAGS) $(ARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(FLAGS) -c $< -o $@ $(patsubst %, -I%, $(INCDIR)) $(ILIBFT) $(IMLX)
+	gcc $(FLAGS) $(ARGS) $(INCLUDES) -c $< -o $@
 
-TRASH = $(shell find `pwd` -type f | grep -e "/\._" -e "~$$" -e "\.swp$$" -e "\.DS_Store$$") $(shell find `pwd` -type f | grep -e "/\#" | grep -e "\#$$")
+clean:
+	rm -rf $(DOTO)
 
-.PHONY: trash
-ifneq ('$(TRASH)', ' ')
-trash:
-	@echo "trashing unwanted files"
-	rm -f $(TRASH)
-else
-trash:
-	@echo "no trash to clear"
-endif
-
-.PHONY: clean
-.PHONY: fclean
-
-ifneq ($(LIBFT), )
-ifneq ($(MLX), )
-clean: trash
-	make clean -C $(LIBFT) --no-print-directory
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
-fclean: trash
-	make clean -C $(MLX) --no-print-directory
-	make fclean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
+fclean: clean
 	rm -rf $(NAME)
-else
-clean: trash
-	make clean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
-fclean: trash
-	make fclean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
-endif
-else
-ifneq ($(MLX), )
-clean: trash
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
-fclean: trash
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
-else
-clean: trash
-	rm -rf $(OBJDIR)
-fclean: trash
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
-endif
-endif
 
-.PHONY: re
 re: fclean all
 
 auteur:
-	@echo "creating default auteur file"
-	echo "hmartzol" > auteur
+	echo $(AUTHOR) > auteur
 
-.PHONY: test
-test: $(NAME)
-	./$(NAME) ./resources/test_maps/42.fdf
+norm:
+	clear
+	norminette $(SRCDIR)
+	norminette $(SRCINC)

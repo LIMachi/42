@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/05 19:14:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/13 09:18:27 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@
 #  define EPIPE		32
 #  define EDOM		33
 #  define ERANGE	34
+#  define EINTERN	((unsigned int)-1)
 # endif
 
 # define MAXERRNOD 34
@@ -136,10 +137,39 @@ typedef	union			u_ldouble16c
 # define LITTLE_ENDIAN __ORDER_LITTLE_ENDIAN__
 # define LOCAL_ENDIAN __BYTE_ORDER__
 
-# define MACINTOCH 1
-# define LINUX 2
-# define FREEBSD 4
-# define WINDOWS 8
+# ifndef LINUX
+#  define LINUX 1
+# endif
+
+# if defined(MACINTOCH) && MACINTOCH == LINUX
+#  undef MACINTOCH
+# endif
+
+# ifndef MACINTOCH
+#  define MACINTOCH (LINUX + 1)
+# endif
+
+# if defined(FREEBSD) && (FREEBSD == LINUX || FREEBSD == MACINTOCH)
+#  undef FREEBSD
+# endif
+
+# ifndef FREEBSD
+#  define FREEBSD (MACINTOCH + 1)
+# endif
+
+# ifdef WINDOWS
+#  if WINDOWS == LINUX || WINDOWS == MACINTOCH || WINDOWS == FREEBSD
+#   undef WINDOWS
+#  endif
+# endif
+
+# ifndef WINDOWS
+#  define WINDOWS (FREEBSD + 1)
+# endif
+
+# ifdef OS
+#  undef OS
+# endif
 
 # ifndef OS
 #  if defined(__WINDOWS__)
@@ -307,6 +337,14 @@ typedef	union			u_ldouble16c
 # define M_SQRT1_2L		0.707106781186547524400844362104849039L
 # define RADIAN(x) (M_PI_180 * (x))
 # define DEGRE(x) (M_180_PI * (x))
+
+typedef struct s_2list	t_2list;
+struct s_2list
+{
+	t_2list	*next;
+	t_2list	*prev;
+	void	*data;
+};
 
 /*
 ** extended fd structure, used in wrapers ft_open, ft_close, ft_write, ft_read,
@@ -756,6 +794,7 @@ int						ft_isspace(int c);
 int						ft_isupper(int c);
 int						ft_islower(int c);
 int						ft_ishexa(int c);
+int						ft_isunix(int c);
 
 /*
 ** file tree related function
@@ -902,6 +941,9 @@ float					ft_pow10f(int p);
 double					ft_sqrtd(double v);
 float					ft_sqrtf(float v);
 int						ft_sqrti(int v);
+int						ft_powi(int nbr, int exp);
+float					ft_powf(float nbr, int exp);
+double					ft_powd(double nbr, int exp);
 
 /*
 ** bitmap related functions
@@ -983,6 +1025,7 @@ t_complex				ft_complex_conjugate(const t_complex c);
 t_complex				ft_complex_divide(const t_complex a, const t_complex b);
 t_complex				ft_complex_power(const t_complex c, int power);
 t_complex				ft_complex_normalize(const t_complex c);
+t_complex				ft_complex_square(const t_complex z);
 
 /*
 ** quaternion functions
@@ -1006,7 +1049,7 @@ double					ft_quat_dot_product(const t_quaternion a,
 											const t_quaternion b);
 t_quaternion			ft_quat_rotation_build(double angle,
 												const t_vector vector);
-inline int				ft_quat_equal(const t_quaternion a,
+int						ft_quat_equal(const t_quaternion a,
 									const t_quaternion b);
 
 /*
@@ -1099,5 +1142,10 @@ void					ft_end(void);
 */
 
 t_page_3gs				ft_page(void);
+
+t_2list				*ft_2l_new_node(void *data);
+t_2list				**ft_2l_add_node(t_2list **head, t_2list *node);
+void				*ft_2l_free(t_2list **head);
+void				*ft_2l_free_node(t_2list *node);
 
 #endif

@@ -6,15 +6,15 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:10:16 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 16:23:46 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 21:11:04 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 int	ftx_motion_hook(int x, int y, void *p)
 {
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 	t_window	*window;
 
 	data = ftx_data(GDX_ACCES);
@@ -42,7 +42,7 @@ int	ftx_motion_hook(int x, int y, void *p)
 
 int	ftx_keypress_hook(int key, void *p)
 {
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 
 	data = ftx_data(GDX_ACCES);
 	(void)p;
@@ -62,7 +62,7 @@ int	ftx_keypress_hook(int key, void *p)
 
 int	ftx_keyrelease_hook(int key, void *p)
 {
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 
 	data = ftx_data(GDX_ACCES);
 	(void)p;
@@ -76,7 +76,7 @@ int	ftx_keyrelease_hook(int key, void *p)
 
 int	ftx_buttonpress_hook(int key, int x, int y, void *p)
 {
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 	t_window	*window;
 
 	data = ftx_data(GDX_ACCES);
@@ -88,7 +88,7 @@ int	ftx_buttonpress_hook(int key, int x, int y, void *p)
 		ft_putstr(" - Buttonpress: ");
 		ft_putnbr(key);
 		ft_putchar('\n');
-		data->mice.map[key] = 1;
+		data->mice.map[key] += 1 + (key > 3);
 		if (key == 1)
 			data->mice.drag = ft_point(x, y);
 		ftx_motion_hook(x, y, p);
@@ -98,7 +98,7 @@ int	ftx_buttonpress_hook(int key, int x, int y, void *p)
 
 int	ftx_buttonrelease_hook(int key, int x, int y, void *p)
 {
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 	t_window	*window;
 
 	data = ftx_data(GDX_ACCES);
@@ -107,7 +107,7 @@ int	ftx_buttonrelease_hook(int key, int x, int y, void *p)
 	ft_putstr(" - Buttonrelease: ");
 	ft_putnbr(key);
 	ft_putchar('\n');
-	data->mice.map[key] = 0;
+	data->mice.map[key] -= 1;
 	ftx_motion_hook(x, y, p);
 	return (0);
 }

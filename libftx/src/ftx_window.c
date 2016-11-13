@@ -6,15 +6,15 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:31:07 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 16:39:54 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 20:36:34 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 t_window	*ftx_get_window(int id)
 {
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 	t_window	*tmp;
 
 	data = ftx_data(GDX_ACCES);
@@ -87,7 +87,8 @@ int			ftx_free_window(t_window *win)
 	return (0);
 }
 
-t_window	*ftx_new_window(t_point size, char *name, int wfps)
+t_window	*ftx_new_window(const t_point size, char *name,
+											const unsigned int wfps)
 {
 	t_window	*window;
 	void		*mlx;
@@ -118,11 +119,12 @@ t_window	*ftx_new_window(t_point size, char *name, int wfps)
 
 int			ftx_add_window(t_window *win)
 {
-	t_mlx_data	*data;
+	t_ftx_data	*data;
 	t_window	*tmp;
 	static int	gid = 0;
 
-	data = ftx_data(GDX_ACCES);
+	if ((data = ftx_data(GDX_ACCES)) == NULL)
+		return (-1);
 	++gid;
 	win->id = gid;
 	if (data->windows == NULL)

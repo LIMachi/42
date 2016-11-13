@@ -6,11 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:05:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 16:18:37 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 17:40:53 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 /*
 ** void	ft_putpixelimg(void *mlx, t_image *img, t_point pos, int color)

@@ -6,20 +6,28 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/11/05 19:02:57 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/11/08 18:17:51 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftx.a
 
-SRCDIR = src
-INCDIR = inc
-LIBFT  =
+SRCDIR =
+OBJDIR =
+INCDIR =
+LIBFT  = ../libft
 
 CC = gcc
 
+OS = $(shell uname)
+
 ifeq ($(DEFINES), )
+ifeq ($(OS),Linux) #force the disabling of the norm on linux for stability purpose
 DEFINES = NORM42=0
+endif
+ifeq ($(OS),Darwin)
+DEFINES = NORM42=1
+endif
 endif
 
 ifneq ($(DEFINES), )
@@ -29,7 +37,6 @@ endif
 FLAGS = -Wall -Wextra -Werror $(EFLAGS)
 LIBS =
 
-OS = $(shell uname)
 
 ifeq ($(SRCDIR), )
 ifneq ($(wildcard src/.), )
@@ -39,7 +46,7 @@ SRCDIR = .
 endif
 endif
 
-DOTC = $(shell find $(SRCDIR) -maxdepth 2 -type f | grep -e '\.c$$')
+DOTC = $(shell find $(SRCDIR) -maxdepth 1 -type f | grep -e '\.c$$')
 
 MAINP = main(
 ifneq ($(DOTC), )
@@ -74,14 +81,16 @@ endif
 endif
 endif
 
-INCLUDES = $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$')
+INCLUDES = $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$')
 
+ifeq ($(OBJDIR), )
 OBJDIR = OBJ
+endif
 
 ifneq ($(INCLUDES), )
-MLXFOUND = $(shell grep '\#*include\ <mlx.h>' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+MLXFOUND = $(shell grep '\#*include\ <mlx.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 ifeq ($(MLXFOUND), )
-MLXFOUND = $(shell grep '\#*include\ \"mlx.h\"' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+MLXFOUND = $(shell grep '\#*include\ \"mlx.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 endif
 endif
 ifeq ($(MLXFOUND), )
@@ -92,9 +101,9 @@ endif
 endif
 
 ifneq ($(INCLUDES), )
-MATHFOUND = $(shell grep '\#*include\ <math.h>' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+MATHFOUND = $(shell grep '\#*include\ <math.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 ifeq ($(MATHFOUND), )
-MATHFOUND = $(shell grep '\#*include\ \"math.h\"' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+MATHFOUND = $(shell grep '\#*include\ \"math.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 endif
 endif
 ifeq ($(MATHFOUND), )
@@ -108,9 +117,9 @@ MATHLIB = -lm
 endif
 
 ifneq ($(INCLUDES), )
-PTHFOUND = $(shell grep '\#*include\ <pthread.h>' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+PTHFOUND = $(shell grep '\#*include\ <pthread.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 ifeq ($(PTHFOUND), )
-PTHFOUND = $(shell grep '\#*include\ \"pthread.h\"' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+PTHFOUND = $(shell grep '\#*include\ \"pthread.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 endif
 endif
 ifeq ($(PTHFOUND), )
@@ -126,8 +135,8 @@ endif
 ifeq ($(OS),Linux)
 TASKS = $(shell 1 + $(shell grep -c ^processor /proc/cpuinfo))
 ifneq ($(MLXFOUND), )
-ifneq ($(wildcard minilibx_X11/.),)
-MLX = minilibx_X11
+ifneq ($(wildcard ../minilibx_X11/.),)
+MLX = ../minilibx_X11
 LMLX = libmlx.a
 MLXFLAGS = -lXext -lX11 ../minilibx_X11/libmlx.a
 IMLX = -I../minilibx_X11
@@ -139,8 +148,8 @@ endif
 ifeq ($(OS),Darwin)
 TASKS = $(shell 1 + $(shell system_profiler | awk '/Number Of CPUs/{print $4}{next;}'))
 ifneq ($(MLXFOUND), )
-ifneq ($(wildcard minilibx/.),)
-MLX = minilibx
+ifneq ($(wildcard ../minilibx/.),)
+MLX = ../minilibx
 LMLX = libmlx.a
 MLXFLAGS = -framework OpenGL -framework AppKit ../minilibx/libmlx.a
 IMLX = -I../minilibx
@@ -154,9 +163,9 @@ OBJ = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(DOTC))
 
 ifneq ($(NAME), libft.a)
 ifneq ($(INCLUDES), )
-LFTFOUND = $(shell grep '\#*include\ <libft.h>' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+LFTFOUND = $(shell grep '\#*include\ <libft.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 ifeq ($(LFTFOUND), )
-LFTFOUND = $(shell grep '\#*include\ \"libft.h\"' $(shell find $(INCDIR) -maxdepth 2 -type f | grep -e '\.h$$'))
+LFTFOUND = $(shell grep '\#*include\ \"libft.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
 endif
 endif
 ifeq ($(LFTFOUND), )
@@ -194,7 +203,7 @@ ifneq ($(MLXFOUND), )
 DEP = $(LDEP) mlx
 endif
 
-INCLUDES = $(shell find $(INCDIR) $(MLX) $(LIBFT) -maxdepth 2 -type f | grep -e '\.h$$')
+INCLUDES = $(shell find $(INCDIR) $(MLX) $(LIBFT) -maxdepth 1 -type f | grep -e '\.h$$')
 
 .PHONY: all
 all: auteur $(NAME)
@@ -202,11 +211,11 @@ all: auteur $(NAME)
 ifneq ($(MAINFOUND), )
 $(NAME): trash $(DEP) allobj
 	@echo "compiling executable"
-	$(CC) $(FLAGS) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
+	$(CC) $(FLAGS) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
 else
 $(NAME): trash $(DEP) allobj
 	@echo "compiling library"
-	ar -rcs $(NAME) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB)
+	ar -rcs $(NAME) ../libft/libft.a $(LIBS) $(OBJ)
 	ranlib $(NAME)
 endif
 
@@ -241,12 +250,9 @@ allobj:
 makeobj: $(OBJDIR) $(AOBJ)
 	@echo "objects made"
 
-SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(notdir $(shell find $(SRCDIR) -type d -not -path $(SRCDIR))))
-
-.PHONY: $(OBJDIR)
 $(OBJDIR):
-	@echo "creating dir $(OBJDIR) and subdirs"
-	mkdir -p $(OBJDIR) $(SUBDIRS)
+	@echo "creating dir $(OBJDIR)"
+	mkdir $(OBJDIR)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(FLAGS) -c $< -o $@ $(patsubst %, -I%, $(INCDIR)) $(ILIBFT) $(IMLX)
@@ -307,10 +313,10 @@ endif
 .PHONY: re
 re: fclean all
 
-.PHONY: norm
-norm:
-	norminette $(DOTC)
-
 auteur:
 	@echo "creating default auteur file"
 	echo "hmartzol" > auteur
+
+.PHONY: test
+test: $(NAME)
+	./$(NAME) ./resources/test_maps/42.fdf

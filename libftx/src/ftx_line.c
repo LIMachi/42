@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:22:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:36:11 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 17:46:56 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
-inline static void	sf_line1(t_image *img, t_vtff_la_norme_0 v, t_point color)
+inline static void	sf_line1(t_image *img, t_ftx_line_data v, t_point color)
 {
 	v.cr[1] = (((color.y >> 16) & 0xFF) - v.cr[0]) / (v.d.y >> 1);
 	v.cg[1] = (((color.y >> 8) & 0xFF) - v.cg[0]) / (v.d.y >> 1);
@@ -35,7 +35,7 @@ inline static void	sf_line1(t_image *img, t_vtff_la_norme_0 v, t_point color)
 	}
 }
 
-inline static void	sf_line0(t_image *img, t_vtff_la_norme_0 v, t_point color)
+inline static void	sf_line0(t_image *img, t_ftx_line_data v, t_point color)
 {
 	v.cr[1] = (((color.y >> 16) & 0xFF) - v.cr[0]) / (v.d.x >> 1);
 	v.cg[1] = (((color.y >> 8) & 0xFF) - v.cg[0]) / (v.d.x >> 1);
@@ -60,7 +60,7 @@ inline static void	sf_line0(t_image *img, t_vtff_la_norme_0 v, t_point color)
 
 void				ftx_line(t_image *img, t_point a, t_point b, t_point color)
 {
-	t_vtff_la_norme_0	v;
+	t_ftx_line_data	v;
 
 	if (a.x == b.x || a.y == b.y)
 	{

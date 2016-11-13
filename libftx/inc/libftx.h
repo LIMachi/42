@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/05 19:30:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/13 11:09:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define LIBFTX_H
 
 # include <mlx.h>
+# include <ftx_macro.h>
+# include <libft.h>
 
 # if !defined(NORM_42) || NORM_42 == 0
 #  include <time.h>
@@ -45,15 +47,15 @@ typedef struct			s_window
 	t_point				size;
 	t_image				*vbuffer;
 	t_image				*images;
-	int					fps;
-	int					wfps;
+	unsigned int		fps;
+	unsigned int		wfps;
 	struct s_window		*next;
 	struct s_window		*prev;
 	int					id;
 	t_int_func_undef	up_func;
-	int					frames;
-	int					frameloss;
-	int					last_frame;
+	unsigned int		frames;
+	unsigned int		frameloss;
+	unsigned int		last_frame;
 	struct timespec		last_time;
 	int					use_code;
 	void				*data;
@@ -75,7 +77,7 @@ typedef struct			s_line_ref
 	int					end;
 }						t_line_ref;
 
-typedef struct			s_mlx_data
+typedef struct			s_ftx_data
 {
 	void				*mlx;
 	t_window			*windows;
@@ -83,7 +85,7 @@ typedef struct			s_mlx_data
 	int					keymap[KEYMAPSIZE];
 	t_mice				mice;
 	int					update;
-}						t_mlx_data;
+}						t_ftx_data;
 
 /*
 ** a button is an interactive immage (can be clicked, toggle, holded, slided,
@@ -205,6 +207,18 @@ typedef struct			s_button_text_box
 	t_int_func_undef	get_text;
 }						t_button_text_box;
 
+typedef struct			s_ftx_line_data
+{
+	int					v;
+	t_point				a;
+	t_point				b;
+	t_point				d;
+	t_point				s;
+	double				cr[2];
+	double				cg[2];
+	double				cb[2];
+}						t_ftx_line_data;
+
 /*
 ** t_font				*font;
 */
@@ -212,7 +226,8 @@ typedef struct			s_button_text_box
 t_window				*ftx_get_window(int id);
 int						ftx_free_all_windows(t_window *win);
 int						ftx_free_window(t_window *win);
-t_window				*ftx_new_window(t_point size, char *name, int wfps);
+t_window				*ftx_new_window(const t_point size, char *name,
+										const unsigned int wfps);
 int						ftx_add_window(t_window *win);
 
 t_image					*ftx_get_image(t_window *win, int id);
@@ -252,13 +267,19 @@ void					ftx_vertical_line(t_image *img, t_point a, t_point b,
 																t_point color);
 void					ftx_line(t_image *img, t_point a, t_point b,
 																t_point color);
-t_mlx_data				*ftx_data(int flag);
+t_ftx_data				*ftx_data(int flag);
 
 int						ftx_color_multiply(int color, double mult);
 
 int						ftx_update(void *ptr);
 void					ftx_error(char *str);
-void					sf_update(int up, t_fdf *fdf, t_image *img,
-													t_window *win);
-
+t_ftx_data				*init_mlx_data(void);
+void					ftx_start(void);
+t_window				*ftx_create_window(char *name, const t_point size,
+						const unsigned int fps, t_int_func_undef image_filler);
+t_ftx_data				*ftx_init(void);
+int						ftx_is_button_press(int button_code);
+void					ftx_print_nbr(t_image *img, t_point pos, int color,
+										int nbr);
+t_point					ftx_mice_position(void);
 #endif

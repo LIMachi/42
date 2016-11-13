@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/05 19:10:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/05 19:30:19 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 21:01:39 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,6 @@
 #  define KEY_Z 122
 #  define KEY_SHIFT_LEFT 65505
 #  define KEY_SHIFT_RIGHT 65506
-#  define MICE_SCROLL_UP 4
-#  define MICE_SCROLL_DOWN 5
 # elif OS == MACINTOCH
 #  define KEYMAPSIZE 280
 #  define KEY_PAD_PLUS 69
@@ -154,6 +152,12 @@
 # else
 #  error "currently unsuported OS"
 # endif
+
+# define MICE_LEFT	-1
+# define MICE_CENTER -2
+# define MICE_RIGHT -3
+# define MICE_SCROLL_UP -4
+# define MICE_SCROLL_DOWN -5
 
 # define FTX_BUTTON 0
 # define FTX_BUTTON_CLICK 1

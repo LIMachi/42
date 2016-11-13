@@ -6,11 +6,11 @@
 #    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/11/08 18:10:22 by hmartzol         ###   ########.fr        #
+#    Updated: 2016/11/08 18:19:00 by hmartzol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME =
+NAME = fractol
 
 SRCDIR =
 OBJDIR =
@@ -132,6 +132,8 @@ ifneq ($(PTHFOUND), )
 PTHLIB = -lpthread
 endif
 
+MLXFOUND = OK
+
 ifeq ($(OS),Linux)
 TASKS = $(shell 1 + $(shell grep -c ^processor /proc/cpuinfo))
 ifneq ($(MLXFOUND), )
@@ -211,7 +213,7 @@ all: auteur $(NAME)
 ifneq ($(MAINFOUND), )
 $(NAME): trash $(DEP) allobj
 	@echo "compiling executable"
-	$(CC) $(FLAGS) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
+	$(CC) $(FLAGS) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) ../libftx/libftx.a $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
 else
 $(NAME): trash $(DEP) allobj
 	@echo "compiling library"
@@ -255,7 +257,7 @@ $(OBJDIR):
 	mkdir $(OBJDIR)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(FLAGS) -c $< -o $@ $(patsubst %, -I%, $(INCDIR)) $(ILIBFT) $(IMLX)
+	$(CC) $(FLAGS) -c $< -o $@ $(patsubst %, -I%, $(INCDIR)) -I../libftx/inc $(ILIBFT) $(IMLX)
 
 TRASH = $(shell find `pwd` -type f | grep -e "/\._" -e "~$$" -e "\.swp$$" -e "\.DS_Store$$") $(shell find `pwd` -type f | grep -e "/\#" | grep -e "\#$$")
 

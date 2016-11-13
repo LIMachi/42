@@ -6,11 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/02 12:48:34 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 12:48:48 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 17:30:38 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 void	ftx_pixel(t_image *img, int x, int y, int color)
 {

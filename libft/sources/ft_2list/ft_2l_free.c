@@ -1,34 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   ft_2l_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 04:59:44 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/13 09:20:34 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/13 09:20:47 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
 /*
-** try to find str2 in str1, will return a pointer to the occurence of str2 in
-** str1 if found, and NULL if str2 is not found
+** wanring: do not touch data in nodes, you must free allocated data manually
+** or use recursivelly ft_free(ft_2l_free_node(node))
 */
 
-char	*ft_strstr(char *str1, char *str2)
+void	*ft_2l_free(t_2list **head)
 {
-	char *p_tmp;
+	t_2list	*tmp;
 
-	if (!*str2)
-		return (str1);
-	p_tmp = str1;
-	while ((p_tmp = ft_strchr(p_tmp, (int)*str2)))
-	{
-		if (!ft_memcmp(str2, p_tmp, ft_strlen(str2)))
-			return (p_tmp);
-		++p_tmp;
-	}
+	tmp = *head;
+	while (tmp != NULL)
+		if (tmp->next != NULL)
+		{
+			tmp = tmp->next;
+			ft_free(tmp->prev);
+		}
+		else
+		{
+			ft_free(tmp);
+			tmp = NULL;
+		}
 	return (NULL);
 }

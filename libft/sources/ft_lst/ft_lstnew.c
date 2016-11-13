@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:10:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/13 03:30:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 
 	if (content == NULL)
 		content_size = 0;
-	if ((out = (t_list *)malloc(sizeof(t_list))) == NULL)
+	if ((out = (t_list *)ft_malloc(sizeof(t_list))) == NULL)
 		return (NULL);
 	if (content_size)
-		if ((tmp = (char *)malloc(sizeof(char) * content_size)) == NULL)
+		if ((tmp = (char *)ft_malloc(sizeof(char) * content_size)) == NULL)
 			return (NULL);
 	if (content == NULL)
 		out->data = NULL;

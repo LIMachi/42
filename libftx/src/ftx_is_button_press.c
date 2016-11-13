@@ -1,34 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   ftx_is_button_press.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 04:59:44 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/08 20:42:57 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/09 17:20:09 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-/*
-** try to find str2 in str1, will return a pointer to the occurence of str2 in
-** str1 if found, and NULL if str2 is not found
-*/
-
-char	*ft_strstr(char *str1, char *str2)
+int	ftx_is_button_press(int button_code)
 {
-	char *p_tmp;
+	t_ftx_data	*data;
 
-	if (!*str2)
-		return (str1);
-	p_tmp = str1;
-	while ((p_tmp = ft_strchr(p_tmp, (int)*str2)))
-	{
-		if (!ft_memcmp(str2, p_tmp, ft_strlen(str2)))
-			return (p_tmp);
-		++p_tmp;
-	}
-	return (NULL);
+	if ((data = ftx_data(GDX_ACCES)) == NULL)
+		return (-1);
+	if (button_code < 0)
+		return (data->mice.map[-button_code]);
+	return (data->keymap[button_code]);
 }

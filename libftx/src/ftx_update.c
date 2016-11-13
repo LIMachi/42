@@ -6,45 +6,48 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/02 08:44:01 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 08:55:28 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/09 17:26:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 #if NORM42 == 0
 
-static int	ftx_update0(t_window *tmpwin, int f, struct timespec time)
+static int	ftx_update0(t_window *tmpwin, int f, struct timespec time,
+															void *mlx)
 {
 	t_image	*tmpimg;
 
 	tmpwin->last_frame = f;
 	tmpwin->last_time = time;
-	ftx_clear_img(tmpwin->vbuffer);
-	if (tmpwin->up_func != NULL)
-		tmpwin->up_func(tmpwin);
-	tmpimg = tmpwin->images;
-	while (tmpimg != NULL)
+	if (tmpwin->up_func == NULL || tmpwin->up_func(tmpwin))
 	{
-		if (tmpimg->fill_func)
-			tmpimg->fill_func(tmpwin, tmpimg);
-		if (tmpimg->update && !(tmpimg->update = 0))
-			ftx_put_img_to_img(tmpwin->vbuffer, tmpimg, 0);
-		tmpimg = tmpimg->next;
+		ftx_clear_img(tmpwin->vbuffer);
+		tmpimg = tmpwin->images;
+		while (tmpimg != NULL)
+		{
+			if (tmpimg->fill_func)
+				tmpimg->fill_func(tmpwin, tmpimg);
+			if (tmpimg->update)
+				ftx_put_img_to_img(tmpwin->vbuffer, tmpimg, 0);
+			tmpimg = tmpimg->next;
+		}
+		mlx_put_image_to_window(mlx, tmpwin->win,
+			tmpwin->vbuffer->ptr, tmpwin->vbuffer->pos.x,
+			tmpwin->vbuffer->pos.y);
 	}
-	mlx_put_image_to_window(((t_mlx_data*)ptr)->mlx, tmpwin->win,
-		tmpwin->vbuffer->ptr, tmpwin->vbuffer->pos.x,
-		tmpwin->vbuffer->pos.y);
+	return (0);
 }
 
 int			ftx_update(void *ptr)
 {
 	t_window		*tmpwin;
 	struct timespec	time;
-	int				f;
+	unsigned int	f;
 
 	clock_gettime(CLOCK_REALTIME, &time);
-	tmpwin = ((t_mlx_data*)ptr)->windows;
+	tmpwin = ((t_ftx_data*)ptr)->windows;
 	while (tmpwin != NULL)
 	{
 		f = time.tv_nsec / (1 + 1000000000L / tmpwin->wfps);
@@ -59,10 +62,11 @@ int			ftx_update(void *ptr)
 			}
 			else
 				tmpwin->frames++;
-			ftx_update0(tmpwin, f, time);
+			ftx_update0(tmpwin, f, time, ((t_ftx_data*)ptr)->mlx);
 		}
 		tmpwin = tmpwin->next;
 	}
+	//ft_bzero(((t_ftx_data*)ptr)->mice.map, 10 * sizeof(int));
 	return (0);
 }
 
@@ -77,24 +81,25 @@ int			ftx_update(void *ptr)
 	t_window		*tmpwin;
 	t_image			*tmpimg;
 
-	tmpwin = ((t_mlx_data*)ptr)->windows;
+	tmpwin = ((t_ftx_data*)ptr)->windows;
 	while (tmpwin != NULL)
 	{
-		ftx_clear_img(tmpwin->vbuffer);
-		if (tmpwin->up_func != NULL)
-			tmpwin->up_func(tmpwin);
-		tmpimg = tmpwin->images;
-		while (tmpimg != NULL)
+		if (tmpwin->up_func == NULL || tmpwin->up_func(tmpwin))
 		{
-			if (tmpimg->fill_func)
-				tmpimg->fill_func(tmpwin, tmpimg);
-			if (tmpimg->update && !(tmpimg->update = 0))
-				ftx_put_img_to_img(tmpwin->vbuffer, tmpimg, 0);
-			tmpimg = tmpimg->next;
+			ftx_clear_img(tmpwin->vbuffer);
+			tmpimg = tmpwin->images;
+			while (tmpimg != NULL)
+			{
+				if (tmpimg->fill_func)
+					tmpimg->fill_func(tmpwin, tmpimg);
+				if (tmpimg->update)
+					ftx_put_img_to_img(tmpwin->vbuffer, tmpimg, 0);
+				tmpimg = tmpimg->next;
+			}
+			mlx_put_image_to_window(((t_ftx_data*)ptr)->mlx, tmpwin->win,
+				tmpwin->vbuffer->ptr, tmpwin->vbuffer->pos.x,
+				tmpwin->vbuffer->pos.y);
 		}
-		mlx_put_image_to_window(((t_mlx_data*)ptr)->mlx, tmpwin->win,
-			tmpwin->vbuffer->ptr, tmpwin->vbuffer->pos.x,
-			tmpwin->vbuffer->pos.y);
 		tmpwin = tmpwin->next;
 	}
 	return (0);

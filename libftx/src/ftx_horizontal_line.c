@@ -6,11 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/02 12:46:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:39:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 17:40:44 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 inline static void	sf_horizontal_line(t_image *img, t_point a, t_point b,
 															t_point color)

@@ -6,11 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 08:33:15 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/31 16:16:53 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/08 20:35:56 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ftx.h>
+#include <libftx.h>
 
 t_image	*ftx_get_image(t_window *win, int id)
 {
