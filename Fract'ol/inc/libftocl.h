@@ -14,7 +14,7 @@
 
 #if OS == LINUX
 # include <CL/opencl.h>
-#elif OS == MAC
+#elif OS == MACINTOCH
 # include <OpenCL/opencl.h>
 #else
 # error "unsuported os"

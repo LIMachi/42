@@ -149,6 +149,7 @@
 #  define KEY_SPACE 49
 #  define KEY_E 14
 #  define KEY_Q 12
+#  define KEY_I 34
 # else
 #  error "currently unsuported OS"
 # endif

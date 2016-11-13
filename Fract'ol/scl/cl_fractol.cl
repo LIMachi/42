@@ -2,7 +2,7 @@ typedef struct
 {
 	float r;
 	float i;
-}	complex;
+}	comp;
 
 typedef struct	s_fractol_args
 {
@@ -17,18 +17,24 @@ typedef struct	s_fractol_args
 	float			view_port_down;
 }				t_fractol_args;
 
-complex	comp_sqr(complex z)
+comp	comp_sqr(comp z);
+comp	comp_add(comp a, comp b);
+float	ft_absf(float v);
+float	ft_modf(float v, float m);
+int		ft_hsv2rgb(float hue, float saturation, float value);
+
+comp	comp_sqr(comp z)
 {
-	complex out;
+	comp out;
 
 	out.r = z.r * z.r - z.i * z.i;
 	out.i = 2.0f * z.r * z.i;
 	return (out);
 }
 
-complex	comp_add(complex a, complex b)
+comp	comp_add(comp a, comp b)
 {
-	complex	out;
+	comp	out;
 
 	out.r = a.r + b.r;
 	out.i = a.i + b.i;
@@ -54,7 +60,7 @@ float	ft_modf(float v, float m)
 	return (v);
 }
 
-int	ft_hsv2rgb(float hue, float saturation, float value)
+int		ft_hsv2rgb(float hue, float saturation, float value)
 {
 	float	c;
 	float	x;
@@ -85,15 +91,15 @@ __kernel void	mandelbrot( __global const t_fractol_args *args,
 	float x = args->view_port_left + (args->view_port_right - args->view_port_left) * ((float)(kindex % args->width) / (float)args->width);
 	float y = args->view_port_up + (args->view_port_down - args->view_port_up) * ((float)(kindex / args->width) / (float)args->length);
 
-	complex	c;
+	comp	c;
 	c.r = x;
 	c.i = y;
-	complex	z;
+	comp	z;
 	z.r = args->z0r;
 	z.i = args->z0i;
 	int		i =			-1;
 
-	while (z.r * z.r + z.i * z.i < 4 && ++i < args->iterations)
+	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)++i < args->iterations)
 		z = comp_add(comp_sqr(z), c);
 	color[kindex] = ft_hsv2rgb(((float)i / (float)args->iterations) * 360.0f, 1.0f, 1.0f);
 }

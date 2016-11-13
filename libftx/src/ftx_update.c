@@ -12,7 +12,7 @@
 
 #include <libftx.h>
 
-#if NORM42 == 0
+#if defined(NORM_42) && NORM_42 == 0
 
 static int	ftx_update0(t_window *tmpwin, int f, struct timespec time,
 															void *mlx)

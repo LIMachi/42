@@ -36,13 +36,13 @@ endif
 ifeq ($(shell uname),Darwin)
 
 #path to external includes
-PINC = ../libft/includes ../libftx/inc ../minilibx_X11
+PINC = ../libft/includes ../libftx/inc ../minilibx_macos
 #path to libs to compile
-CLIB = ../libft ../libftx
+CLIB = ../libft ../libftx ../minilibx_macos
 #exact path of lib files to add in source
-LIB = ../libftx/libftx.a ../libft/libft.a
+LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_macos/libmlx.a
 #args passed to gcc depending on the os
-ARGS = -framework OpenCL -framework OpenGL -framework AppKit -lmlx
+ARGS = -framework OpenCL -framework OpenGL -framework AppKit
 
 endif
 
@@ -73,7 +73,7 @@ $(NAME): $(OBJDIR) auteur libs $(DOTO)
 	gcc $(FLAGS) $(ARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	gcc $(FLAGS) $(ARGS) $(INCLUDES) -c $< -o $@
+	gcc $(FLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -rf $(DOTO)
