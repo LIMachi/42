@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:52:49 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/14 09:20:01 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	ft_global_error(int flag, long data)
 	if ((flag == ERROR_PRINT) && error)
 	{
 		ft_putstr_fd((char*)data, 2);
+		ft_log((char*)data);
 		if ((tmp_str = strerror(error)) == NULL)
 		{
 			ft_putstr_fd("Unknown error number: ", 2);
@@ -35,7 +36,7 @@ int	ft_global_error(int flag, long data)
 		else
 			ft_putendl_fd(strerror(error), 2);
 	}
-	return (error);
+	EXIT(error);
 }
 
 #else
@@ -62,6 +63,7 @@ int	ft_global_error(int flag, long data)
 			ft_putchar_fd('\n', 2);
 		}
 	}
-	return (error);
+	EXIT(error);
 }
+
 #endif

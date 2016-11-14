@@ -15,12 +15,11 @@ ITEMS = ft_fractol \
 		ftocl_make_program \
 		ftocl_end
 
-#gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror
-
 #variables for Linux
 ifeq ($(shell uname),Linux)
 
+#gcc/clang flags
+CFLAGS = -Wall -Wextra -Werror -Wno-deprecated -Wno-deprecated-declarations
 #path to external includes
 PINC = ../libft/includes ../libftx/inc ../minilibx_X11
 #path to libs to compile
@@ -28,13 +27,15 @@ CLIB = ../libft ../libftx ../minilibx_X11
 #exact path of lib files to add in source
 LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_X11/libmlx.a
 #args passed to gcc depending on the os
-ARGS = -Wno-deprecated -Wno-deprecated-declarations -lOpenCL -ICL -lXext -lX11
+ARGS = -lOpenCL -ICL -lXext -lX11
 
 endif
 
 #variables for Max
 ifeq ($(shell uname),Darwin)
 
+#gcc/clang flags
+CFLAGS = -Wall -Wextra -Werror
 #path to external includes
 PINC = ../libft/includes ../libftx/inc ../minilibx_macos
 #path to libs to compile

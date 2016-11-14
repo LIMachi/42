@@ -6,11 +6,26 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/30 18:52:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:09:42 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/14 09:56:46 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
+
+static void	sf_putdata(void *data, size_t size)
+{
+	char	*buff;
+
+	write(1, data, size);
+	if ((*ft_global_flags() & GF_FORCE_LOG) == GF_FORCE_LOG)
+	{
+		buff = (char*)ft_malloc(size + 1);
+		ft_memcpy(buff, data, size);
+		buff[size] = '\0';
+		ft_global_log(LOG_SET | LOG_STORE, buff);
+		ft_free(buff);
+	}
+}
 
 void	ft_putlist(t_list **sl)
 {
@@ -30,7 +45,7 @@ void	ft_putlist(t_list **sl)
 			if (current->content_size == 0 || current->data == NULL)
 				ft_putstr("(NULL)");
 			else
-				write(1, current->data, current->content_size);
+				sf_putdata(current->data, current->content_size);
 			ft_putstr("\n\n");
 			current = current->next;
 		}

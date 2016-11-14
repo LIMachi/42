@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 09:18:27 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/14 09:37:42 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,25 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <stdint.h>
+
+/*
+** intern flags to modify the beaving of certain functions
+*/
+
+# define GF_USE_LOG (0x0000000000000001ull)
+# define GF_FORCE_LOG (GF_USE_LOG | 0x0000000000000002ull)
+
+# define DEFAULT_FLAGS (GF_FORCE_LOG)
+
+/*
+** *****************************************************************************
+*/
+
+# if 1
+#  define EXIT(v) exit (v)
+# else
+#  define EXIT(v) return (v)
+#endif
 
 /*
 ** optimisation flags to replace code with macro, assembler or other code
@@ -1147,5 +1166,11 @@ t_2list				*ft_2l_new_node(void *data);
 t_2list				**ft_2l_add_node(t_2list **head, t_2list *node);
 void				*ft_2l_free(t_2list **head);
 void				*ft_2l_free_node(t_2list *node);
+
+/*
+** intern flags to modify the beaving of certain functions
+*/
+
+uint64_t			*ft_global_flags(void);
 
 #endif

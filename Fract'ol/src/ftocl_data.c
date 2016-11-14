@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:00:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 02:50:08 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/14 10:08:31 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@ static void CL_CALLBACK	notify(const char *errinfo, const void *private_info,
 	(void)private_info;
 	(void)cb;
 	(void)user_data;
+	*ft_global_flags() |= GF_FORCE_LOG;
+	ft_putendl("_____________________________________________________________");
 	ft_putstr("OpenCL notify error (nb: ");
 	ft_putnbr(n);
 	ft_putstr("): ");
 	ft_putstr(errinfo);
 	ft_putchar('\n');
+	ft_putendl("_____________________________________________________________");
 }
 
 t_ocl_data	*ftocl_data(void)
@@ -36,7 +39,7 @@ t_ocl_data	*ftocl_data(void)
 
 	if (!(data.platform && data.device && data.context && data.queue))
 	{
-		ft_putstr("initializing OpenCL environement...\n");
+		ft_log("Initializing OpenCL environement...\n");
 		clGetPlatformIDs(0, NULL, &n);
 		if (n == 0)
 			ft_error(EINTERN, "No opencl platform found");

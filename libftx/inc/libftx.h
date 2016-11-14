@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 11:09:50 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/14 09:04:56 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct			s_image
 	int					endian;
 	int					*data;
 	t_point				pos;
+	t_point				cursor;
 	struct s_image		*next;
 	struct s_image		*prev;
 	int					id;
@@ -236,10 +237,8 @@ int						ftx_free_image(t_image *img);
 int						ftx_free_all_images(t_image *img);
 void					ftx_add_image(t_window *win, t_image *img, int id);
 
-void					ftx_print_char(t_image *img, t_point pos, int color,
-										char c);
-void					ftx_print_str(t_image *img, t_point pos, int color,
-										char *str);
+size_t					ftx_write(t_image *img, char *str, size_t count,
+																int color);
 
 void					ftx_clear_img(t_image *img);
 void					ftx_put_img_to_img(t_image *out, t_image *img,
@@ -253,12 +252,6 @@ int						ftx_buttonpress_hook(int key, int x, int y, void *p);
 int						ftx_buttonrelease_hook(int key, int x, int y, void *p);
 
 void					ftx_init_mlx_data(void);
-
-t_point					ftx_get_width(char c);
-
-int						sf_clip(t_point *a, t_point *b, t_point c, t_point d);
-int						sf_color_mix(int s, int e, t_fix f);
-void					ftx_putpixelimg(t_image *img, t_point pos, int color);
 
 void					ftx_pixel(t_image *img, int x, int y, int color);
 void					ftx_horizontal_line(t_image *img, t_point a, t_point b,

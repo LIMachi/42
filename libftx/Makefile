@@ -10,7 +10,7 @@ INCDIR = ./inc
 OBJDIR = ./OBJ
 
 #name of files to compile without the extension
-ITEMS = color_multiply \
+ITEMS = ftx_color_multiply \
 		ftx_ascii \
 		ftx_button \
 		ftx_create_window \

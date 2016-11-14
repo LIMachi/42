@@ -55,7 +55,7 @@ float	ft_modf(float v, float m)
 	m = ft_absf(m);
 	while (v < 0.0f)
 		v += m;
-	while (v > m)
+	while (v >= m)
 		v -= m;
 	return (v);
 }
@@ -69,17 +69,17 @@ int		ft_hsv2rgb(float hue, float saturation, float value)
 	float	tmp[3];
 
 	c = value * saturation;
-	h = hue / 60;
-	x = c * (1.0 - ft_absf(ft_modf(h, 2.0) - 1.0));
+	h = ft_modf(hue, 360.0f) / 60.0f;
+	x = c * (1.0f - ft_absf(ft_modf(h, 2.0f) - 1.0f));
 	m = value - c;
-	tmp[0] = m + c * ((h >= 0 && h < 1) || (h >= 5 && h < 6))
-			+ x * ((h >= 1 && h < 2) || (h >= 4 && h < 5));
-	tmp[1] = m + c * (h >= 1 && h < 3)
-			+ x * ((h >= 0 && h < 1) || (h >= 3 && h < 4));
-	tmp[2] = m + c * (h >= 3 && h < 5)
-			+ x * ((h >= 2 && h < 3) || (h >= 5 && h < 6));
-	return (((int)(tmp[0] * 255) << 16) | ((int)(tmp[1] * 255) << 8) |
-			(int)(tmp[2] * 255));
+	tmp[0] = m + c * ((h >= 0.0f && h < 1.0f) || (h >= 5.0f && h < 6.0f))
+			+ x * ((h >= 1.0f && h < 2.0f) || (h >= 4.0f && h < 5.0f));
+	tmp[1] = m + c * (h >= 1.0f && h < 3.0f)
+			+ x * ((h >= 0.0f && h < 1.0f) || (h >= 3.0f && h < 4.0f));
+	tmp[2] = m + c * (h >= 3.0f && h < 5.0f)
+			+ x * ((h >= 2.0f && h < 3.0f) || (h >= 5.0f && h < 6.0f));
+	return (((int)(tmp[0] * 255.0f) << 16) | ((int)(tmp[1] * 255.0f) << 8) |
+			(int)(tmp[2] * 255.0f));
 }
 
 __kernel void	mandelbrot( __global const t_fractol_args *args,
@@ -101,5 +101,6 @@ __kernel void	mandelbrot( __global const t_fractol_args *args,
 
 	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)++i < args->iterations)
 		z = comp_add(comp_sqr(z), c);
-	color[kindex] = ft_hsv2rgb(((float)i / (float)args->iterations) * 360.0f, 1.0f, 1.0f);
+	float thing = ((float)i / (float)args->iterations);
+	color[kindex] = ft_hsv2rgb(i, thing, 0.97f * thing + 0.03f);
 }
