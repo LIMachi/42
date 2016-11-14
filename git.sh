@@ -9,6 +9,7 @@ make clean -C minilibx_X11
 make clean -C minilibx_macos
 find . -name ".DS_Store" -delete
 find . -name "~*" -delete
+find . -name "log.txt" -delete
 git add *
 git status
 git commit -m "`date`"
