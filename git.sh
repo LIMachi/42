@@ -11,3 +11,5 @@ find . -name ".DS_Store" -delete
 find . -name "~*" -delete
 git add *
 git status
+git commit -m "`date`"
+git push
