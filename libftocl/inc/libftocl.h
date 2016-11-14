@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 09:53:54 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 09:36:39 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/14 11:44:28 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,3 +63,11 @@ typedef struct		s_ocl_data
 t_ocl_data			*ftocl_data(void);
 cl_int				ftocl_make_program(uint64_t *id, const char *src);
 void				ftocl_end(void);
+void				ftocl_clear_current_kernel_arg(cl_uint index);
+void				ftocl_read_current_kernel_arg(cl_uint index, void *ptr);
+int					ftocl_set_current_kernel_arg(cl_mem_flags flags,
+										cl_uint index, size_t size, void *ptr);
+int					ftocl_set_current_kernel(uint64_t *kernel_id);
+int					ftocl_set_current_program(uint64_t *program_id);
+void				ftocl_start_current_kernel(cl_uint work_dim,
+				const size_t *global_work_size, const size_t *local_work_size);

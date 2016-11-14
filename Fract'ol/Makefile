@@ -22,7 +22,7 @@ PINC = ../libft/includes ../libftx/inc ../minilibx_X11 ../libftocl/inc
 #path to libs to compile
 CLIB = ../libft ../libftx ../minilibx_X11 ../libftocl
 #exact path of lib files to add in source
-LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_X11/libmlx.a ../libftocl/libftocl.a
+LIB = ../libftx/libftx.a ../libftocl/libftocl.a ../libft/libft.a ../minilibx_X11/libmlx.a
 #args passed to gcc depending on the os
 ARGS = -lOpenCL -ICL -lXext -lX11
 
@@ -38,7 +38,7 @@ PINC = ../libft/includes ../libftx/inc ../minilibx_macos ../libftocl/inc
 #path to libs to compile
 CLIB = ../libft ../libftx ../minilibx_macos ../libftocl
 #exact path of lib files to add in source
-LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_macos/libmlx.a ../libftocl/libftocl.a
+LIB = ../libftx/libftx.a ../libftocl/libftocl.a ../libft/libft.a ../minilibx_macos/libmlx.a
 #args passed to gcc depending on the os
 ARGS = -framework OpenCL -framework OpenGL -framework AppKit
 
