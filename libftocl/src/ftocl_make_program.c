@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:02:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 09:14:58 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/14 11:13:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libftocl.h>
 
-static t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
+static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 												char *kernel_start)
 {
 	char	*kernel_end;
@@ -45,7 +45,7 @@ static t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 	return (out);
 }
 
-cl_int				ftocl_make_program(uint64_t *id, const char *src)
+cl_int						ftocl_make_program(uint64_t *id, const char *src)
 {
 	cl_int			err;
 	t_ocl_data		*data;

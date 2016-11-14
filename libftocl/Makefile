@@ -2,7 +2,7 @@
 AUTHOR = hmartzol
 
 #name of compiled file
-NAME = libftx.a
+NAME = libftocl.a
 
 #path to folder containing source files, project header and resulting objects
 SRCDIR = ./src
@@ -10,39 +10,29 @@ INCDIR = ./inc
 OBJDIR = ./OBJ
 
 #name of files to compile without the extension
-ITEMS = ftx_color_multiply \
-		ftx_ascii \
-		ftx_button \
-		ftx_create_window \
-		ftx_data \
-		ftx_error \
-		ftx_horizontal_line \
-		ftx_image \
-		ftx_img \
-		ftx_init \
-		ftx_input_hooks \
-		ftx_is_button_press \
-		ftx_line \
-		ftx_mice_position \
-		ftx_pixel \
-		ftx_start \
-		ftx_update \
-		ftx_vertical_line \
-		ftx_window
+ITEMS = ftocl_clear_current_kernel_arg \
+		ftocl_start_current_kernel \
+		ftocl_read_current_kernel_arg \
+		ftocl_end \
+		ftocl_make_program \
+		ftocl_set_current_kernel \
+		ftocl_data \
+		ftocl_set_current_program \
+		ftocl_set_current_kernel_arg
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -Wno-deprecated -Wno-deprecated-declarations
 #path to external includes
-PINC = ../libft/includes ../minilibx_X11
+PINC = ../libft/includes
 #path to libs to compile
-CLIB = ../libft ../minilibx_X11
+CLIB = ../libft
 #exact path of lib files to add in source
-LIB = ../libft/libft.a ../minilibx_X11/libmlx.a
+LIB = ../libft/libft.a
 #args passed to gcc depending on the os
-ARGS = -lXext -lX11
+ARGS = -lOpenCL -ICL
 
 endif
 
@@ -50,15 +40,15 @@ endif
 ifeq ($(shell uname),Darwin)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra
 #path to external includes
-PINC = ../libft/includes ../minilibx_macos
+PINC = ../libft/includes
 #path to libs to compile
-CLIB = ../libft ../minilibx_macos
+CLIB = ../libft
 #exact path of lib files to add in source
-LIB = ../libft/libft.a ../minilibx_macos/libmlx.a
+LIB = ../libft/libft.a
 #args passed to gcc depending on the os
-ARGS = -framework OpenGL -framework AppKit
+ARGS = -framework OpenCL
 
 endif
 

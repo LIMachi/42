@@ -10,10 +10,7 @@ INCDIR = ./inc
 OBJDIR = ./OBJ
 
 #name of files to compile without the extension
-ITEMS = ft_fractol \
-		ftocl_data \
-		ftocl_make_program \
-		ftocl_end
+ITEMS = ft_fractol
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
@@ -21,11 +18,11 @@ ifeq ($(shell uname),Linux)
 #gcc/clang flags
 CFLAGS = -Wall -Wextra -Werror -Wno-deprecated -Wno-deprecated-declarations
 #path to external includes
-PINC = ../libft/includes ../libftx/inc ../minilibx_X11
+PINC = ../libft/includes ../libftx/inc ../minilibx_X11 ../libftocl/inc
 #path to libs to compile
-CLIB = ../libft ../libftx ../minilibx_X11
+CLIB = ../libft ../libftx ../minilibx_X11 ../libftocl
 #exact path of lib files to add in source
-LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_X11/libmlx.a
+LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_X11/libmlx.a ../libftocl/libftocl.a
 #args passed to gcc depending on the os
 ARGS = -lOpenCL -ICL -lXext -lX11
 
@@ -37,11 +34,11 @@ ifeq ($(shell uname),Darwin)
 #gcc/clang flags
 CFLAGS = -Wall -Wextra -Werror
 #path to external includes
-PINC = ../libft/includes ../libftx/inc ../minilibx_macos
+PINC = ../libft/includes ../libftx/inc ../minilibx_macos ../libftocl/inc
 #path to libs to compile
-CLIB = ../libft ../libftx ../minilibx_macos
+CLIB = ../libft ../libftx ../minilibx_macos ../libftocl
 #exact path of lib files to add in source
-LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_macos/libmlx.a
+LIB = ../libftx/libftx.a ../libft/libft.a ../minilibx_macos/libmlx.a ../libftocl/libftocl.a
 #args passed to gcc depending on the os
 ARGS = -framework OpenCL -framework OpenGL -framework AppKit
 
