@@ -4,26 +4,26 @@
 #include <libftocl.h>
 #include <fractol.h>
 
+#define WIDTH	(1920 * 1)
+#define HEIGHT	(1080 * 1)
+
 void	ft_fractol_data_init(t_fractol_data	*data)
 {
-	data->args.iterations = 100;
-	data->args.z0r = 0;
-	data->args.z0i = 0;
-	data->args.width = 1920;
-	data->args.length = 1080;
-	data->args.view_port_left = -3.0f;
-	data->args.view_port_right = 3.0f;
-	data->args.view_port_up = -2.0f;
-	data->args.view_port_down = 2.0f;
-	data->array_size = sizeof(cl_int) * 2073600;
+	data->args.iterations = 1000;
+	data->args.z0 = (t_cl_comp){0, 0};
+	data->args.size = (t_cl_point){WIDTH, HEIGHT};
+	data->args.vp_ul = (t_cl_comp){-3.0f, -2.0f};
+	data->args.vp_dr = (t_cl_comp){3.0f, 2.0f};
+	data->array_size = sizeof(cl_int) * WIDTH * HEIGHT;
 	data->rbmp = (cl_int*)ft_memalloc(data->array_size);
+	data->args.anti_alias = 1;
 }
 
 t_fractol_data	*ft_fractol_data(void)
 {
 	static t_fractol_data	data = {0};
 
-	if (data.args.width == 0 && data.args.length == 0)
+	if (data.args.size.x == 0 && data.args.size.y == 0)
 		ft_fractol_data_init(&data);
 	return (&data);
 }
@@ -34,14 +34,15 @@ int		fill_fractol(t_window *win, t_image *img)
 	int						x;
 	int						y;
 
+	(void)win;
 	if (data == NULL)
 		data = ft_fractol_data();
 	ftocl_start_current_kernel(1, &data->array_size, NULL);
 	ftocl_read_current_kernel_arg(1, data->rbmp);
 	y = -1;
-	while (++y < data->args.length && (x = -1))
-		while (++x < data->args.width)
-			ftx_putpixelimg(img, ft_point(x, y), data->rbmp[y * data->args.width + x]);
+	while (++y < data->args.size.y && (x = -1))
+		while (++x < data->args.size.x)
+			ftx_putpixelimg(img, ft_point(x, y), data->rbmp[y * data->args.size.x + x]);
 	img->update = 1;
 	return (0);
 }
@@ -69,9 +70,10 @@ int		update(void	*ptr)
 {
 	int						up;
 	static t_fractol_data	*data = NULL;
-	int						tmp;
-	t_complex				c;
+//	int						tmp;
+	float					c;
 
+	(void)ptr;
 	up = 0;
 	if (data == NULL)
 		data = ft_fractol_data();
@@ -82,57 +84,60 @@ int		update(void	*ptr)
 		if (ftx_is_button_press(KEY_PAD_MINUS) && (data->args.iterations > 2) && (up = 1))
 			data->args.iterations -= 1;
 	}
+	if (ftx_is_button_press(KEY_A))
+	{
+		if (ftx_is_button_press(KEY_PAD_PLUS) && (up = 1))
+			data->args.anti_alias += data->args.anti_alias < 4;
+		if (ftx_is_button_press(KEY_PAD_MINUS) && (up = 1))
+			data->args.anti_alias -= data->args.anti_alias > 1;
+	}
 	if (ftx_is_button_press(KEY_Z))
 	{
 		if (ftx_is_button_press(KEY_PAD_PLUS) && (up = 1))
 		{
-			data->args.view_port_up /= 1.5;
-			data->args.view_port_down /= 1.5;
-			data->args.view_port_left /= 1.5;
-			data->args.view_port_right /= 1.5;
+			data->args.vp_ul.r /= 1.5;
+			data->args.vp_ul.i /= 1.5;
+			data->args.vp_dr.r /= 1.5;
+			data->args.vp_dr.i /= 1.5;
+			ft_error(0, "because i said so");
 		}
 		if (ftx_is_button_press(KEY_PAD_MINUS) && (up = 1))
 		{
-			data->args.view_port_up *= 1.5;
-			data->args.view_port_down *= 1.5;
-			data->args.view_port_left *= 1.5;
-			data->args.view_port_right *= 1.5;
+			data->args.vp_ul.r *= 1.5;
+			data->args.vp_ul.i *= 1.5;
+			data->args.vp_dr.r *= 1.5;
+			data->args.vp_dr.i *= 1.5;
 		}
 	}
 	if (ftx_is_button_press(KEY_LEFT) && (up = 1))
 	{
-		c.r = (data->args.view_port_right - data->args.view_port_left) / 60;
-		data->args.view_port_left -= c.r;
-		data->args.view_port_right -= c.r;
+		c = -(data->args.vp_dr.r - data->args.vp_ul.r) / 60.0f;
+		data->args.vp_dr.r += c;
+		data->args.vp_ul.r += c;
 	}
 	if (ftx_is_button_press(KEY_RIGHT) && (up = 1))
 	{
-		c.r = (data->args.view_port_right - data->args.view_port_left) / 60;
-		data->args.view_port_left += c.r;
-		data->args.view_port_right += c.r;
+		c = (data->args.vp_dr.r - data->args.vp_ul.r) / 60.0f;
+		data->args.vp_dr.r += c;
+		data->args.vp_ul.r += c;
 	}
 	if (ftx_is_button_press(KEY_DOWN) && (up = 1))
 	{
-		c.i = (data->args.view_port_down - data->args.view_port_up) / 60;
-		data->args.view_port_down += c.i;
-		data->args.view_port_up += c.i;
+		c = (data->args.vp_dr.i - data->args.vp_ul.i) / 60.0f;
+		data->args.vp_dr.i += c;
+		data->args.vp_ul.i += c;
 	}
 	if (ftx_is_button_press(KEY_UP) && (up = 1))
 	{
-		c.i = (data->args.view_port_down - data->args.view_port_up) / 60;
-		data->args.view_port_down -= c.i;
-		data->args.view_port_up -= c.i;
+		c = -(data->args.vp_dr.i - data->args.vp_ul.i) / 60.0f;
+		data->args.vp_dr.i += c;
+		data->args.vp_ul.i += c;
 	}
-	if (ftx_is_button_press(MICE_LEFT) && (up = 1))
+	if (ftx_is_button_press(KEY_PAD_0) && (up = 1))
 	{
-		printf("view_port - left: %f, right: %f, up: %f, down: %f\n", data->args.view_port_left, data->args.view_port_right, data->args.view_port_up, data->args.view_port_down);
-		c.r = data->args.view_port_left + (data->args.view_port_right - data->args.view_port_left) * (ftx_mice_position().x / data->args.width);
-		c.i = data->args.view_port_up + (data->args.view_port_down - data->args.view_port_up) * (ftx_mice_position().y / data->args.length);
-		data->args.view_port_left += c.r;
-		data->args.view_port_right += c.r;
-		data->args.view_port_up += c.i;
-		data->args.view_port_down += c.i;
-		printf("view_port - left: %f, right: %f, up: %f, down: %f\n", data->args.view_port_left, data->args.view_port_right, data->args.view_port_up, data->args.view_port_down);
+		data->args.iterations = 1000;
+		data->args.vp_ul = (t_cl_comp){-3.0f, -2.0f};
+		data->args.vp_dr = (t_cl_comp){3.0f, 2.0f};
 	}
 	if (up)
 	{
@@ -174,19 +179,22 @@ int		main(int argc, char **argv)
 {
 	int	fd;
 
-	if (argc < 2)
+	if (argc < 3)
 	{
 		write(1, "Usage: ", 7);
 		write(1, argv[0], ft_strlen(argv[0]));
-		write(1, " <arg0> [arg1, ...]\n", 20);
+		write(1, " <file.cl> <kernel_id> [options..]\n", 35);
 		return (0);
 	}
 	ft_init();
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		return (-1);
 	ftocl_make_program((uint64_t*)"fractol ", ft_readfile(fd));
-	ftocl_set_current_kernel((uint64_t*)"mandelbr");
 	close(fd);
-	fractol();
+	if (!(fd = ftocl_set_current_kernel((uint64_t*)argv[2])))
+		fractol();
+	if (fd == 1)
+		ft_putendl("There was no fractal correcponding to the id passed in arg");
+	ftocl_end();
 	return (0);
 }

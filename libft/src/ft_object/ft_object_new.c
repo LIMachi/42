@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fractol.h                                          :+:      :+:    :+:   */
+/*   ft_object_new.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/13 02:04:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 16:02:30 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/15 19:54:26 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/15 19:59:48 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FRACTOL_H
-# define FRACTOL_H
+#include <libft.h>
 
-# include <libftocl.h>
-
-typedef struct	s_fractol_args
+t_object	*ft_object_new(void *data)
 {
-	cl_uint		iterations;
-	t_cl_comp	z0;
-	t_cl_point	size;
-	t_cl_comp	vp_ul;
-	t_cl_comp	vp_dr;
-	cl_uint		anti_alias;
-}				t_fractol_args;
+	t_object	*out;
 
-typedef struct	s_fractol_data
-{
-	t_fractol_args	args;
-	size_t			array_size;
-	cl_int			*rbmp;
-}				t_fractol_data;
-
-#endif
+	out = (t_object*)ft_malloc(sizeof(t_object));
+	*(uint32_t*)&out->type = OBJECT;
+	*(uint64_t*)&out->functions = OBJECT_FUNCTION;
+	out->data = data;
+	out->next = NULL;
+	return (out);
+}

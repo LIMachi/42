@@ -36,7 +36,7 @@ ifeq ($(shell uname),Linux)
 #gcc/clang flags
 CFLAGS = -Wall -Wextra -Werror
 #path to external includes
-PINC = ../libft/includes ../minilibx_X11
+PINC = ../libft/inc ../minilibx_X11
 #path to libs to compile
 CLIB = ../libft ../minilibx_X11
 #exact path of lib files to add in source
@@ -52,7 +52,7 @@ ifeq ($(shell uname),Darwin)
 #gcc/clang flags
 CFLAGS = -Wall -Wextra -Werror
 #path to external includes
-PINC = ../libft/includes ../minilibx_macos
+PINC = ../libft/inc ../minilibx_macos
 #path to libs to compile
 CLIB = ../libft ../minilibx_macos
 #exact path of lib files to add in source
@@ -75,35 +75,59 @@ DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
 
 INCLUDES = $(patsubst %, -I%, $(INCDIR)) $(patsubst %, -I%, $(PINC))
 
-.PHONY: all libs clean fclean re norm
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(notdir $(shell find $(SRCDIR) -type d -not -path $(SRCDIR))))
 
-all: $(NAME)
+.PHONY: all libs clean fclean re norm relibs fcleanlibs items
+
+all: dirs auteur libs $(NAME)
 
 libs:
 	$(foreach V, $(CLIB), make -C $(V);)
 
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+relibs:
+	$(foreach V, $(CLIB), make re -C $(V);)
+	make re
 
-$(NAME): $(OBJDIR) auteur libs $(DOTO)
-	ar -rc $(NAME) $(FLAGS) $(DOTO) $(LIB)
+fcleanlibs:
+	$(foreach V, $(CLIB), make clean -C $(V);)
+	$(foreach V, $(CLIB), make fclean -C $(V);)
+	make fclean
+
+dirs:
+	@mkdir -p $(OBJDIR) $(SUBDIRS)
+
+ifeq ($(suffix $(NAME)), .a)
+$(NAME): $(DOTO) $(LIB)
+	ar -rc $(NAME) $(DOTO) $(LIB)
 	ranlib $(NAME)
+else
+$(NAME): $(DOTO) $(LIB)
+	gcc $(CFLAGS) $(ARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
+endif
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	gcc $(FLAGS) $(INCLUDES) -c $< -o $@
+	gcc $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -rf $(DOTO)
+	rm -f items
+	rm -f `find . -type f | grep "$(OBJDIR)" | grep ".o"`
+	rm -rf `find . -depth -empty | grep "$(OBJDIR)"`
+	rm -rf `find . -depth -empty | grep "$(OBJDIR)"`
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
 
 auteur:
-	echo $(AUTHOR) > auteur
+	@echo $(AUTHOR) > auteur
 
 norm:
-	clear
+	@clear
 	norminette $(SRCDIR)
 	norminette $(SRCINC)
+
+items:
+	@echo "ITEMS = \\" > items;
+	@$(foreach V, $(shell find $(SRCDIR) -type f | cut -f3- -d/ | rev | cut -f2- -d. | rev), echo "		$(V) \\" >> items;)
+	@less items

@@ -1,35 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fractol.h                                          :+:      :+:    :+:   */
+/*   ft_2lstsearchid.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/13 02:04:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 16:02:30 by hmartzol         ###   ########.fr       */
+/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/15 22:55:54 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FRACTOL_H
-# define FRACTOL_H
+#include <libft.h>
 
-# include <libftocl.h>
-
-typedef struct	s_fractol_args
+t_2list	*ft_2lstsearchid(int id, t_2list *lst)
 {
-	cl_uint		iterations;
-	t_cl_comp	z0;
-	t_cl_point	size;
-	t_cl_comp	vp_ul;
-	t_cl_comp	vp_dr;
-	cl_uint		anti_alias;
-}				t_fractol_args;
+	t_2list	*top;
+	t_2list	*bot;
 
-typedef struct	s_fractol_data
-{
-	t_fractol_args	args;
-	size_t			array_size;
-	cl_int			*rbmp;
-}				t_fractol_data;
-
-#endif
+	if (lst == NULL || lst->id == id)
+		return (lst);
+	top = lst;
+	bot = lst;
+	while (top->id != id && bot->id != id && (top->prev || bot->next))
+	{
+		top = top->prev;
+		bot = bot->next;
+	}
+	if (top && top->id == id)
+		return (top);
+	if (bot && bot->id == id)
+		return (bot);
+	return (NULL);
+}

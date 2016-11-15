@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 09:22:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/13 09:35:42 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/15 22:42:32 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ static inline t_ocl_data	*sf_end(t_ocl_data *data)
 		{
 			i = 0;
 			while (i < ((t_ocl_kernel*)list->data)->nb_args)
-				if (((t_ocl_kernel*)list->data)->args[i])
-					clReleaseMemObject(((t_ocl_kernel*)list->data)->args[i++]);
+				if (((t_ocl_kernel*)list->data)->args[i++])
+					clReleaseMemObject(((t_ocl_kernel*)list->data)->args[i - 1]);
 			sf_free(((t_ocl_kernel*)list->data)->args);
 			sf_free(((t_ocl_kernel*)list->data)->sizes);
 			if (((t_ocl_kernel*)list->data)->kernel)

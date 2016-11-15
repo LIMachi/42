@@ -1,35 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fractol.h                                          :+:      :+:    :+:   */
+/*   ft_env_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/13 02:04:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 16:02:30 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/15 18:22:20 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/15 19:00:02 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FRACTOL_H
-# define FRACTOL_H
+#include <libft.h>
 
-# include <libftocl.h>
+/*
+** takes NULL or a pointer to a list of string containing environement variables
+** and will initialise ft_global_env with it (actually, with a NULL env, will
+** just return 0)
+*/
 
-typedef struct	s_fractol_args
+int	ft_env_init(char **env)
 {
-	cl_uint		iterations;
-	t_cl_comp	z0;
-	t_cl_point	size;
-	t_cl_comp	vp_ul;
-	t_cl_comp	vp_dr;
-	cl_uint		anti_alias;
-}				t_fractol_args;
-
-typedef struct	s_fractol_data
-{
-	t_fractol_args	args;
-	size_t			array_size;
-	cl_int			*rbmp;
-}				t_fractol_data;
-
-#endif
+	if (env == NULL)
+		return (0);
+	while (*env)
+		if (ft_putenv(*env) == -1)
+			return (-1);
+	return (0);
+}

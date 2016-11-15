@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 11:15:26 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/14 11:20:32 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/15 09:53:39 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 /*
 ** will search (in the current program) and set the current kernel to the kernel
-** correcponding to the kernel_id passed in arg, will return 0 on succes and -1
-** on faillure
+** correcponding to the kernel_id passed in arg, will return 0 on succes, 1 if
+** there was no correcponding kernel to the kernel_id and -1 if an error occured
 */
 
 int	ftocl_set_current_kernel(uint64_t *kernel_id)
@@ -37,5 +37,5 @@ int	ftocl_set_current_kernel(uint64_t *kernel_id)
 		data->current_kernel = (t_ocl_kernel*)list->data;
 		return (0);
 	}
-	return (-1);
+	return (1);
 }

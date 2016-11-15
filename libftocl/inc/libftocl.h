@@ -6,25 +6,40 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 09:53:54 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/14 11:44:28 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/15 22:42:48 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#ifndef LIBFTOCL_H
+# define LIBFTOCL_H
 
-#if OS == LINUX
-# include <CL/opencl.h>
-#elif OS == MACINTOCH
-# include <OpenCL/opencl.h>
-#else
-# error "unsuported os"
-#endif
+# include <libft.h>
 
-#define FTOCL_ALL_ARGS ((cl_uint)-1)
+# if OS == LINUX
+#  include <CL/opencl.h>
+# elif OS == MACINTOCH
+#  include <OpenCL/opencl.h>
+# else
+#  error "unsuported os"
+# endif
 
-#include <stdio.h>
+# define FTOCL_ALL_ARGS ((cl_uint)-1)
+
+# include <stdio.h>
 //#define DEBUG printf("function: %s, line %d, potential error: %d\n", __func__, __LINE__, 0/*(int)err*/);
-#define DEBUG ft_putstr("function: "); ft_putstr(__func__); ft_putstr(", line: "); ft_putnbr(__LINE__); ft_putchar('\n');
+# define DEBUG ft_putstr("function: "); ft_putstr(__func__); ft_putstr(", line: "); ft_putnbr(__LINE__); ft_putchar('\n');
+
+typedef struct	s_cl_comp
+{
+	cl_float	r;
+	cl_float	i;
+}				t_cl_comp;
+
+typedef struct	s_cl_point
+{
+	cl_int	x;
+	cl_int	y;
+}				t_cl_point;
 
 //note: the id of a kernel is the first 8 ascii characters of his name (faster search and more intuitive)
 //note: the id must be filled with 8 ascii, and all unused ascii must be \0
@@ -71,3 +86,5 @@ int					ftocl_set_current_kernel(uint64_t *kernel_id);
 int					ftocl_set_current_program(uint64_t *program_id);
 void				ftocl_start_current_kernel(cl_uint work_dim,
 				const size_t *global_work_size, const size_t *local_work_size);
+
+#endif

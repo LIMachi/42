@@ -4,24 +4,37 @@ typedef struct
 	float i;
 }	comp;
 
-typedef struct	s_fractol_args
+typedef struct
+{
+	int	x;
+	int	y;
+}	point;
+
+typedef struct
 {
 	unsigned int	iterations;
-	float			z0r;
-	float			z0i;
-	unsigned int	width;
-	unsigned int	length;
-	float			view_port_left;
-	float			view_port_up;
-	float			view_port_right;
-	float			view_port_down;
-}				t_fractol_args;
+	comp			z0;
+	point			size;
+	comp			vp_ul;
+	comp			vp_dr;
+	unsigned int	anti_alias; //1, 2, 3, 4, 6, 8, 16
+}	t_fractol_args;
 
+comp	ccomp(float r, float i);
 comp	comp_sqr(comp z);
 comp	comp_add(comp a, comp b);
 float	ft_absf(float v);
 float	ft_modf(float v, float m);
 int		ft_hsv2rgb(float hue, float saturation, float value);
+
+comp	ccomp(float r, float i)
+{
+	comp	out;
+
+	out.r = r;
+	out.i = i;
+	return (out);
+}
 
 comp	comp_sqr(comp z)
 {
@@ -60,7 +73,7 @@ float	ft_modf(float v, float m)
 	return (v);
 }
 
-int		ft_hsv2rgb(float hue, float saturation, float value)
+int		hsv2rgb(float hue, float saturation, float value)
 {
 	float	c;
 	float	x;
@@ -82,25 +95,26 @@ int		ft_hsv2rgb(float hue, float saturation, float value)
 			(int)(tmp[2] * 255.0f));
 }
 
+int		coloration(int iteration, int max)
+{
+	return (hsv2rgb(360 * (float)iteration / (float)max, 1.0f, 1.0f));
+}
+
 __kernel void	mandelbrot( __global const t_fractol_args *args,
 							__global int *color)
 {
 	size_t		kindex =	get_global_id(0);
-	if (kindex >= args->width * args->length)
+	if (kindex >= args->size.x * args->size.y)
 		return ;
-	float x = args->view_port_left + (args->view_port_right - args->view_port_left) * ((float)(kindex % args->width) / (float)args->width);
-	float y = args->view_port_up + (args->view_port_down - args->view_port_up) * ((float)(kindex / args->width) / (float)args->length);
-
 	comp	c;
-	c.r = x;
-	c.i = y;
-	comp	z;
-	z.r = args->z0r;
-	z.i = args->z0i;
-	int		i =			-1;
-
-	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)++i < args->iterations)
+	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
+	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	comp	z = args->z0;
+	unsigned int		iteration = 0;
+	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
+	{
 		z = comp_add(comp_sqr(z), c);
-	float thing = ((float)i / (float)args->iterations);
-	color[kindex] = ft_hsv2rgb(i, thing, 0.97f * thing + 0.03f);
+		++iteration;
+	}
+	color[kindex] = coloration(iteration, args->iterations);
 }

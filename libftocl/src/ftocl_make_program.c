@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:02:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/14 11:13:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/15 23:23:31 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 	out->args = (cl_mem*)ft_memalloc(sizeof(cl_mem) * out->nb_args);
 	out->sizes = (size_t*)ft_memalloc(sizeof(size_t) * out->nb_args);
 	out->kernel = clCreateKernel(data->current_program->program, name_buff, &e);
+	if (e != CL_SUCCESS)
+		ft_error(EINTERN, "Kernel creation failed\n");
 	return (out);
 }
 
@@ -59,8 +61,11 @@ cl_int						ftocl_make_program(uint64_t *id, const char *src)
 								.kernels = NULL};
 	program->program = clCreateProgramWithSource(data->context, 1,
 									(const char **)&src, 0, &err);
-	err = clBuildProgram(program->program, 0, NULL, NULL, NULL, NULL);
-	(void)ft_2l_add_node(&data->programs, ft_2l_new_node((void*)program));
+	if (err != CL_SUCCESS)
+		ft_error(EINTERN, "Could not create program with sources\n");
+	if ((err = clBuildProgram(program->program, 0, 0, 0, 0, 0)) != CL_SUCCESS)
+		ft_error(EINTERN, "Could not build program\n");
+	(void)ft_2lstadd(&data->programs, ft_2lstnew(0, (void*)program, 0));
 	data->current_program = program;
 	ptr = (char*)src - 1;
 	while ((ptr = ft_strstr(ptr + 1, "__kernel")) != NULL)
@@ -68,8 +73,8 @@ cl_int						ftocl_make_program(uint64_t *id, const char *src)
 		kernel = sf_parse_and_create_kernel(data, ptr);
 		if (data->current_kernel == NULL)
 			data->current_kernel = kernel;
-		(void)ft_2l_add_node(&data->current_program->kernels,
-							ft_2l_new_node((void*)kernel));
+		(void)ft_2lstadd(&data->current_program->kernels,
+							ft_2lstnew(0, (void*)kernel, 0));
 	}
 	if (data->current_kernel == NULL)
 		ft_error(EINTERN, "No kernel was founs in program sources\n");

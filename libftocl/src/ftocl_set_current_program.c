@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 11:14:26 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/14 11:14:49 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/15 09:54:53 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 /*
 ** will search and set the current program to the program correcponding to the
-** program_id passed in arg, will return 0 on succes and -1 on faillure
+** program_id passed in arg, will return 0 on succes, 1 if there was no
+** correcponding program to the program_id and -1 if an error occured
 */
 
 int		ftocl_set_current_program(uint64_t *program_id)
@@ -35,5 +36,5 @@ int		ftocl_set_current_program(uint64_t *program_id)
 		data->current_program = (t_ocl_program*)list->data;
 		return (0);
 	}
-	return (-1);
+	return (1);
 }
