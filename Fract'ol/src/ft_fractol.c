@@ -28,13 +28,12 @@ t_fractol_data	*ft_fractol_data(void)
 	return (&data);
 }
 
-int		fill_fractol(t_window *win, t_image *img)
+int		fill_fractol(t_image *img)
 {
 	static t_fractol_data	*data = NULL;
 	int						x;
 	int						y;
 
-	(void)win;
 	if (data == NULL)
 		data = ft_fractol_data();
 	ftocl_start_current_kernel(1, &data->array_size, NULL);
@@ -42,38 +41,16 @@ int		fill_fractol(t_window *win, t_image *img)
 	y = -1;
 	while (++y < data->args.size.y && (x = -1))
 		while (++x < data->args.size.x)
-			ftx_putpixelimg(img, ft_point(x, y), data->rbmp[y * data->args.size.x + x]);
-	img->update = 1;
+			ftx_put_pixel_img(img, x, y, data->rbmp[y * data->args.size.x + x]);
 	return (0);
 }
 
-int		fill_info(t_window *win, t_image *img)
-{
-//	t_fractol_data	*data;
-
-	(void)win;
-	(void)img;
-//	data = (t_fractol_data*)win->data;
-//	ftx_clear_img(img);
-//	ftx_print_str(img, ft_point(1, 1), WHITE, buff);
-//	sprintf(buff, "right: %f", data->args.view_port_right);
-//	ftx_print_str(img, ft_point(1, 11), WHITE, buff);
-//	sprintf(buff, "up: %f", data->args.view_port_up);
-//	ftx_print_str(img, ft_point(1, 21), WHITE, buff);
-//	sprintf(buff, "down: %f", data->args.view_port_down);
-//	ftx_print_str(img, ft_point(1, 31), WHITE, buff);
-//	img->update = 1;
-	return (0);
-}
-
-int		update(void	*ptr)
+int		update(void)
 {
 	int						up;
 	static t_fractol_data	*data = NULL;
-//	int						tmp;
 	float					c;
 
-	(void)ptr;
 	up = 0;
 	if (data == NULL)
 		data = ft_fractol_data();
@@ -99,7 +76,6 @@ int		update(void	*ptr)
 			data->args.vp_ul.i /= 1.5;
 			data->args.vp_dr.r /= 1.5;
 			data->args.vp_dr.i /= 1.5;
-			ft_error(0, "because i said so");
 		}
 		if (ftx_is_button_press(KEY_PAD_MINUS) && (up = 1))
 		{
@@ -142,10 +118,9 @@ int		update(void	*ptr)
 	if (up)
 	{
 		ftocl_clear_current_kernel_arg(0);
-		ftocl_set_current_kernel_arg(CL_MEM_READ_ONLY, 0, sizeof(t_fractol_args),
-													&data->args);
+		ftocl_set_current_kernel_arg(CL_MEM_READ_ONLY, 0,
+									sizeof(t_fractol_args), &data->args);
 	}
-	return (up);
 }
 
 void	first_args(void)
@@ -163,19 +138,14 @@ void	fractol(void)
 	t_window		*win;
 	t_image			*info;
 
-	if (ftx_init() == NULL)
-		return ;
-	if ((win = ftx_create_window("fractol", ft_point(1920, 1080), 60, &fill_fractol)) == NULL)
+	if ((win = ftx_new_window("fractol", ft_point(1920, 1080), 60, &fill_fractol)) == NULL)
 		return ;
 	win->up_func = &update;
-	info = ftx_new_image(ft_point(50, 30));
-	info->fill_func = &fill_info;
-	ftx_add_image(win, info, 1);
 	first_args();
 	ftx_start();
 }
 
-int		main(int argc, char **argv)
+int		main(int argc, char **argv, char **env)
 {
 	int	fd;
 
@@ -186,7 +156,7 @@ int		main(int argc, char **argv)
 		write(1, " <file.cl> <kernel_id> [options..]\n", 35);
 		return (0);
 	}
-	ft_init();
+	ft_init(env);
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		return (-1);
 	ftocl_make_program((uint64_t*)"fractol ", ft_readfile(fd));

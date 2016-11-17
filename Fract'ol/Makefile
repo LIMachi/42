@@ -18,11 +18,11 @@ ifeq ($(shell uname),Linux)
 #gcc/clang flags
 CFLAGS = -Wall -Wextra -Werror -Wno-deprecated -Wno-deprecated-declarations
 #path to external includes
-PINC = ../libft/inc ../libftx/inc ../minilibx_X11 ../libftocl/inc
+PINC = ../libft/inc ../libftx2/inc ../minilibx_X11 ../libftocl/inc
 #path to libs to compile
-CLIB = ../libft ../libftx ../minilibx_X11 ../libftocl
+CLIB = ../libft ../libftx2 ../minilibx_X11 ../libftocl
 #exact path of lib files to add in source
-LIB = ../libftx/libftx.a ../libftocl/libftocl.a ../libft/libft.a ../minilibx_X11/libmlx.a
+LIB = ../libftx2/libftx.a ../libftocl/libftocl.a ../libft/libft.a ../minilibx_X11/libmlx.a
 #args passed to gcc depending on the os
 ARGS = -lOpenCL -ICL -lXext -lX11
 
@@ -34,11 +34,11 @@ ifeq ($(shell uname),Darwin)
 #gcc/clang flags
 CFLAGS = -Wall -Wextra -Werror
 #path to external includes
-PINC = ../libft/inc ../libftx/inc ../minilibx_macos ../libftocl/inc
+PINC = ../libft/inc ../libftx2/inc ../minilibx_macos ../libftocl/inc
 #path to libs to compile
-CLIB = ../libft ../libftx ../minilibx_macos ../libftocl
+CLIB = ../libft ../libftx2 ../minilibx_macos ../libftocl
 #exact path of lib files to add in source
-LIB = ../libftx/libftx.a ../libftocl/libftocl.a ../libft/libft.a ../minilibx_macos/libmlx.a
+LIB = ../libftx2/libftx.a ../libftocl/libftocl.a ../libft/libft.a ../minilibx_macos/libmlx.a
 #args passed to gcc depending on the os
 ARGS = -framework OpenCL -framework OpenGL -framework AppKit
 
