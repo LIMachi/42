@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_2lstadd.c                                       :+:      :+:    :+:   */
+/*   ftx_key_hook.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 14:30:11 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/17 12:56:42 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/17 14:14:24 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-void	ft_2lstadd(t_2list **lst, t_2list *new)
+int	ftx_key_hook(int key, t_keymap_callback callback, void *data)
 {
-	if (*lst != NULL)
+	if (key >= KEYMAP_SIZE)
 	{
-		*lst = ft_2lsttop(*lst);
-		new->next = *lst;
-		(*lst)->prev = new;
+		ft_error(EINVAL, "ftx_key_hook got wrong key code\n");
+		return (-1);
 	}
-	*lst = new;
+	ftx_data()->keymap[key] = (t_key_data){
+		.status = FTX_KEY_STATUS_RELEASED,
+		.callback = callback,
+		.data = data,
+		.tick = !0u};
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 11:11:43 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 11:35:35 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 14:08:53 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 # include <libft.h>
 # include <ftx_macro.h>
 # include <mlx.h>
+
+# define FTX_KEY_STATUS_PRESSED 1
+# define FTX_KEY_STATUS_HOLD 2
+# define FTX_KEY_STATUS_RELEASED 0
+# define FTX_KEY_STATUS_DOUBLED 3
 
 /*
 ** t_image:
@@ -76,13 +81,24 @@ typedef struct	s_window
 ** mlx		pointer to an opaque object mlx from mlx
 */
 
+typedef int (*t_keymap_callback)(int key, int status, void *data);
+
+typedef struct	s_key_data
+{
+	int					status;
+	t_keymap_callback	callback;
+	void				*data;
+	unsigned int		tick;
+}				t_key_data;
+
 typedef struct	s_ftx_data
 {
-	void			*mlx;
-	t_2list			*windows;
-	t_2list			*images;
-	t_window		*focused_window;
-	unsigned int	tick;
+	void				*mlx;
+	t_2list				*windows;
+	t_2list				*images;
+	t_window			*focused_window;
+	unsigned int		tick;
+	t_key_data			keymap[KEYMAP_SIZE];
 }				t_ftx_data;
 
 /*
@@ -225,5 +241,7 @@ t_window	*ftx_new_window(const t_point size, const char *name,
 int			ftx_free_image(t_image *img);
 t_image		*ftx_new_image(t_point size);
 int			ftx_refresh_window(t_window *win);
+int			ftx_key_hook(int key, t_keymap_callback callback, void *data);
+int			*ftx_key_status(int keycode);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/05 19:10:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 11:35:34 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 13:21:37 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@
 # define MAGENTA 0xFF00FF
 
 # if OS == LINUX
-#  define KEYMAPSIZE 65535
+#  define KEYMAP_SIZE 65535
 #  define KEY_EXIT 65307
 #  define KEY_UP 65362
 #  define KEY_LEFT 65361
@@ -140,7 +140,7 @@
 #  define KEY_SHIFT_LEFT 65505
 #  define KEY_SHIFT_RIGHT 65506
 # elif OS == MACINTOCH
-#  define KEYMAPSIZE 280
+#  define KEYMAP_SIZE 280
 #  define KEY_PAD_PLUS 69
 #  define KEY_PAD_MINUS 78
 #  define KEY_CTRL_LEFT 256

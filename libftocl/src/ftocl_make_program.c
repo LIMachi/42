@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:02:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 23:23:31 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 14:21:31 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,21 @@ cl_int						ftocl_make_program(uint64_t *id, const char *src)
 	t_ocl_kernel	*kernel;
 
 	data = ftocl_data();
+	DEBUG
 	program = (t_ocl_program*)ft_malloc(sizeof(t_ocl_program));
 	*program = (t_ocl_program){.id = *id, .source = src, .program = 0,
 								.kernels = NULL};
+	DEBUG
 	program->program = clCreateProgramWithSource(data->context, 1,
 									(const char **)&src, 0, &err);
 	if (err != CL_SUCCESS)
 		ft_error(EINTERN, "Could not create program with sources\n");
+	DEBUG
 	if ((err = clBuildProgram(program->program, 0, 0, 0, 0, 0)) != CL_SUCCESS)
 		ft_error(EINTERN, "Could not build program\n");
+	DEBUG
 	(void)ft_2lstadd(&data->programs, ft_2lstnew(0, (void*)program, 0));
+	DEBUG
 	data->current_program = program;
 	ptr = (char*)src - 1;
 	while ((ptr = ft_strstr(ptr + 1, "__kernel")) != NULL)

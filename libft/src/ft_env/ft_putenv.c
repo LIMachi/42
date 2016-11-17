@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/15 19:00:26 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 22:26:05 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 14:16:49 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	ft_putenv(char *string)
 {
 	t_object	*lst;
 
-	if (string == NULL || ft_strchr(string, '='))
+	if (string == NULL || ft_strchr(string, '=') == NULL)
 	{
 		(void)ft_error(EINVAL, "Invalid string passed to ft_putenv\n");
 		return (-1);

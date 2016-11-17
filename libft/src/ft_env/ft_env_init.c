@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/15 18:22:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 19:00:02 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 14:19:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_env_init(char **env)
 	if (env == NULL)
 		return (0);
 	while (*env)
-		if (ft_putenv(*env) == -1)
+		if (ft_putenv(*env++) == -1)
 			return (-1);
 	return (0);
 }

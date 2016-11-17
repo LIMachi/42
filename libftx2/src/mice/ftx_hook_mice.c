@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 09:51:11 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 11:09:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 12:59:11 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,18 @@ static int	sf_button_release_hook(int key, int x, int y, void *p)
 	return (((int (*)(void *data))((void**)p)[1])(((void**)p)[2]));
 }
 
-int			ftx_hook_mice(t_window *window, int (*mice_update_func)(void *data),
+int			ftx_hook_mice(t_window *window, int (*callback)(void *data),
  							void *data)
 {
 	void	*tmp[3];
 
-	if (window == NULL || mice_update_func == NULL)
+	if (window == NULL || callback == NULL)
 	{
 		ft_error(EINVAL, "ftx_hook_mice got NULL parameters\n");
 		return (-1);
 	}
 	tmp[0] = (void*)window;
-	tmp[1] = (void*)mice_update_func;
+	tmp[1] = (void*)callback;
 	tmp[2] = data;
 	window->mice = (t_mice){.pos = ft_point(!0, !0),
 							.click_pos = ft_point(!0, !0),

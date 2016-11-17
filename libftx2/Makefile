@@ -18,11 +18,13 @@ ITEMS = \
 		image/ftx_horizontal_line \
 		image/ftx_img_to_img \
 		image/ftx_line \
-		image/ftx_pixel \
 		image/ftx_new_image \
+		image/ftx_pixel \
 		image/ftx_put_pixel_img \
 		image/ftx_vertical_line \
 		image/ftx_write \
+		key/ftx_key_hook \
+		key/ftx_key_status \
 		mice/ftx_hook_mice \
 		window/ftx_free_window \
 		window/ftx_new_window \

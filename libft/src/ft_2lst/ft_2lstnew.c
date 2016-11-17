@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 09:12:27 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 14:28:10 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ t_2list	*ft_2lstnew(const uint64_t *id, void *content, size_t content_size)
 		content_size = 0;
 	if ((out = (t_2list *)ft_memalloc(sizeof(t_2list))) == NULL)
 		return (NULL);
-	out->id = *id;
+	if (id != NULL)
+		out->id = *id;
+	else
+		out->id = 0;
 	if (content_size)
 		if ((tmp = (char *)ft_memalloc(sizeof(char) * content_size)) == NULL)
 			return (NULL);

@@ -54,30 +54,30 @@ int		update(void)
 	up = 0;
 	if (data == NULL)
 		data = ft_fractol_data();
-	if (ftx_is_button_press(KEY_I))
+	if (*ftx_key_status(KEY_I))
 	{
-		if (ftx_is_button_press(KEY_PAD_PLUS) && (up = 1))
+		if (*ftx_key_status(KEY_PAD_PLUS) && (up = 1))
 			data->args.iterations += 1;
-		if (ftx_is_button_press(KEY_PAD_MINUS) && (data->args.iterations > 2) && (up = 1))
+		if (*ftx_key_status(KEY_PAD_MINUS) && (data->args.iterations > 2) && (up = 1))
 			data->args.iterations -= 1;
 	}
-	if (ftx_is_button_press(KEY_A))
+	if (*ftx_key_status(KEY_A))
 	{
-		if (ftx_is_button_press(KEY_PAD_PLUS) && (up = 1))
+		if (*ftx_key_status(KEY_PAD_PLUS) && (up = 1))
 			data->args.anti_alias += data->args.anti_alias < 4;
-		if (ftx_is_button_press(KEY_PAD_MINUS) && (up = 1))
+		if (*ftx_key_status(KEY_PAD_MINUS) && (up = 1))
 			data->args.anti_alias -= data->args.anti_alias > 1;
 	}
-	if (ftx_is_button_press(KEY_Z))
+	if (*ftx_key_status(KEY_Z))
 	{
-		if (ftx_is_button_press(KEY_PAD_PLUS) && (up = 1))
+		if (*ftx_key_status(KEY_PAD_PLUS) && (up = 1))
 		{
 			data->args.vp_ul.r /= 1.5;
 			data->args.vp_ul.i /= 1.5;
 			data->args.vp_dr.r /= 1.5;
 			data->args.vp_dr.i /= 1.5;
 		}
-		if (ftx_is_button_press(KEY_PAD_MINUS) && (up = 1))
+		if (*ftx_key_status(KEY_PAD_MINUS) && (up = 1))
 		{
 			data->args.vp_ul.r *= 1.5;
 			data->args.vp_ul.i *= 1.5;
@@ -85,31 +85,31 @@ int		update(void)
 			data->args.vp_dr.i *= 1.5;
 		}
 	}
-	if (ftx_is_button_press(KEY_LEFT) && (up = 1))
+	if (*ftx_key_status(KEY_LEFT) && (up = 1))
 	{
 		c = -(data->args.vp_dr.r - data->args.vp_ul.r) / 60.0f;
 		data->args.vp_dr.r += c;
 		data->args.vp_ul.r += c;
 	}
-	if (ftx_is_button_press(KEY_RIGHT) && (up = 1))
+	if (*ftx_key_status(KEY_RIGHT) && (up = 1))
 	{
 		c = (data->args.vp_dr.r - data->args.vp_ul.r) / 60.0f;
 		data->args.vp_dr.r += c;
 		data->args.vp_ul.r += c;
 	}
-	if (ftx_is_button_press(KEY_DOWN) && (up = 1))
+	if (*ftx_key_status(KEY_DOWN) && (up = 1))
 	{
 		c = (data->args.vp_dr.i - data->args.vp_ul.i) / 60.0f;
 		data->args.vp_dr.i += c;
 		data->args.vp_ul.i += c;
 	}
-	if (ftx_is_button_press(KEY_UP) && (up = 1))
+	if (*ftx_key_status(KEY_UP) && (up = 1))
 	{
 		c = -(data->args.vp_dr.i - data->args.vp_ul.i) / 60.0f;
 		data->args.vp_dr.i += c;
 		data->args.vp_ul.i += c;
 	}
-	if (ftx_is_button_press(KEY_PAD_0) && (up = 1))
+	if (*ftx_key_status(KEY_PAD_0) && (up = 1))
 	{
 		data->args.iterations = 1000;
 		data->args.vp_ul = (t_cl_comp){-3.0f, -2.0f};
@@ -121,6 +121,7 @@ int		update(void)
 		ftocl_set_current_kernel_arg(CL_MEM_READ_ONLY, 0,
 									sizeof(t_fractol_args), &data->args);
 	}
+	return (up);
 }
 
 void	first_args(void)
@@ -136,12 +137,14 @@ void	first_args(void)
 void	fractol(void)
 {
 	t_window		*win;
-	t_image			*info;
 
-	if ((win = ftx_new_window("fractol", ft_point(1920, 1080), 60, &fill_fractol)) == NULL)
+	DEBUG
+	if ((win = ftx_new_window(ft_point(1920, 1080), "fractol",
+								(const uint64_t *)"fractol")) == NULL)
 		return ;
-	win->up_func = &update;
+	DEBUG
 	first_args();
+	DEBUG
 	ftx_start();
 }
 
@@ -159,10 +162,14 @@ int		main(int argc, char **argv, char **env)
 	ft_init(env);
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		return (-1);
+	DEBUG
 	ftocl_make_program((uint64_t*)"fractol ", ft_readfile(fd));
+	DEBUG
 	close(fd);
+	DEBUG
 	if (!(fd = ftocl_set_current_kernel((uint64_t*)argv[2])))
 		fractol();
+	DEBUG
 	if (fd == 1)
 		ft_putendl("There was no fractal correcponding to the id passed in arg");
 	ftocl_end();

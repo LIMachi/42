@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_2lstadd.c                                       :+:      :+:    :+:   */
+/*   ftx_key_status.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 14:30:11 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/17 13:28:41 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/17 14:15:41 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-void	ft_2lstadd(t_2list **lst, t_2list *new)
+int	*ftx_key_status(int key)
 {
-	if (*lst != NULL)
-	{
-		*lst = ft_2lsttop(*lst);
-		new->next = *lst;
-		(*lst)->prev = new;
-	}
-	*lst = new;
+	if (key >= KEYMAP_SIZE)
+		return (NULL);
+	return (&ftx_data()->keymap[key].status);
 }
