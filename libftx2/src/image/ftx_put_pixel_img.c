@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_init.c                                          :+:      :+:    :+:   */
+/*   ftx_put_pixel_img.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 09:40:23 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/16 11:42:41 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/16 12:26:43 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-void	ft_init(char **env)
+t_image	*ftx_put_pixel_img(t_image *img, const int x, const int y, int color)
 {
-	if (ft_global_log(LOG_SET_PATH, DEFAULT_LOG_PATH) == NULL ||
-			ft_global_log(LOG_SET | LOG_STORE, "New log started\n") == NULL)
-		(void)ft_error(ERROR_ERRNO, 0);
-	ft_env_init(env);
+	if (!((img->endian == 0) ^ (LOCAL_ENDIAN == BIG_ENDIAN)))
+		img->data[y * img->size.x + x] = ft_bswap32(color);
+	else
+		img->data[y * img->size.x + x] = color;
+	return (img);
 }

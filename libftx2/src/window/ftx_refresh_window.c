@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_init.c                                          :+:      :+:    :+:   */
+/*   ftx_refresh_window.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 09:40:23 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/17 09:28:39 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/17 09:47:25 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-void	ft_init(char **env)
+int	ftx_refresh_window(t_window *win)
 {
-	if (ft_global_log(LOG_SET_PATH, DEFAULT_LOG_PATH) == NULL ||
-			ft_global_log(LOG_SET | LOG_STORE, "New log started\n") == NULL)
-		(void)ft_error(ERROR_ERRNO, 0);
-	ft_env_init(env);
+	if (ftx_data()->mlx == NULL || win->vbuffer == NULL)
+		return (-1);
+	mlx_put_image_to_window(ftx_data()->mlx, win, win->vbuffer->img, 0, 0);
+	return (0);
 }

@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_init.c                                          :+:      :+:    :+:   */
+/*   ftx_pixel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 09:40:23 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/16 11:44:29 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/16 12:14:35 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-void	ft_init(char **env)
+t_image	*ftx_pixel(t_image *img, const int x, const int y, const int color)
 {
-	if (ft_global_log(LOG_SET_PATH, DEFAULT_LOG_PATH) == NULL ||
-			ft_global_log(LOG_SET | LOG_STORE, "New log started\n") == NULL)
-		(void)ft_error(ERROR_ERRNO, 0);
-	ft_env_init(env);
+	if (x < 0 || x >= img->size.x || y < 0 || y >= img->size.y)
+		return (img);
+	return (ftx_put_pixel_img(img, x, y, color));
 }

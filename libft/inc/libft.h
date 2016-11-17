@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 23:22:38 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/17 09:15:33 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -597,8 +597,8 @@ struct 					s_2list
 	void			*data;
 	t_2list			*next;
 	t_2list			*prev;
-	int				id;
-	size_t				content_size;
+	uint64_t		id;
+	size_t			content_size;
 };
 
 # define OBJECT_XTREE 3
@@ -612,9 +612,9 @@ struct					s_xtree
 	void				*data;
 	t_xtree				*next;
 	t_xtree				*prev;
+	uint64_t			id;
 	unsigned int		type;
 	unsigned int		security;
-	unsigned long long	id;
 	t_xtree				**root;
 	t_xtree				*up;
 	t_xtree				*down;
@@ -834,7 +834,8 @@ t_list					*ft_lstnew(void const *content, size_t content_size);
 t_list					*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 void					ft_lstappend(t_list **alst, t_list *new);
 
-t_2list					*ft_2lstnew(int id, void *content, size_t content_size);
+t_2list					*ft_2lstnew(const uint64_t *id, void *content,
+									size_t content_size);
 void					ft_2lstadd(t_2list **lst, t_2list *new);
 void					ft_2lstdel(t_2list *lst, void (*del)(void *, size_t));
 void					ft_2lstdelone(t_2list *lst, void (*del)(void *,
@@ -844,7 +845,7 @@ void					ft_2lstiter(t_2list *lst, void (*f)(t_2list *elem));
 t_2list					*ft_2lstmap(t_2list *lst, t_2list *(*f)(t_2list *elem));
 t_2list					*ft_2lsttop(t_2list *lst);
 t_2list					*ft_2lstbot(t_2list *lst);
-t_2list					*ft_alssearchid(int id, t_2list *lst);
+t_2list					*ft_2lstsearchid(const uint64_t *id, t_2list *lst);
 t_2list					*ft_2lstdeltop(t_2list *lst, void (*del)(void *,
 										size_t));
 t_2list					*ft_2lstdelbot(t_2list *lst, void (*del)(void *,
@@ -1143,7 +1144,7 @@ char					*ft_log(char *str);
 ** initialiser function, set default global data ()
 */
 
-void					ft_init(void);
+void					ft_init(char **env);
 
 /*
 ** closing function used to free all global data
@@ -1162,6 +1163,7 @@ t_page_3gs				ft_page(void);
 */
 
 uint64_t			*ft_global_flags(void);
+int					ft_env_init(char **env);
 int					ft_putenv(char *string);
 t_object			**ft_global_env(void);
 char				*ft_getenv(const char *name);

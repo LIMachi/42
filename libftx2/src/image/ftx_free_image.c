@@ -1,21 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_init.c                                          :+:      :+:    :+:   */
+/*   ftx_free_image.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 09:40:23 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/17 09:16:55 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/17 09:19:06 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-void	ft_init(char **env)
+int		ftx_free_image(t_image *img)
 {
-	if (ft_global_log(LOG_SET_PATH, DEFAULT_LOG_PATH) == NULL ||
-			ft_global_log(LOG_SET | LOG_STORE, "New log started\n") == NULL)
-		(void)ft_error(ERROR_ERRNO, 0);
-	ft_env_init(env);
+	void	*mlx;
+
+	if ((mlx = ftx_data()->mlx) == NULL)
+		return (-1);
+	if (img == NULL)
+		return (1);
+	if (img->img)
+		mlx_destroy_image(mlx, img->img);
+	free(img);
+	return (0);
 }

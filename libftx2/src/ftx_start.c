@@ -1,21 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_init.c                                          :+:      :+:    :+:   */
+/*   ftx_start.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 09:40:23 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/17 09:37:48 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/17 09:46:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <libftx.h>
 
-void	ft_init(char **env)
+#if OS == MACINTOCH
+
+static int	sf_tick(void *data)
 {
-	if (ft_global_log(LOG_SET_PATH, DEFAULT_LOG_PATH) == NULL ||
-			ft_global_log(LOG_SET | LOG_STORE, "New log started\n") == NULL)
-		(void)ft_error(ERROR_ERRNO, 0);
-	ft_env_init(env);
+	return (++((t_ftx_data*)data)->tick);
+}
+
+#else
+
+static int	sf_tick(void *data)
+{
+	return (++((t_ftx_data*)data)->tick);
+}
+
+#endif
+
+void		ftx_start(void)
+{
+	t_ftx_data	*data;
+
+	if ((data = ftx_data())->mlx == NULL)
+		return ;
+	mlx_loop_hook(data->mlx, &sf_tick, (void*)data);
+	mlx_loop(data->mlx);
 }
