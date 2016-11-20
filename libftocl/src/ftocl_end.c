@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 09:22:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 22:42:32 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 18:35:10 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,5 @@ void	ftocl_end(void)
 		clReleaseCommandQueue(data->queue);
 	if (data->context)
 		clReleaseContext(data->context);
-	*data = (t_ocl_data){0};
+	ft_bzero(data, sizeof(t_ocl_data));
 }

@@ -25,7 +25,8 @@ comp	comp_sqr(comp z);
 comp	comp_add(comp a, comp b);
 float	ft_absf(float v);
 float	ft_modf(float v, float m);
-int		ft_hsv2rgb(float hue, float saturation, float value);
+int		hsv2rgb(float hue, float saturation, float value);
+int		coloration(int iteration, int max);
 
 comp	ccomp(float r, float i)
 {
@@ -106,7 +107,7 @@ __kernel void	mandelbrot( __global const t_fractol_args *args,
 							__global int *color)
 {
 	size_t		kindex =	get_global_id(0);
-	if (kindex >= args->size.x * args->size.y)
+	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	c;
 	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
@@ -125,7 +126,7 @@ __kernel void	julia( __global const t_fractol_args *args,
 								__global int *color)
 {
 	size_t		kindex =	get_global_id(0);
-	if (kindex >= args->size.x * args->size.y)
+	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	z;
 	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
@@ -144,7 +145,7 @@ __kernel void	burning_ship( __global const t_fractol_args *args,
 						__global int *color)
 {
 	size_t		kindex =	get_global_id(0);
-	if (kindex >= args->size.x * args->size.y)
+	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	c;
 	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
@@ -153,6 +154,8 @@ __kernel void	burning_ship( __global const t_fractol_args *args,
 	unsigned int		iteration = 0;
 	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
 	{
+		z.i = fabs(z.i);
+		z.r = fabs(z.r);
 		z = comp_add(comp_sqr(z), c);
 		++iteration;
 	}

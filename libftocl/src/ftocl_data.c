@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:00:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/19 16:08:36 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 18:42:44 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ static void CL_CALLBACK	notify(const char *errinfo, const void *private_info,
 
 t_ocl_data	*ftocl_data(void)
 {
-	static t_ocl_data	data = {0};
+	static t_ocl_data	data = {.platform = 0};
 	cl_uint		n;
 	cl_int		e;
 
-	if (!(data.platform && data.device && data.context && data.queue))
+	if (data.platform == 0)
 	{
 		ft_log("Initializing OpenCL environement...\n");
 		clGetPlatformIDs(0, NULL, &n);

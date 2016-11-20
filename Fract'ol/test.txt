@@ -1,0 +1,281 @@
+inline static void	sf_0(int fd)
+{
+	write(fd, "New log started\nNew log started\nNew log started\nNew log", 55);
+	write(fd, " started\nNew log started\nUsage: fractol [source.cl] <ker", 56);
+	write(fd, "nel_id> [kernel_id..]\nKernel ids found in default ./scl/f", 57);
+	write(fd, "ractol.cl:\nmandelbrot\njulia\nburning_ship\nLog ended\nNe", 53);
+	write(fd, "w log started\nInitializing OpenCL environement...\n\n____", 55);
+	write(fd, "_______________________________________________________\nO", 57);
+	write(fd, "penCL notify error (nb: 1): \nOpenCL Build Warning : Compi", 57);
+	write(fd, "ler build log:\n<program source>:76:6: warning: no previou", 57);
+	write(fd, "s prototype for function 'hsv2rgb'\nint             hsv2rg", 57);
+	write(fd, "b(float hue, float saturation, float value)\n     ^\n<prog", 56);
+	write(fd, "ram source>:98:6: warning: no previous prototype for funct", 58);
+	write(fd, "ion 'coloration'\nint             coloration(int iteration", 57);
+	write(fd, ", int max)\n     ^\n<program source>:109:13: warning: comp", 56);
+	write(fd, "arison of integers of different signs: 'size_t' (aka 'unsi", 58);
+	write(fd, "gned long') and 'int'\n        if (kindex >= args->size.x ", 57);
+	write(fd, "* args->size.y)\n     ~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~", 57);
+	write(fd, "~\n<program source>:128:13: warning: comparison of integer", 57);
+	write(fd, "s of different signs: 'size_t' (aka 'unsigned long') and '", 58);
+	write(fd, "int'\n        if (kindex >= args->size.x * args->size.y)", 55);
+	write(fd, "\n     ~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~\n<program sou", 56);
+	write(fd, "rce>:147:13: warning: comparison of integers of different ", 58);
+	write(fd, "signs: 'size_t' (aka 'unsigned long') and 'int'\n        i", 57);
+	write(fd, "f (kindex >= args->size.x * args->size.y)\n     ~~~~~~ ^  ", 57);
+	write(fd, "~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n_________________________", 55);
+	sf_1();
+}
+
+inline static void	sf_1(int fd)
+{
+	write(fd, "__________________________________\nNew log started\nIniti", 56);
+	write(fd, "alizing OpenCL environement...\n\n________________________", 56);
+	write(fd, "___________________________________\nOpenCL notify error (", 57);
+	write(fd, "nb: 1): \nOpenCL Build Warning : Compiler build log:\n<pro", 56);
+	write(fd, "gram source>:76:6: warning: no previous prototype for func", 58);
+	write(fd, "tion 'hsv2rgb'\nint             hsv2rgb(float hue, float s", 57);
+	write(fd, "aturation, float value)\n     ^\n<program source>:98:6: wa", 56);
+	write(fd, "rning: no previous prototype for function 'coloration'\nin", 57);
+	write(fd, "t             coloration(int iteration, int max)\n     ^", 55);
+	write(fd, "\n<program source>:109:13: warning: comparison of integers", 57);
+	write(fd, " of different signs: 'size_t' (aka 'unsigned long') and 'i", 58);
+	write(fd, "nt'\n        if (kindex >= args->size.x * args->size.y)\n ", 56);
+	write(fd, "    ~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~\n<program source", 57);
+	write(fd, ">:128:13: warning: comparison of integers of different sig", 58);
+	write(fd, "ns: 'size_t' (aka 'unsigned long') and 'int'\n        if (", 57);
+	write(fd, "kindex >= args->size.x * args->size.y)\n     ~~~~~~ ^  ~~~", 57);
+	write(fd, "~~~~~~~~~~~~~~~~~~~~~~~~\n<program source>:147:13: warning", 57);
+	write(fd, ": comparison of integers of different signs: 'size_t' (aka", 58);
+	write(fd, " 'unsigned long') and 'int'\n        if (kindex >= args->s", 57);
+	write(fd, "ize.x * args->size.y)\n     ~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~", 57);
+	write(fd, "~~~~~~~\n\n\n_____________________________________________", 55);
+	write(fd, "______________\nNew log started\nInitializing OpenCL envir", 56);
+	write(fd, "onement...\nNew log started\nInitializing OpenCL environem", 56);
+	write(fd, "ent...\nNew log started\nInitializing OpenCL environement.", 56);
+	sf_2();
+}
+
+inline static void	sf_2(int fd)
+{
+	write(fd, "..\nNew log started\nUsage: fractol [source.cl] <kernel_id", 56);
+	write(fd, "> [kernel_id..]\nKernel ids found in default ./scl/fractol", 57);
+	write(fd, ".cl:\nmandelbrot\njulia\nburning_ship\nLog ended\nNew log ", 53);
+	write(fd, "started\nUsage: fractol [source.cl] <kernel_id> [kernel_id", 57);
+	write(fd, "..]\nKernel ids found in default ./scl/fractol.cl:\nmandel", 56);
+	write(fd, "brot\njulia\nburning_ship\nLog ended\nNew log started\nIni", 53);
+	write(fd, "tializing OpenCL environement...\nNew log started\nInitial", 56);
+	write(fd, "izing OpenCL environement...\nNew log started\nfunction: m", 56);
+	write(fd, "ain, line: 432\nInitializing OpenCL environement...\nfunct", 56);
+	write(fd, "ion: ftocl_make_program, line: 62\nNew log started\nfuncti", 56);
+	write(fd, "on: main, line: 432\nInitializing OpenCL environement...", 55);
+	write(fd, "\nfunction: ftocl_make_program, line: 62\nfunction: ftocl_", 56);
+	write(fd, "make_program, line: 72\nNew log started\nfunction: main, l", 56);
+	write(fd, "ine: 432\nInitializing OpenCL environement...\nfunction: f", 56);
+	write(fd, "tocl_make_program, line: 63\nfunction: ftocl_make_program,", 57);
+	write(fd, " line: 73\nfunction: sf_parse_and_create_kernel, line: 31", 56);
+	write(fd, "\nNew log started\nfunction: main, line: 432\nInitializing", 55);
+	write(fd, " OpenCL environement...\nfunction: ftocl_make_program, lin", 57);
+	write(fd, "e: 67\nfunction: ftocl_make_program, line: 77\nfunction: s", 56);
+	write(fd, "f_parse_and_create_kernel, line: 31\nfunction: sf_parse_an", 57);
+	write(fd, "d_create_kernel, line: 35\nNew log started\nfunction: main", 56);
+	write(fd, ", line: 432\nInitializing OpenCL environement...\nfunction", 56);
+	write(fd, ": ftocl_make_program, line: 69\nfunction: ftocl_make_progr", 57);
+	write(fd, "am, line: 79\nfunction: sf_parse_and_create_kernel, line: ", 57);
+	sf_3();
+}
+
+inline static void	sf_3(int fd)
+{
+	write(fd, "31\nfunction: sf_parse_and_create_kernel, line: 35\nfuncti", 56);
+	write(fd, "on: sf_parse_and_create_kernel, line: 37\nNew log started", 56);
+	write(fd, "\nfunction: main, line: 432\nfunction: ftocl_str_to_id64, ", 56);
+	write(fd, "line: 27\nfunction: ftocl_str_to_id64, line: 31\nfunction:", 56);
+	write(fd, " ftocl_str_to_id64, line: 34\nfunction: ftocl_str_to_id64,", 57);
+	write(fd, " line: 36\nInitializing OpenCL environement...\nfunction: ", 56);
+	write(fd, "ftocl_make_program, line: 69\nfunction: ftocl_make_program", 57);
+	write(fd, ", line: 79\nfunction: sf_parse_and_create_kernel, line: 31", 57);
+	write(fd, "\nfunction: sf_parse_and_create_kernel, line: 35\nfunction", 56);
+	write(fd, ": sf_parse_and_create_kernel, line: 37\nfunction: ftocl_st", 57);
+	write(fd, "r_to_id64, line: 27\nfunction: ftocl_str_to_id64, line: 31", 57);
+	write(fd, "\nfunction: ftocl_str_to_id64, line: 34\nfunction: ftocl_s", 56);
+	write(fd, "tr_to_id64, line: 36\nNew log started\nfunction: main, lin", 56);
+	write(fd, "e: 432\nfunction: ftocl_str_to_id64, line: 27\nfunction: f", 56);
+	write(fd, "tocl_str_to_id64, line: 31\nfunction: ftocl_str_to_id64, l", 57);
+	write(fd, "ine: 34\nfunction: ftocl_str_to_id64, line: 36\nInitializi", 56);
+	write(fd, "ng OpenCL environement...\nfunction: ftocl_make_program, l", 57);
+	write(fd, "ine: 69\nfunction: ftocl_make_program, line: 79\nfunction:", 56);
+	write(fd, " sf_parse_and_create_kernel, line: 31\nfunction: sf_parse_", 57);
+	write(fd, "and_create_kernel, line: 35\nfunction: sf_parse_and_create", 57);
+	write(fd, "_kernel, line: 37\nfunction: ftocl_str_to_id64, line: 27", 55);
+	write(fd, "\nfunction: ftocl_str_to_id64, line: 31\nfunction: ftocl_s", 56);
+	write(fd, "tr_to_id64, line: 34\nfunction: ftocl_str_to_id64, line: 3", 57);
+	write(fd, "6\nNew log started\nfunction: main, line: 432\nfunction: f", 55);
+	sf_4();
+}
+
+inline static void	sf_4(int fd)
+{
+	write(fd, "tocl_str_to_id64, line: 27\nfunction: ftocl_str_to_id64, l", 57);
+	write(fd, "ine: 31\nfunction: ftocl_str_to_id64, line: 34\nfunction: ", 56);
+	write(fd, "ftocl_str_to_id64, line: 37\nInitializing OpenCL environem", 57);
+	write(fd, "ent...\nfunction: ftocl_make_program, line: 69\nfunction: ", 56);
+	write(fd, "ftocl_make_program, line: 79\nfunction: sf_parse_and_creat", 57);
+	write(fd, "e_kernel, line: 31\nfunction: sf_parse_and_create_kernel, ", 57);
+	write(fd, "line: 35\nfunction: sf_parse_and_create_kernel, line: 37", 55);
+	write(fd, "\nfunction: ftocl_str_to_id64, line: 27\nfunction: ftocl_s", 56);
+	write(fd, "tr_to_id64, line: 31\nfunction: ftocl_str_to_id64, line: 3", 57);
+	write(fd, "4\nfunction: ftocl_str_to_id64, line: 37\nNew log started", 55);
+	write(fd, "\nfunction: main, line: 432\nfunction: ftocl_str_to_id64, ", 56);
+	write(fd, "line: 27\nfunction: ftocl_str_to_id64, line: 31\nfunction:", 56);
+	write(fd, " ftocl_str_to_id64, line: 34\nfunction: ftocl_str_to_id64,", 57);
+	write(fd, " line: 36\nInitializing OpenCL environement...\nfunction: ", 56);
+	write(fd, "ftocl_make_program, line: 71\nfunction: ftocl_make_program", 57);
+	write(fd, ", line: 81\nfunction: sf_parse_and_create_kernel, line: 33", 57);
+	write(fd, "\nfunction: sf_parse_and_create_kernel, line: 37\nfunction", 56);
+	write(fd, ": sf_parse_and_create_kernel, line: 39\nfunction: ftocl_st", 57);
+	write(fd, "r_to_id64, line: 27\nfunction: ftocl_str_to_id64, line: 31", 57);
+	write(fd, "\nfunction: ftocl_str_to_id64, line: 34\nfunction: ftocl_s", 56);
+	write(fd, "tr_to_id64, line: 36\nNew log started\nfunction: main, lin", 56);
+	write(fd, "e: 432\nfunction: ftocl_str_to_id64, line: 27\nfunction: f", 56);
+	write(fd, "tocl_str_to_id64, line: 31\nfunction: ftocl_str_to_id64, l", 57);
+	write(fd, "ine: 34\nfunction: ftocl_str_to_id64, line: 36\nInitializi", 56);
+	sf_5();
+}
+
+inline static void	sf_5(int fd)
+{
+	write(fd, "ng OpenCL environement...\nfunction: ftocl_make_program, l", 57);
+	write(fd, "ine: 73\nfunction: ftocl_make_program, line: 83\nfunction:", 56);
+	write(fd, " sf_parse_and_create_kernel, line: 33\nfunction: sf_parse_", 57);
+	write(fd, "and_create_kernel, line: 37\nfunction: sf_parse_and_create", 57);
+	write(fd, "_kernel, line: 39\nfunction: sf_parse_and_create_kernel, l", 57);
+	write(fd, "ine: 42\nfunction: ftocl_str_to_id64, line: 27\nfunction: ", 56);
+	write(fd, "ftocl_str_to_id64, line: 31\nfunction: ftocl_str_to_id64, ", 57);
+	write(fd, "line: 34\nfunction: ftocl_str_to_id64, line: 36\nNew log s", 56);
+	write(fd, "tarted\nfunction: main, line: 432\nfunction: ftocl_str_to_", 56);
+	write(fd, "id64, line: 27\nfunction: ftocl_str_to_id64, line: 31\nfun", 56);
+	write(fd, "ction: ftocl_str_to_id64, line: 34\nfunction: ftocl_str_to", 57);
+	write(fd, "_id64, line: 36\nInitializing OpenCL environement...\nfunc", 56);
+	write(fd, "tion: ftocl_make_program, line: 73\nfunction: ftocl_make_p", 57);
+	write(fd, "rogram, line: 83\nfunction: sf_parse_and_create_kernel, li", 57);
+	write(fd, "ne: 33\nfunction: sf_parse_and_create_kernel, line: 37\nfu", 56);
+	write(fd, "nction: sf_parse_and_create_kernel, line: 39\nfunction: sf", 57);
+	write(fd, "_parse_and_create_kernel, line: 42\nfunction: ftocl_str_to", 57);
+	write(fd, "_id64, line: 27\nfunction: ftocl_str_to_id64, line: 31\nfu", 56);
+	write(fd, "nction: ftocl_str_to_id64, line: 34\nfunction: ftocl_str_t", 57);
+	write(fd, "o_id64, line: 36\nNew log started\nfunction: main, line: 4", 56);
+	write(fd, "32\nfunction: ftocl_str_to_id64, line: 27\nfunction: ftocl", 56);
+	write(fd, "_str_to_id64, line: 31\nfunction: ftocl_str_to_id64, line:", 57);
+	write(fd, " 34\nfunction: ftocl_str_to_id64, line: 36\nInitializing O", 56);
+	write(fd, "penCL environement...\nfunction: ftocl_make_program, line:", 57);
+	sf_6();
+}
+
+inline static void	sf_6(int fd)
+{
+	write(fd, " 73\nfunction: ftocl_make_program, line: 83\nfunction: sf_", 56);
+	write(fd, "parse_and_create_kernel, line: 33\nfunction: sf_parse_and_", 57);
+	write(fd, "create_kernel, line: 37\nfunction: sf_parse_and_create_ker", 57);
+	write(fd, "nel, line: 39\nfunction: sf_parse_and_create_kernel, line:", 57);
+	write(fd, " 42\nfunction: ftocl_str_to_id64, line: 27\nfunction: ftoc", 56);
+	write(fd, "l_str_to_id64, line: 31\nfunction: ftocl_str_to_id64, line", 57);
+	write(fd, ": 34\nfunction: ftocl_str_to_id64, line: 36\nNew log start", 56);
+	write(fd, "ed\nfunction: main, line: 432\nfunction: ftocl_str_to_id64", 56);
+	write(fd, ", line: 51\nfunction: ftocl_str_to_id64, line: 55\nfunctio", 56);
+	write(fd, "n: ftocl_str_to_id64, line: 58\nfunction: ftocl_str_to_id6", 57);
+	write(fd, "4, line: 60\nfunction: ftocl_str_to_id64, line: 62\nInitia", 56);
+	write(fd, "lizing OpenCL environement...\nfunction: ftocl_make_progra", 57);
+	write(fd, "m, line: 73\nfunction: ftocl_make_program, line: 83\nfunct", 56);
+	write(fd, "ion: sf_parse_and_create_kernel, line: 33\nfunction: sf_pa", 57);
+	write(fd, "rse_and_create_kernel, line: 37\nfunction: sf_parse_and_cr", 57);
+	write(fd, "eate_kernel, line: 39\nfunction: sf_parse_and_create_kerne", 57);
+	write(fd, "l, line: 42\nfunction: ftocl_str_to_id64, line: 51\nfuncti", 56);
+	write(fd, "on: ftocl_str_to_id64, line: 55\nfunction: ftocl_str_to_id", 57);
+	write(fd, "64, line: 58\nfunction: ftocl_str_to_id64, line: 60\nfunct", 56);
+	write(fd, "ion: ftocl_str_to_id64, line: 62\nfunction: sf_parse_and_c", 57);
+	write(fd, "reate_kernel, line: 44\nfunction: sf_parse_and_create_kern", 57);
+	write(fd, "el, line: 46\nfunction: sf_parse_and_create_kernel, line: ", 57);
+	write(fd, "51\nfunction: sf_parse_and_create_kernel, line: 55\nfuncti", 56);
+	write(fd, "on: ftocl_make_program, line: 87\nfunction: ftocl_make_pro", 57);
+	sf_7();
+}
+
+inline static void	sf_7(int fd)
+{
+	write(fd, "gram, line: 90\nfunction: sf_parse_and_create_kernel, line", 57);
+	write(fd, ": 33\nfunction: sf_parse_and_create_kernel, line: 37\nfunc", 56);
+	write(fd, "tion: sf_parse_and_create_kernel, line: 39\nfunction: sf_p", 57);
+	write(fd, "arse_and_create_kernel, line: 42\nfunction: ftocl_str_to_i", 57);
+	write(fd, "d64, line: 51\nfunction: ftocl_str_to_id64, line: 55\nfunc", 56);
+	write(fd, "tion: ftocl_str_to_id64, line: 58\nfunction: ftocl_str_to_", 57);
+	write(fd, "id64, line: 60\nfunction: ftocl_str_to_id64, line: 62\nfun", 56);
+	write(fd, "ction: sf_parse_and_create_kernel, line: 44\nfunction: sf_", 57);
+	write(fd, "parse_and_create_kernel, line: 46\nfunction: sf_parse_and_", 57);
+	write(fd, "create_kernel, line: 51\nfunction: sf_parse_and_create_ker", 57);
+	write(fd, "nel, line: 55\nfunction: ftocl_make_program, line: 87\nfun", 56);
+	write(fd, "ction: ftocl_make_program, line: 90\nfunction: sf_parse_an", 57);
+	write(fd, "d_create_kernel, line: 33\nfunction: sf_parse_and_create_k", 57);
+	write(fd, "ernel, line: 37\nfunction: sf_parse_and_create_kernel, lin", 57);
+	write(fd, "e: 39\nfunction: sf_parse_and_create_kernel, line: 42\nfun", 56);
+	write(fd, "ction: ftocl_str_to_id64, line: 51\nfunction: ftocl_str_to", 57);
+	write(fd, "_id64, line: 55\nfunction: ftocl_str_to_id64, line: 58\nfu", 56);
+	write(fd, "nction: ftocl_str_to_id64, line: 60\nfunction: ftocl_str_t", 57);
+	write(fd, "o_id64, line: 62\nfunction: sf_parse_and_create_kernel, li", 57);
+	write(fd, "ne: 44\nfunction: sf_parse_and_create_kernel, line: 46\nfu", 56);
+	write(fd, "nction: sf_parse_and_create_kernel, line: 51\nfunction: sf", 57);
+	write(fd, "_parse_and_create_kernel, line: 55\nfunction: ftocl_make_p", 57);
+	write(fd, "rogram, line: 87\nfunction: ftocl_make_program, line: 90", 55);
+	write(fd, "\nfunction: ftocl_make_program, line: 94\nfunction: main, ", 56);
+	sf_8();
+}
+
+inline static void	sf_8(int fd)
+{
+	write(fd, "line: 434\nfunction: ftocl_str_to_id64, line: 51\nfunction", 56);
+	write(fd, ": ftocl_str_to_id64, line: 55\nfunction: ftocl_str_to_id64", 57);
+	write(fd, ", line: 58\nfunction: ftocl_str_to_id64, line: 60\nfunctio", 56);
+	write(fd, "n: ftocl_str_to_id64, line: 62\nWeird, I can't found that ", 57);
+	write(fd, "damn display... oh, right, 'env -u DISPLAY' must have been", 58);
+	write(fd, " there earlier, this filthy stealer. Oh well, no show toni", 58);
+	write(fd, "ght\nNew log started\nfunction: main, line: 432\nInitializ", 55);
+	write(fd, "ing OpenCL environement...\nfunction: main, line: 434\nWei", 56);
+	write(fd, "rd, I can't found that damn display... oh, right, 'env -u ", 58);
+	write(fd, "DISPLAY' must have been there earlier, this filthy stealer", 58);
+	write(fd, ". Oh well, no show tonight\nNew log started\nInitializing ", 56);
+	write(fd, "OpenCL environement...\n849\n949\n1049\n1149\n1249\n1349", 50);
+	write(fd, "\n1449\n1549\nNew log started\nInitializing OpenCL environ", 54);
+	write(fd, "ement...\n849\n949\n1049\n1149\n1249\n1349\n1449\n1549\n16", 49);
+	write(fd, "49\n1749\n1849\n1949\n2049\n2149\n2249\n2349\n2400\n2400", 47);
+	write(fd, "\n2400\n2400\nNew log started\nInitializing OpenCL environ", 54);
+	write(fd, "ement...\nNew log started\nInitializing OpenCL environemen", 56);
+	write(fd, "t...\n849\n749\nNew log started\nInitializing OpenCL envir", 54);
+	write(fd, "onement...\nNew log started\nInitializing OpenCL environem", 56);
+	write(fd, "ent...\n849\n749\n649\n549\n449\n439\n429\n419\n409\n399", 46);
+	write(fd, "\n389\n379\n369\n359\n349\n339\n329\n319\n309\n299\n289\n2", 46);
+	write(fd, "79\n269\n259\n249\n239\n229\n219\n209\n199\n189\n179\n169", 46);
+	write(fd, "\n159\n149\n139\n129\n119\n109\n99\n89\n79\n69\n59\n49\n39", 45);
+	write(fd, "\n29\n19\n18\n17\n16\n15\n14\n13\n14\n15\n16\n17\n18\n19", 42);
+	sf_9();
+}
+
+inline static void	sf_9(int fd)
+{
+	write(fd, "\n20\n21\n31\n41\n51\n61\n71\n81\n91\n101\n111\n121\n131", 43);
+	write(fd, "\n141\n151\n161\n171\n181\n191\n201\n211\n221\n231\n241\n2", 46);
+	write(fd, "51\n261\n271\n281\n291\n301\n311\n321\n331\n341\n351\n361", 46);
+	write(fd, "\n371\n381\n371\n361\n351\n341\n351\n341\n331\n321\n331\n3", 46);
+	write(fd, "41\n351\n361\n371\n381\n391\n401\n501\n601\n701\n801\n901", 46);
+	write(fd, "\n1001\n1101\n1201\n1301\n1401\n1501\n1601\n1701\n1801\n19", 48);
+	write(fd, "01\n2001\n2101\n2201\n2301\n2400\n2400\n2400\nNew log star", 50);
+	write(fd, "ted\nUsage: fractol [source.cl] <kernel_id> [kernel_id..]", 56);
+	write(fd, "\nKernel ids found in default ./scl/fractol.cl:\nmandelbro", 56);
+	write(fd, "t\njulia\nburning_ship\nLog ended\nNew log started\nUsage:", 53);
+	write(fd, " fractol [source.cl] <kernel_id> [kernel_id..]\nKernel ids", 57);
+	write(fd, " found in default ./scl/fractol.cl:\nmandelbrot\njulia\nbu", 55);
+	write(fd, "rning_ship\nLog ended\nNew log started\nInitializing OpenC", 55);
+	write(fd, "L environement...\nBad corrector, 'env -i' is bad, and you", 57);
+	write(fd, " should fell bad for doing this :´(\nShuting down gracefu", 57);
+	write(fd, "lly anyway\n", 11);
+}
+ 

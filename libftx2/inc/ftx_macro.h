@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/05 19:10:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/19 11:29:23 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 18:38:13 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,8 @@
 #  define KEY_PAD_MINUS 78
 #  define KEY_CTRL_LEFT 256
 #  define KEY_PAD_0 82
+#  define KEY_B 0
+#  define KEY_R 0
 #  define KEY_X 7
 #  define KEY_Y 16
 #  define KEY_Z 6

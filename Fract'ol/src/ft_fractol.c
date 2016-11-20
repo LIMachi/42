@@ -21,7 +21,7 @@ void	ft_fractol_data_init(t_fractol_data	*data)
 
 t_fractol_data	*ft_fractol_data(void)
 {
-	static t_fractol_data	data = {0};
+	static t_fractol_data	data = {.args = (t_fractol_args){.size = (t_cl_point){0, 0}}};
 
 	if (data.args.size.x == 0 && data.args.size.y == 0)
 		ft_fractol_data_init(&data);
@@ -194,7 +194,7 @@ int	call_key_1(int key, int status, void *data)
 		f->args.vp_dr = (t_cl_comp){3.0f, 2.0f};
 	}
 	if (*ftx_key_status(KEY_I) && key == KEY_PAD_PLUS && (up = 1))
-		f->args.iterations = (f->args.iterations += 1 + 9 * (f->args.iterations > 20) + 90 * (f->args.iterations > 400)) < 2400 ? f->args.iterations : 2400;
+		f->args.iterations = (f->args.iterations += 1 + 9 * (f->args.iterations > 20) + 90 * (f->args.iterations > 400)) < 5000 ? f->args.iterations : 5000;
 	if (*ftx_key_status(KEY_I) && key == KEY_PAD_MINUS && (up = 1))
 		f->args.iterations = (f->args.iterations -= 1 + 9 * (f->args.iterations > 20) + 90 * (f->args.iterations > 500)) > 0 ? f->args.iterations : 1;
 	if (*ftx_key_status(KEY_I))
@@ -233,7 +233,7 @@ int	call_mice_move(t_point pos, t_point click_pos, void *data)
 	return (0);
 }
 
-#define FRACTOL_KEEP_ORIENTATION 1
+#define FRACTOL_KEEP_ORIENTATION 0
 #define FRACTOL_KEEP_RATIO 0
 
 void	view_port_cut(t_fractol_args *args, t_point a, t_point b)
@@ -437,4 +437,5 @@ int		main(int argc, char **argv, char **env)
 		ft_putendl("There was no fractal correcponding to the id passed in arg");
 	ftocl_end();
 	return (0);
+
 }

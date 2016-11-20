@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:02:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 10:54:33 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 19:07:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 	while (ft_isunix(*kernel_start))
 		name_buff[e++] = *kernel_start++;
 	name_buff[e] = 0;
-	*out = (t_ocl_kernel){.id = ftocl_str_to_id64(name_buff), .kernel = 0,
+	*out = (t_ocl_kernel){.id = 0, .kernel = 0,
 						.nb_args = 1, .args = NULL, .sizes = NULL};
+	out->id = ftocl_str_to_id64(name_buff);
 	kernel_start = ft_strchr(kernel_start, '(');
 	kernel_end = ft_strchr(kernel_start, ')');
 	while (((kernel_start = ft_strchr(kernel_start + 1, ',')) != NULL)
