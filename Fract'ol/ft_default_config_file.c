@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/20 12:26:06 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 13:36:30 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 13:47:44 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ inline static int	sf_default_config_file(void)
 
 	if ((fd = open(".config", O_WRONLY)) == -1)
 	{
-		ft_error(ERROR_ERRNO, "ft_default_config_file failed to open .config (2)\n");
+		ft_error(ERROR_ERRNO,
+			"ft_default_config_file failed to open .config (2)\n");
 		return (-1);
 	}
 	sf_default_config_file_0(fd);
@@ -115,7 +116,8 @@ inline static int	sf_default_config_file(void)
 	sf_default_config_file_2(fd);
 	if (close(fd) == -1)
 	{
-		ft_error(ERROR_ERRNO, "ft_default_config_file failed to close .config (2)\n");
+		ft_error(ERROR_ERRNO,
+			"ft_default_config_file failed to close .config (2)\n");
 		return (-1);
 	}
 	return (1);
@@ -128,17 +130,20 @@ int					ft_default_config_file(void)
 
 	if ((fd = open(".config", O_RDONLY | O_CREAT)) == -1)
 	{
-		ft_error(ERROR_ERRNO, "ft_default_config_file failed to open .config (1)\n");
+		ft_error(ERROR_ERRNO,
+			"ft_default_config_file failed to open .config (1)\n");
 		return (-1);
 	}
 	if ((i = read(fd, &i, 1)) == -1)
 	{
-		ft_error(ERROR_ERRNO, "ft_default_config_file failed to read .config\n");
+		ft_error(ERROR_ERRNO,
+			"ft_default_config_file failed to read .config\n");
 		return (-1);
 	}
 	if (close(fd))
 	{
-		ft_error(ERROR_ERRNO, "ft_default_config_file failed to close .config (1)\n");
+		ft_error(ERROR_ERRNO,
+			"ft_default_config_file failed to close .config (1)\n");
 		return (-1);
 	}
 	if (i == 1)

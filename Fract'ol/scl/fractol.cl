@@ -121,16 +121,16 @@ __kernel void	mandelbrot( __global const t_fractol_args *args,
 	color[kindex] = coloration(iteration, args->iterations);
 }
 
-__kernel void	burning_ship( __global const t_fractol_args *args,
+__kernel void	julia( __global const t_fractol_args *args,
 								__global int *color)
 {
 	size_t		kindex =	get_global_id(0);
 	if (kindex >= args->size.x * args->size.y)
 		return ;
-	comp	c;
-	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
-	comp	z = args->z0;
+	comp	z;
+	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
+	z.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	comp	c = args->z0;
 	unsigned int		iteration = 0;
 	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
 	{
@@ -140,7 +140,7 @@ __kernel void	burning_ship( __global const t_fractol_args *args,
 	color[kindex] = coloration(iteration, args->iterations);
 }
 
-__kernel void	julia( __global const t_fractol_args *args,
+__kernel void	burning_ship( __global const t_fractol_args *args,
 						__global int *color)
 {
 	size_t		kindex =	get_global_id(0);

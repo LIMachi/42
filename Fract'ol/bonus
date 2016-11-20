@@ -1,11 +1,26 @@
-o-utilisation de la carte graphique (vitesse)
-o-zoom en selectionnant un view_port avec la souris
-o-déplacement avec les touches
-o-reset avec la touche PAD_0
-o-sauvegarde de screenshot avec CTRL_LEFT + S (format bmp, a la racine, nom de la fenêtre)
-t-gestion de multiples fractales/fenêtres
-t-5 fractales en plus des 3 de base
-o-transition de couleur suivant la norme HSV (arc-en-ciel pour les neophites)
-o-gestion de combo de touches (suite de touches/multi touches)
-t-animation
-o-fichier log contenant toutes les sorties dans le terminal (log.txt, a la racine)
+TODO:
+-julia
+-burning_ship
+-gestion de julia a la souris
+-zoom correct
+-gestion de multiples fractales/fenêtres (bonus, dernier soucis)
+-5 fractales en plus des 3 de base (bonus, indispensable)
+
+FINISHED:
+-gestion de la couleur
+-gestion des entres standard et arret sur parametre invalide (eventuellement, bonus du fait que le message s'adapte aux source .cl)
+-utiliser la MLX (lol, no joke)
+-gerer l'expose
+-touche ESC
+-utilisation d'images
+
+BONUS:
+-gestion de l'erreur d'environement
+-utilisation de la carte graphique (vitesse)
+-zoom en selectionnant un view_port avec la souris
+-déplacement avec les touches
+-reset avec la touche PAD_0
+-sauvegarde de screenshot avec CTRL_LEFT + S (format bmp, a la racine, nom de la fenêtre)
+-transition de couleur suivant la norme HSV (arc-en-ciel pour les neophites)
+-gestion de combo de touches (suite de touches/multi touches)
+-fichier log contenant toutes les sorties dans le terminal (log.txt, a la racine)

@@ -6,11 +6,15 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/14 14:11:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 14:24:34 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
+
+/*
+** append up to n bytes of src to dst, null terminating the result
+*/
 
 char	*ft_strncat(char *dst, const char *src, size_t n)
 {

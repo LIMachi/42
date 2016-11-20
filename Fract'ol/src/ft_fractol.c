@@ -12,8 +12,8 @@ void	ft_fractol_data_init(t_fractol_data	*data)
 	data->args.iterations = 749;
 	data->args.z0 = (t_cl_comp){0, 0};
 	data->args.size = (t_cl_point){WIDTH, HEIGHT};
-	data->args.vp_ul = (t_cl_comp){-3.0f, -2.0f};
-	data->args.vp_dr = (t_cl_comp){3.0f, 2.0f};
+	data->args.vp_ul = (t_cl_comp){-1.0f - 7.0f / 9.0f, -1.0f};
+	data->args.vp_dr = (t_cl_comp){1.0f + 7.0f / 9.0f, 1.0f};
 	data->array_size = sizeof(cl_int) * WIDTH * HEIGHT;
 	data->rbmp = (cl_int*)ft_memalloc(data->array_size);
 	data->args.anti_alias = 1;
