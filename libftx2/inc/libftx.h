@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 11:11:43 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 14:08:53 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/19 11:33:31 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,25 @@
 # define FTX_KEY_STATUS_RELEASED 0
 # define FTX_KEY_STATUS_DOUBLED 3
 
+typedef struct s_image		t_image;
+typedef struct s_mice		t_mice;
+typedef struct s_window		t_window;
+typedef struct s_key_data	t_key_data;
+typedef struct s_ftx_data	t_ftx_data;
+
 /*
 ** t_image:
-** img						pointer to an opaque object image from mlx
-** data						pointer to raw bmp data of image
-** bpp (bites per pixel)	number of bites used to represent a color
-** size_line				number of bytes to store a single line of pixels
-** endian					endian (byte order) of raw bmp data
-** size						size (in pixels) of the image
-** cursor					position at wich ftx_write will put characters
-** tick						number of rougthly 60th of second since start
+** img:						pointer to an opaque object image from mlx
+** data:					pointer to raw bmp data of image
+** bpp (bites per pixel):	number of bites used to represent a color
+** size_line:				number of bytes to store a single line of pixels
+** endian:					endian (byte order) of raw bmp data
+** size:					size (in pixels) of the image
+** cursor:					position at wich ftx_write will put characters
+** tick:					number of rougthly 60th of second since start
 */
 
-typedef struct	s_image
+struct	s_image
 {
 	void			*img;
 	int				*data;
@@ -43,55 +49,71 @@ typedef struct	s_image
 	t_point			size;
 	t_point			cursor;
 	unsigned int	tick;
-}				t_image;
+};
+
+/*
+** t_key_data:
+** status:		status of the key (RELEASED, PRESSED, DOUBLED, HOLD)
+** callback:	function to callback on changement in status
+** data:		pointer to data to be sent to callback
+** tick:		tick of the last update
+*/
+
+struct	s_key_data
+{
+	int				status;
+	int 			(*callback)(int key, int status, void *data);
+	void			*data;
+	unsigned int	tick;
+};
 
 /*
 ** t_mice:
-** pos						position of the cursor
-** click_pos				position of the last click (for dragging)
-** click_tick				tick of the start of the actual click
-** int	last_click_release	tick of the end of last click
-** int	click_button		last Buttonpress update (mask)
+** pos:			position of the cursor
+** click_pos:	position of the last click (for dragging)
+** callback:	pointer to function to be called when the mice move
+** data:		data to be sent to the callback
+** keymap:		mice keymap (see t_key_data)
 */
 
-typedef struct	s_mice
+struct	s_mice
 {
 	t_point			pos;
 	t_point			click_pos;
-	unsigned int	click_tick;
-	unsigned int	last_click_release;
-	unsigned int	click_button;
-}				t_mice;
+	int 			(*callback)(t_point pos, t_point click_pos, void *data);
+	void			*data;
+	t_key_data		keymap[10];
+};
 
 /*
 ** t_window:
-** win		pointer to an opaque object window from mlx
-** mice		mice data (more information: t_mice)
+** win:		pointer to an opaque object window from mlx
+** name:	string containing the name of the window
+** size:	size (in pixels) of the (inner part of the) window
+** vbuffer:	video buffer, image to be print on the window on update
+** mice:	mice data (more information: t_mice)
 */
 
-typedef struct	s_window
+struct	s_window
 {
 	void			*win;
+	char			*name;
 	t_point			size;
 	t_image			*vbuffer;
 	t_mice			mice;
-}				t_window;
+};
+
 /*
 ** t_ftx_data:
-** mlx		pointer to an opaque object mlx from mlx
+** mlx:				pointer to an opaque object mlx from mlx
+** windows:			list of windows currently oppened by mlx
+** images:			list of currently oppened images by mlx
+** focused_window:	pointer to the focused window
+** tick:			current tick of execution (around 60th of seconds)
+** keymap:			keyboard keymap (see t_key_data)
 */
 
-typedef int (*t_keymap_callback)(int key, int status, void *data);
-
-typedef struct	s_key_data
-{
-	int					status;
-	t_keymap_callback	callback;
-	void				*data;
-	unsigned int		tick;
-}				t_key_data;
-
-typedef struct	s_ftx_data
+struct	s_ftx_data
 {
 	void				*mlx;
 	t_2list				*windows;
@@ -99,7 +121,7 @@ typedef struct	s_ftx_data
 	t_window			*focused_window;
 	unsigned int		tick;
 	t_key_data			keymap[KEYMAP_SIZE];
-}				t_ftx_data;
+};
 
 /*
 ** t_ftx_line_data: (structure to store bresenham algorithm's variables)
@@ -138,13 +160,10 @@ t_ftx_data	*ftx_data(void);
 
 int			ftx_color_lerp(const int f, const int b, double v);
 
-/*
-** hook the function mice_update_func to the mice updates in window
-** return 0 on succes, -1 on failure
-*/
-
-int			ftx_hook_mice(t_window *window, int (*mice_update_func)(void *data),
- 							void *data);
+int			ftx_hook_mice_button(t_window *window, int button,
+				int (*callback)(int key, int status, void *data), void *data);
+int			ftx_hook_mice_move(t_window *window, int (*callback)(t_point pos,
+								t_point click_pos, void *data), void *data);
 
 /*
 ** ftx_put_pixel_img: put in img at the coord x, y a pixel
@@ -238,10 +257,74 @@ int			ftx_free_window(const uint64_t *id);
 t_window	*ftx_new_window(const t_point size, const char *name,
 							const uint64_t *id);
 
+/*
+** ftx_free_image: free image passed in arg
+*/
+
 int			ftx_free_image(t_image *img);
+
+/*
+** ftx_new_image: create a new image of size passed in arg
+*/
+
 t_image		*ftx_new_image(t_point size);
+
+/*
+** ftx_refresh_window: print the vbuffer image of window
+*/
+
 int			ftx_refresh_window(t_window *win);
-int			ftx_key_hook(int key, t_keymap_callback callback, void *data);
+
+/*
+** ftx_key_hook: hook a key update (press, release, repeat, etc...) with a
+** callback. on any key update, the callback will be executed with a single
+** parameter (void *data)
+*/
+
+int			ftx_key_hook(int key, int (*callback)(int key, int status,
+							void *data), void *data);
+
+/*
+** ftx_key_status return a pointer to the status older of keycode
+*/
+
 int			*ftx_key_status(int keycode);
+
+/*
+** ftx_put_selection_square will put a partially transparent square on img
+** between point a and b with filled with color (borders are more visible than
+** iner)
+*/
+
+t_image		*ftx_put_selection_square(t_image *img, const t_point a,
+										const t_point b, const int color);
+
+/*
+** return the color value of a pixel of img at the coord x,y
+*/
+
+int			ftx_get_pixel_img(t_image *img, const int x, const int y);
+
+/*
+** put a pixel on img with the color blended between the current visible pixel
+** and the one pending to be print (value determine the blending)
+*/
+
+t_image		*ftx_slerp_pixel(t_image *img, const t_point pos, const int color,
+								const double value);
+
+/*
+** ftx_fill_image fill img with color multplied by value (0 to 1 double)
+*/
+
+t_image		*ftx_fill_image(t_image *img, const int color, const double value);
+
+/*
+** does not work for now, make invalid bmp files
+*/
+
+int			ftx_screenshoot(t_window *win, const char *folder_path);
+
+int	*ftx_button_status(int button);
 
 #endif

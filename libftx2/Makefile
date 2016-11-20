@@ -4,6 +4,9 @@ AUTHOR = hmartzol
 #name of compiled file
 NAME = libftx2.a
 
+#args passed to executable if executed from "make test"
+EXEARGS =
+
 #path to folder containing source files, project header and resulting objects
 SRCDIR = ./src
 INCDIR = ./inc
@@ -14,27 +17,33 @@ ITEMS = \
 		color/ftx_color_lerp \
 		ftx_data \
 		ftx_start \
+		image/ftx_fill_image \
 		image/ftx_free_image \
+		image/ftx_get_pixel_img \
 		image/ftx_horizontal_line \
 		image/ftx_img_to_img \
 		image/ftx_line \
 		image/ftx_new_image \
 		image/ftx_pixel \
 		image/ftx_put_pixel_img \
+		image/ftx_selection_square \
+		image/ftx_slerp_pixel \
 		image/ftx_vertical_line \
 		image/ftx_write \
 		key/ftx_key_hook \
 		key/ftx_key_status \
 		mice/ftx_hook_mice \
+		mice/ftx_button_status \
 		window/ftx_free_window \
 		window/ftx_new_window \
-		window/ftx_refresh_window
+		window/ftx_refresh_window \
+		window/ftx_screenshoot
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -O3
 #path to external includes
 PINC = ../libft/inc ../minilibx_X11
 #path to libs to compile
@@ -77,7 +86,7 @@ INCLUDES = $(patsubst %, -I%, $(INCDIR)) $(patsubst %, -I%, $(PINC))
 
 SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(notdir $(shell find $(SRCDIR) -type d -not -path $(SRCDIR))))
 
-.PHONY: all libs clean fclean re norm relibs fcleanlibs items
+.PHONY: all libs clean fclean re norm relibs fcleanlibs items test
 
 all: dirs auteur libs $(NAME)
 
@@ -131,3 +140,6 @@ items:
 	@echo "ITEMS = \\" > items;
 	@$(foreach V, $(shell find $(SRCDIR) -type f | cut -f3- -d/ | rev | cut -f2- -d. | rev), echo "		$(V) \\" >> items;)
 	@less items
+
+test: all
+	valgrind ./$(NAME) $(EXEARGS)

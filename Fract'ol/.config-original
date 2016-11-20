@@ -1,0 +1,48 @@
+#indev .config file format by H "LIMachi" Martzolf
+#to read and use this file, use the libftconf.a by Hugo "LIMachi" Martzolf
+#all space (except in strings) are ignored. spaces are ' ' and '\t' only. All commands are only one line, the '\n' is used to cut commands and should be writen in plain text in string for returns
+#any line with a starting # will be considered as commentary and will not be evaluated
+#there is only four types in config: pointers to int, pointers to double, pointers to string and pointers to functions
+#all variables names are upercase plus eventual underscores and numbers, and can be up to 24 chars (they are stored as 2 uint64_t)
+#<> means an arg is obligatory, [] means an arg is facultative, ... means the last facultative arg can be reused multiple times
+#all strings, even path, should be encased in "", if not, they will be considered as int or double, '<char>' will be considered as the wchar_t value of <char> stored in a int
+
+#.INTERNAL is a special keyword to precise that the C code should autofill all names listed in INTERNAL instead of using the ones in .config
+.INTERNAL=WINDOW_NAME,ITERATIONS,VIEW_PORT
+
+#default path to the OpenCL source file
+DEFAULT_CL="./scl/fractol.cl"
+
+#default kernel names found in DEFAULT_CL
+#the search command search in a fashion close to grep and scanf (%w means whites, tabs or space, %u means unix text, only lower case, numbers and underscores, * means any number of chars except \n and \0)
+#the syntax is make-like: $(search <text to find>, <transformation>, <source text>)
+DEFAULT_KERNEL_ID=$(search "__kernel%wvoid%w%u%w(*)"," %u", $(DEFAULT_CL))
+
+#ifeq is make-like, compares the two string passed in arg, execute if they're equivalent (space and returns aren't tested): ifeq(<string 1>,<string 2>)
+ifeq($(KERNEL_ID),)
+
+#redefinition of variables is valable in those config, but follow the top to bottom rule
+KERNEL_ID="No kernel id where found in $(DEFAULT_CL)"
+
+#keyword to stop a if, ifeq, ifneq or other if statement
+endif
+
+#string printed on invalid command passed to ./fractol
+USAGE="Usage: ./fractol [source.cl] <kernel_id> [kernel_id] ...\nDefault source: $(DEFAULT_CL)\nkernel id avaliable: $(KERNEL_ID)\n"
+
+#string printed while executing ./fractol if KEY_H is pressed
+HELP="H: Show this help\nMice scroll: zoom\nMice position: change values of some fractals\nMice drag left: new viewport (Combo O: keep orientation/Combo R: keep ratio)\nArrows: move viewport\nCombo I + PAD_+/PAD_-: change the number of iterations\nCombo C + PAD_+/PAD_-: change the color palette\nCombo Ctrl + S: Save screenshot (Combo A: Save with info)\nD: toggle debug information"
+
+#path to the fonts to use to print text
+FONT_PATH="./resource/font.bmp"
+
+#keybindings, they follow the format <key1>[+key2...]=<function> and are separed by ':'
+#the linking of keys and function is internal, and migt throw an error on invalid key/action names or invalid function names
+#since the linking is internal, there is no need to declare keys and functions as internal
+KEY_BIND="KEY_H=show_help:MICE_SCROLL_UP=zoom_plus:MICE_SCROLL_DOWN=zoom_minus:MICE_POS=set_z0:MICE_DRAG=new_view:KEY_O+MICE_DRAG=new_view_oriented:KEY_R+MICE_DRAG=new_view_ratio:KEY_O+KEY_R+MICE_DRAG=new_view_oriented_ratio:KEY_R+KEY_O+MICE_DRAG=new_view_oriented_ratio:KEY_UP=move_view_port_up:KEY_DOWN=move_view_port_down:KEY_RIGHT=move_view_port_right:KEY_LEFT=move_view_port_left:KEY_I+KEY_PAD_PLUS=iteration_plus:KEY_I+KEY_PAD_MINUS=iteration_minus:KEY_C+KEY_PAD_PLUS=color_plus:KEY_C+KEY_PAD_MINUS=color_minus:KEY_CTRL+KEY_S=screensot:KEY_CTRL+KEY_A+KEY_S=screenshot_info:KEY_D=toggle_info"
+
+#default format for the names of screenshot
+BMP_DEFAULT_NAME_FORMAT="$(WINDOW_NAME).bmp"
+
+#extended (detailled) format for the names of screenshot
+BMP_EXTENDED_NAME_FORMAT="$(WINDOW_NAME)-iterations:$(ITERATIONS)-view_port:$(VIEW_PORT).bmp"

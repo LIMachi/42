@@ -6,13 +6,14 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 12:56:42 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 14:14:24 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/19 11:14:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libftx.h>
 
-int	ftx_key_hook(int key, t_keymap_callback callback, void *data)
+int	ftx_key_hook(int key, int (*callback)(int key, int status, void *data),
+				void *data)
 {
 	if (key >= KEYMAP_SIZE)
 	{

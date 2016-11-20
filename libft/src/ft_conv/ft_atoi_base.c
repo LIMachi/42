@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/30 18:52:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/09 07:31:32 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/18 13:58:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int						ft_atoi_base(const char *str, const int size_base,
 	void	*ptr;
 
 	p_tmp = (char*)str;
+	out = 0;
 	while (ft_isspace(*p_tmp))
 		++p_tmp;
 	if ((sign = 1) && (*p_tmp == '+' || *p_tmp == '-'))

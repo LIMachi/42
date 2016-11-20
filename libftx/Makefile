@@ -4,6 +4,9 @@ AUTHOR = hmartzol
 #name of compiled file
 NAME = libftx.a
 
+#args passed to executable if executed from "make test"
+EXEARGS =
+
 #path to folder containing source files, project header and resulting objects
 SRCDIR = ./src
 INCDIR = ./inc
@@ -34,7 +37,7 @@ ITEMS = ftx_color_multiply \
 ifeq ($(shell uname),Linux)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -O3
 #path to external includes
 PINC = ../libft/inc ../minilibx_X11
 #path to libs to compile
@@ -77,7 +80,7 @@ INCLUDES = $(patsubst %, -I%, $(INCDIR)) $(patsubst %, -I%, $(PINC))
 
 SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(notdir $(shell find $(SRCDIR) -type d -not -path $(SRCDIR))))
 
-.PHONY: all libs clean fclean re norm relibs fcleanlibs items
+.PHONY: all libs clean fclean re norm relibs fcleanlibs items test
 
 all: dirs auteur libs $(NAME)
 
@@ -131,3 +134,6 @@ items:
 	@echo "ITEMS = \\" > items;
 	@$(foreach V, $(shell find $(SRCDIR) -type f | cut -f3- -d/ | rev | cut -f2- -d. | rev), echo "		$(V) \\" >> items;)
 	@less items
+
+test: all
+	valgrind ./$(NAME) $(EXEARGS)

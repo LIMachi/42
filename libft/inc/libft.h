@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 09:15:33 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/19 15:11:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,18 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <stdint.h>
+
+# ifndef NORM_42
+#  define NORM_42 1
+# endif
+
+#define USE_DEBUG 1
+
+# if defined(USE_DEBUG) && USE_DEBUG != 0
+#  define DEBUG ft_putstr("function: "); ft_putstr(__func__); ft_putstr(", line: "); ft_putnbr(__LINE__); ft_putchar('\n');
+# else
+#  define DEBUG
+# endif
 
 /*
 ** intern flags to modify the beaving of certain functions
@@ -871,12 +883,16 @@ void					ft_putendl(char const *s);
 void					ft_putendl_fd(char const *s, int fd);
 void					ft_putnbr(int n);
 void					ft_putnbr_fd(int n, int fd);
+void					ft_putnbr_hex(int n);
+void					ft_putnbr_hex_fd(int n, int fd);
 void					ft_putstr(char const *s);
 void					ft_putstr_fd(char const *s, int fd);
 void					ft_puttab(char **tab);
 void					ft_puttab_fd(char **tab, int fd);
 void					ft_putlist(t_list **sl);
 void					ft_putlist_fd(t_list **sl, int fd);
+int						ft_putnstr(char *str, int n);
+int						ft_putnstr_fd(char *str, int n, int fd);
 
 /*
 ** character string related functions
@@ -968,6 +984,7 @@ t_ubmp					*ft_bmp_to_ubmp(t_bitmap *bitmap);
 t_bitmap				*ft_bitmap_file_load(char *path);
 int						ft_bitmap_file_save(char *path, t_bitmap *bmp);
 t_bitmap				*ft_ubmp_to_bmp(t_ubmp *ubmp);
+void					ft_bmp_print_info(t_bitmap *bmp);
 
 /*
 ** wrapper functions for file acces

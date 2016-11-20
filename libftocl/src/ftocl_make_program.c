@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:02:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 14:21:31 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 10:54:33 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 	while (ft_isspace(*kernel_start))
 		++kernel_start;
 	out = (t_ocl_kernel*)ft_malloc(sizeof(t_ocl_kernel));
-	*out = (t_ocl_kernel){.id = *(uint64_t*)kernel_start, .kernel = 0,
-						.nb_args = 1, .args = NULL, .sizes = NULL};
 	e = 0;
 	while (ft_isunix(*kernel_start))
 		name_buff[e++] = *kernel_start++;
 	name_buff[e] = 0;
+	*out = (t_ocl_kernel){.id = ftocl_str_to_id64(name_buff), .kernel = 0,
+						.nb_args = 1, .args = NULL, .sizes = NULL};
 	kernel_start = ft_strchr(kernel_start, '(');
 	kernel_end = ft_strchr(kernel_start, ')');
 	while (((kernel_start = ft_strchr(kernel_start + 1, ',')) != NULL)
@@ -47,7 +47,7 @@ static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 	return (out);
 }
 
-cl_int						ftocl_make_program(uint64_t *id, const char *src)
+cl_int						ftocl_make_program(uint64_t id, const char *src)
 {
 	cl_int			err;
 	t_ocl_data		*data;
@@ -56,21 +56,16 @@ cl_int						ftocl_make_program(uint64_t *id, const char *src)
 	t_ocl_kernel	*kernel;
 
 	data = ftocl_data();
-	DEBUG
 	program = (t_ocl_program*)ft_malloc(sizeof(t_ocl_program));
-	*program = (t_ocl_program){.id = *id, .source = src, .program = 0,
+	*program = (t_ocl_program){.id = id, .source = src, .program = 0,
 								.kernels = NULL};
-	DEBUG
 	program->program = clCreateProgramWithSource(data->context, 1,
 									(const char **)&src, 0, &err);
 	if (err != CL_SUCCESS)
 		ft_error(EINTERN, "Could not create program with sources\n");
-	DEBUG
 	if ((err = clBuildProgram(program->program, 0, 0, 0, 0, 0)) != CL_SUCCESS)
 		ft_error(EINTERN, "Could not build program\n");
-	DEBUG
 	(void)ft_2lstadd(&data->programs, ft_2lstnew(0, (void*)program, 0));
-	DEBUG
 	data->current_program = program;
 	ptr = (char*)src - 1;
 	while ((ptr = ft_strstr(ptr + 1, "__kernel")) != NULL)

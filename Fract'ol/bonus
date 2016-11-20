@@ -1,0 +1,11 @@
+o-utilisation de la carte graphique (vitesse)
+o-zoom en selectionnant un view_port avec la souris
+o-déplacement avec les touches
+o-reset avec la touche PAD_0
+o-sauvegarde de screenshot avec CTRL_LEFT + S (format bmp, a la racine, nom de la fenêtre)
+t-gestion de multiples fractales/fenêtres
+t-5 fractales en plus des 3 de base
+o-transition de couleur suivant la norme HSV (arc-en-ciel pour les neophites)
+o-gestion de combo de touches (suite de touches/multi touches)
+t-animation
+o-fichier log contenant toutes les sorties dans le terminal (log.txt, a la racine)

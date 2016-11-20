@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 09:51:11 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 12:59:11 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/19 12:34:28 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,55 +27,83 @@
 
 static int	sf_motion_hook(int x, int y, void *p)
 {
-	((t_window*)((void**)p)[0])->mice.pos = ft_point(x, y);
-	return (((int (*)(void *data))((void**)p)[1])(((void**)p)[2]));
+	((t_mice*)p)->pos = ft_point(x, y);
+	if (((t_mice*)p)->callback != NULL)
+		return (((t_mice*)p)->callback(((t_mice*)p)->pos,
+				((t_mice*)p)->click_pos, ((t_mice*)p)->data));
+	return (0);
 }
 
 static int	sf_button_press_hook(int key, int x, int y, void *p)
 {
-	t_mice	*mice;
+	t_key_data	*k;
 
-	mice = &((t_window*)((void**)p)[0])->mice;
-	mice->pos = ft_point(x, y);
-	mice->click_pos = ft_point(x, y);
-	mice->click_tick = ftx_data()->tick;
-	mice->click_button ^= 1 << key;
-	return (((int (*)(void *data))((void**)p)[1])(((void**)p)[2]));
+	((t_mice*)p)->pos = ft_point(x, y);
+	((t_mice*)p)->click_pos = ft_point(x, y);
+	k = &((t_mice*)p)->keymap[key];
+	k->status = FTX_KEY_STATUS_PRESSED;
+	k->tick = ftx_data()->tick;
+	if (k->callback != NULL)
+		return (k->callback(key, k->status, k->data));
+	return (0);
 }
 
 static int	sf_button_release_hook(int key, int x, int y, void *p)
 {
-	t_mice	*mice;
+	t_key_data	*k;
 
-	mice = &((t_window*)((void**)p)[0])->mice;
-	mice->pos = ft_point(x, y);
-	mice->click_pos = ft_point(!0, !0);
-	mice->click_tick = !0u;
-	mice->last_click_release = ftx_data()->tick;
-	mice->click_button ^= 1 << key;
-	return (((int (*)(void *data))((void**)p)[1])(((void**)p)[2]));
+	((t_mice*)p)->pos = ft_point(x, y);
+	k = &((t_mice*)p)->keymap[key];
+	k->status = FTX_KEY_STATUS_RELEASED;
+	k->tick = ftx_data()->tick;
+	if (k->callback != NULL)
+		return (k->callback(key, k->status, k->data));
+	((t_mice*)p)->click_pos = ft_point(!0, !0);
+	return (0);
 }
 
-int			ftx_hook_mice(t_window *window, int (*callback)(void *data),
- 							void *data)
+int			ftx_hook_mice_move(t_window *window, int (*callback)(t_point pos,
+								t_point click_pos, void *data), void *data)
 {
-	void	*tmp[3];
+	t_mice	*mice;
 
-	if (window == NULL || callback == NULL)
+	if (window == NULL)
 	{
-		ft_error(EINVAL, "ftx_hook_mice got NULL parameters\n");
+		ft_error(EINVAL, "ftx_hook_mice_move got NULL parameter\n");
 		return (-1);
 	}
-	tmp[0] = (void*)window;
-	tmp[1] = (void*)callback;
-	tmp[2] = data;
-	window->mice = (t_mice){.pos = ft_point(!0, !0),
-							.click_pos = ft_point(!0, !0),
-							.click_tick = !0,
-							.last_click_release = 0,
-							.click_button = 0};
-	mlx_hook(window->win, 4, (1L << 2), &sf_button_press_hook, (void*)tmp);
-	mlx_hook(window->win, 5, (1L << 3), &sf_button_release_hook, (void*)tmp);
-	mlx_hook(window->win, 6, (1L << 6), &sf_motion_hook, (void*)tmp);
+	mice = &window->mice;
+	mice->pos = ft_point(!0, !0);
+	mice->click_pos = ft_point(!0, !0),
+	mice->callback = callback;
+	mice->data = data;
+	mlx_hook(window->win, 6, (1L << 6), &sf_motion_hook, (void*)mice);
+	return (0);
+}
+
+int			ftx_hook_mice_button(t_window *window, int button,
+				int (*callback)(int key, int status, void *data), void *data)
+{
+	t_key_data	*k;
+
+	if (window == NULL)
+	{
+		ft_error(EINVAL, "ftx_hook_mice_button got NULL parameter\n");
+		return (-1);
+	}
+	if (button < 0 || button >= 10)
+	{
+		ft_error(EINVAL, "ftx_hook_mice_button got invalid button parameter\n");
+		return (-1);
+	}
+	k = &window->mice.keymap[button];
+	k->status = FTX_KEY_STATUS_RELEASED;
+	k->tick = !0u;
+	k->callback = callback;
+	k->data = data;
+	mlx_hook(window->win, 4, (1L << 2), &sf_button_press_hook,
+				(void*)&window->mice);
+	mlx_hook(window->win, 5, (1L << 3), &sf_button_release_hook,
+				(void*)&window->mice);
 	return (0);
 }

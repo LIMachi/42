@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/03 18:09:27 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/20 00:19:27 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1004,7 +1004,7 @@ double					ft_quat_dot_product(const t_quaternion a,
 											const t_quaternion b);
 t_quaternion			ft_quat_rotation_build(double angle,
 												const t_vector vector);
-inline int				ft_quat_equal(const t_quaternion a,
+int						ft_quat_equal(const t_quaternion a,
 									const t_quaternion b);
 
 /*

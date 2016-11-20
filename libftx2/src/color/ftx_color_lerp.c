@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/15 17:31:53 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 18:09:58 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/18 14:54:20 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@
 
 int	ftx_color_lerp(const int f, const int b, double v)
 {
-	if (v < 0)
+	if (v < 0.0)
 		v = -v + (double)(int)v;
-	if (v > 1)
-		v = 1;
+	if (v > 1.0)
+		v = 1.0;
+	if (v == 1.0)
+		return (f);
+	if (v == 0.0)
+		return (b);
 	return (((int)((double)((f >> 16) & 0xFF) * v +
 					(double)((b >> 16) & 0xFF) * (1.0 - v)) << 16) |
 			((int)((double)((f >> 8) & 0xFF) * v +

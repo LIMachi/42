@@ -4,6 +4,9 @@ AUTHOR = hmartzol
 #name of compiled file
 NAME = libft.a
 
+#args passed to executable if executed from "make test"
+EXEARGS =
+
 #path to folder containing source files, project header and resulting objects
 SRCDIR = ./src
 INCDIR = ./inc
@@ -11,6 +14,9 @@ OBJDIR = ./OBJ
 
 #name of files to compile without the extension (you can run make items to get them in the file items)
 ITEMS = \
+		ft_io/ft_putnbr_hex \
+		ft_io/ft_putnbr_hex_fd \
+		ft_bmp/ft_bmp_print_info \
 		ft_2lst/ft_2lstadd \
 		ft_2lst/ft_2lstappend \
 		ft_2lst/ft_2lstbot \
@@ -239,7 +245,7 @@ ITEMS = \
 ifeq ($(shell uname),Linux)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -O3
 #path to external includes
 PINC =
 #path to libs to compile
@@ -282,7 +288,7 @@ INCLUDES = $(patsubst %, -I%, $(INCDIR)) $(patsubst %, -I%, $(PINC))
 
 SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(notdir $(shell find $(SRCDIR) -type d -not -path $(SRCDIR))))
 
-.PHONY: all libs clean fclean re norm relibs fcleanlibs items
+.PHONY: all libs clean fclean re norm relibs fcleanlibs items test
 
 all: dirs auteur libs $(NAME)
 
@@ -336,3 +342,6 @@ items:
 	@echo "ITEMS = \\" > items;
 	@$(foreach V, $(shell find $(SRCDIR) -type f | cut -f3- -d/ | rev | cut -f2- -d. | rev), echo "		$(V) \\" >> items;)
 	@less items
+
+test: all
+	valgrind ./$(NAME) $(EXEARGS)
