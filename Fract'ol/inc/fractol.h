@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:04:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/15 16:02:30 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 04:27:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef struct	s_fractol_data
 	t_fractol_args	args;
 	size_t			array_size;
 	cl_int			*rbmp;
+	int				lock;
+	int				info;
 }				t_fractol_data;
 
 #endif

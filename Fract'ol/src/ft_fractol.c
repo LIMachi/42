@@ -7,27 +7,16 @@
 #define WIDTH	(1920 * 1)
 #define HEIGHT	(1080 * 1)
 
-void	ft_fractol_data_init(t_fractol_data	*data)
-{
-	data->args.iterations = 749;
-	data->args.z0 = (t_cl_comp){0, 0};
-	data->args.size = (t_cl_point){WIDTH, HEIGHT};
-	data->args.vp_ul = (t_cl_comp){-1.0f - 7.0f / 9.0f, -1.0f};
-	data->args.vp_dr = (t_cl_comp){1.0f + 7.0f / 9.0f, 1.0f};
-	data->array_size = sizeof(cl_int) * WIDTH * HEIGHT;
-	data->rbmp = (cl_int*)ft_memalloc(data->array_size);
-	data->args.anti_alias = 1;
-}
-
 t_fractol_data	*ft_fractol_data(void)
 {
-	static t_fractol_data	data = {.args = {.iterations = 0u,
-		.z0 = (t_cl_comp){0.0f, 0.0f}, .size = (t_cl_point){0, 0},
-		.vp_ul = (t_cl_comp){0.0f, 0.0f}, .vp_dr = (t_cl_comp){0.0f, 0.0f},
-		.anti_alias = 0u}, .array_size = 0ul, .rbmp = NULL};
+	static t_fractol_data	data = {.args = {.iterations = 750u,
+		.z0 = (t_cl_comp){0.0f, 0.0f}, .size = (t_cl_point){WIDTH, HEIGHT},
+		.vp_ul = (t_cl_comp){-1.77f, -1.0f}, .vp_dr = (t_cl_comp){1.77f, 1.0f},
+		.anti_alias = 1u}, .array_size = sizeof(cl_int) * WIDTH * HEIGHT,
+		.rbmp = NULL, .lock = 1};
 
-	if (data.args.size.x == 0 && data.args.size.y == 0)
-		ft_fractol_data_init(&data);
+	if (data.rbmp == NULL)
+		data.rbmp = (cl_int*)ft_memalloc(data.array_size);
 	return (&data);
 }
 
@@ -48,85 +37,6 @@ int		fill_fractol(t_image *img)
 	return (0);
 }
 
-int		update(void)
-{
-	int						up;
-	static t_fractol_data	*data = NULL;
-	float					c;
-
-	up = 0;
-	if (data == NULL)
-		data = ft_fractol_data();
-	if (*ftx_key_status(KEY_I))
-	{
-		if (*ftx_key_status(KEY_PAD_PLUS) && (up = 1))
-			data->args.iterations += 1;
-		if (*ftx_key_status(KEY_PAD_MINUS) && (data->args.iterations > 2) && (up = 1))
-			data->args.iterations -= 1;
-	}
-	if (*ftx_key_status(KEY_A))
-	{
-		if (*ftx_key_status(KEY_PAD_PLUS) && (up = 1))
-			data->args.anti_alias += data->args.anti_alias < 4;
-		if (*ftx_key_status(KEY_PAD_MINUS) && (up = 1))
-			data->args.anti_alias -= data->args.anti_alias > 1;
-	}
-	if (*ftx_key_status(KEY_Z))
-	{
-		if (*ftx_key_status(KEY_PAD_PLUS) && (up = 1))
-		{
-			data->args.vp_ul.r /= 1.5;
-			data->args.vp_ul.i /= 1.5;
-			data->args.vp_dr.r /= 1.5;
-			data->args.vp_dr.i /= 1.5;
-		}
-		if (*ftx_key_status(KEY_PAD_MINUS) && (up = 1))
-		{
-			data->args.vp_ul.r *= 1.5;
-			data->args.vp_ul.i *= 1.5;
-			data->args.vp_dr.r *= 1.5;
-			data->args.vp_dr.i *= 1.5;
-		}
-	}
-	if (*ftx_key_status(KEY_LEFT) && (up = 1))
-	{
-		c = -(data->args.vp_dr.r - data->args.vp_ul.r) / 60.0f;
-		data->args.vp_dr.r += c;
-		data->args.vp_ul.r += c;
-	}
-	if (*ftx_key_status(KEY_RIGHT) && (up = 1))
-	{
-		c = (data->args.vp_dr.r - data->args.vp_ul.r) / 60.0f;
-		data->args.vp_dr.r += c;
-		data->args.vp_ul.r += c;
-	}
-	if (*ftx_key_status(KEY_DOWN) && (up = 1))
-	{
-		c = (data->args.vp_dr.i - data->args.vp_ul.i) / 60.0f;
-		data->args.vp_dr.i += c;
-		data->args.vp_ul.i += c;
-	}
-	if (*ftx_key_status(KEY_UP) && (up = 1))
-	{
-		c = -(data->args.vp_dr.i - data->args.vp_ul.i) / 60.0f;
-		data->args.vp_dr.i += c;
-		data->args.vp_ul.i += c;
-	}
-	if (*ftx_key_status(KEY_PAD_0) && (up = 1))
-	{
-		data->args.iterations = 749;
-		data->args.vp_ul = (t_cl_comp){-3.0f, -2.0f};
-		data->args.vp_dr = (t_cl_comp){3.0f, 2.0f};
-	}
-	if (up)
-	{
-		ftocl_clear_current_kernel_arg(0);
-		ftocl_set_current_kernel_arg(CL_MEM_READ_ONLY, 0,
-									sizeof(t_fractol_args), &data->args);
-	}
-	return (up);
-}
-
 void	first_args(void)
 {
 	t_fractol_data	*data;
@@ -135,24 +45,29 @@ void	first_args(void)
 	ftocl_set_current_kernel_arg(CL_MEM_READ_ONLY, 0, sizeof(t_fractol_args),
 												&data->args);
 	ftocl_set_current_kernel_arg(CL_MEM_WRITE_ONLY, 1, data->array_size, NULL);
+	fill_fractol(ftx_data()->focused_window->vbuffer);
+	ftx_refresh_window(ftx_data()->focused_window);
 }
 
 int	call_key_0(int key, int status, void *data)
 {
-	int up;
+	int 		up;
+	t_window	*win;
 
-	(void)data;
+	win = (t_window*)data;
 	up = 0;
 	if (key == KEY_R && status == FTX_KEY_STATUS_PRESSED && (up = 1))
-		fill_fractol(ftx_data()->focused_window->vbuffer);
+		fill_fractol(win->vbuffer);
 	if (key == KEY_B && status == FTX_KEY_STATUS_PRESSED && (up = 1))
-		ftx_fill_image(ftx_data()->focused_window->vbuffer, 0, 0.01);
+		ftx_fill_image(win->vbuffer, 0, 0.01);
 	if (key == KEY_W && status == FTX_KEY_STATUS_PRESSED && (up = 1))
-		ftx_fill_image(ftx_data()->focused_window->vbuffer, 0xFFFFFF, 0.01);
+		ftx_fill_image(win->vbuffer, 0xFFFFFF, 0.01);
 	if (key == KEY_S && status == FTX_KEY_STATUS_PRESSED && *ftx_key_status(KEY_CTRL_LEFT))
-		ftx_screenshoot(ftx_data()->focused_window, "./");
+		ftx_screenshoot(win, "./");
+	if (key == KEY_L && status == FTX_KEY_STATUS_PRESSED)
+		ft_fractol_data()->lock = 1 - ft_fractol_data()->lock;
 	if (up)
-		ftx_refresh_window(ftx_data()->focused_window);
+		ftx_refresh_window(win);
 	return (0);
 }
 
@@ -192,9 +107,13 @@ int	call_key_1(int key, int status, void *data)
 	}
 	if (key == KEY_PAD_0 && (up = 1))
 	{
-		f->args.iterations = 749;
-		f->args.vp_ul = (t_cl_comp){-3.0f, -2.0f};
-		f->args.vp_dr = (t_cl_comp){3.0f, 2.0f};
+		f->args = (t_fractol_args){.iterations = 750u,
+			.z0 = (t_cl_comp){0.0f, 0.0f},
+			.size = (t_cl_point){WIDTH, HEIGHT},
+			.vp_ul = (t_cl_comp){-1.77f, -1.0f},
+			.vp_dr = (t_cl_comp){1.77f, 1.0f},
+			.anti_alias = 1u};
+		f->lock = 1;
 	}
 	if (*ftx_key_status(KEY_I) && key == KEY_PAD_PLUS && (up = 1))
 		f->args.iterations = (f->args.iterations += 1 + 9 * (f->args.iterations > 20) + 90 * (f->args.iterations > 400)) < 5000 ? f->args.iterations : 5000;
@@ -224,6 +143,24 @@ int	call_exit(int key, int status, void *data)
 	return (0);
 }
 
+t_cl_comp	mice_to_comp(void)
+{
+	t_fractol_args	*args;
+	t_point			mice;
+	t_cl_comp		p;
+	t_cl_comp		s;
+
+	args = &ft_fractol_data()->args;
+	mice = ftx_data()->focused_window->mice.pos;
+	p = (t_cl_comp){.r = (cl_float)mice.x / (cl_float)args->size.x,
+					.i = (cl_float)mice.y / (cl_float)args->size.y};
+	s = (t_cl_comp){.r = args->vp_dr.r - args->vp_ul.r,
+					.i = args->vp_dr.i - args->vp_ul.i};
+	return ((t_cl_comp){
+		.r = args->vp_ul.r + s.r * p.r,
+		.i = args->vp_ul.i + s.i * p.i});
+}
+
 int	call_mice_move(t_point pos, t_point click_pos, void *data)
 {
 	(void)data;
@@ -233,10 +170,18 @@ int	call_mice_move(t_point pos, t_point click_pos, void *data)
 		ftx_put_selection_square(ftx_data()->focused_window->vbuffer, pos, click_pos, 0x7777FF);
 		ftx_refresh_window(ftx_data()->focused_window);
 	}
+	if (ft_fractol_data()->lock == 0)
+	{
+		ft_fractol_data()->args.z0 = mice_to_comp();
+		ftocl_clear_current_kernel_arg(0);
+		ftocl_set_current_kernel_arg(CL_MEM_READ_ONLY, 0,
+						sizeof(t_fractol_args), &ft_fractol_data()->args);
+		fill_fractol(ftx_data()->focused_window->vbuffer);
+		ftx_refresh_window(ftx_data()->focused_window);
+	}
 	return (0);
 }
 
-#define FRACTOL_KEEP_ORIENTATION 0
 #define FRACTOL_KEEP_RATIO 0
 
 void	view_port_cut(t_fractol_args *args, t_point a, t_point b)
@@ -248,13 +193,10 @@ void	view_port_cut(t_fractol_args *args, t_point a, t_point b)
 
 	if (ft_point_equal(a, b))
 		return ;
-	if (FRACTOL_KEEP_ORIENTATION)
-	{
-		if (a.x > b.x)
-		 	ft_int_swap(&a.x, &b.x);
-		if (a.y > b.y)
-			ft_int_swap(&a.y, &b.y);
-	}
+	if (a.x > b.x)
+	 	ft_int_swap(&a.x, &b.x);
+	if (a.y > b.y)
+		ft_int_swap(&a.y, &b.y);
 	if (FRACTOL_KEEP_RATIO)
 	{
 		(void)(r = (cl_float)args->size.x / (cl_float)args->size.y);
@@ -270,6 +212,26 @@ void	view_port_cut(t_fractol_args *args, t_point a, t_point b)
 	args->vp_dr = tmp_dr;
 }
 
+void	zoom(cl_float zoom)
+{
+	t_fractol_args	*args;
+	t_point			mice;
+	t_cl_comp		p;
+	t_cl_comp		s;
+
+	args = &ft_fractol_data()->args;
+	mice = ftx_data()->focused_window->mice.pos;
+	p = (t_cl_comp){.r = (cl_float)mice.x / (cl_float)args->size.x,
+					.i = (cl_float)mice.y / (cl_float)args->size.y};
+	s = (t_cl_comp){.r = args->vp_dr.r - args->vp_ul.r,
+					.i = args->vp_dr.i - args->vp_ul.i};
+	s = (t_cl_comp){.r = s.r * zoom - s.r, .i = s.i * zoom - s.i};
+	args->vp_dr.r -= (1.0f - p.r) * s.r;
+	args->vp_ul.r += p.r * s.r;
+	args->vp_dr.i -= (1.0f - p.i) * s.i;
+	args->vp_ul.i += p.i * s.i;
+}
+
 int	call_mice_button(int button, int status, void *data)
 {
 	int				up;
@@ -281,17 +243,19 @@ int	call_mice_button(int button, int status, void *data)
 	win = (t_window*)data;
 	if (button == MICE_SCROLL_UP && status == FTX_KEY_STATUS_PRESSED && (up = 1))
 	{
-		f->args.vp_ul.r /= 1.5;
-		f->args.vp_ul.i /= 1.5;
-		f->args.vp_dr.r /= 1.5;
-		f->args.vp_dr.i /= 1.5;
+		zoom(1.1f);
+//		f->args.vp_ul.r /= 1.5;
+//		f->args.vp_ul.i /= 1.5;
+//		f->args.vp_dr.r /= 1.5;
+//		f->args.vp_dr.i /= 1.5;
 	}
 	if (button == MICE_SCROLL_DOWN && status == FTX_KEY_STATUS_PRESSED && (up = 1))
 	{
-		f->args.vp_ul.r *= 1.5;
-		f->args.vp_ul.i *= 1.5;
-		f->args.vp_dr.r *= 1.5;
-		f->args.vp_dr.i *= 1.5;
+		zoom(1.0f / 1.1f);
+//		f->args.vp_ul.r *= 1.5;
+//		f->args.vp_ul.i *= 1.5;
+//		f->args.vp_dr.r *= 1.5;
+//		f->args.vp_dr.i *= 1.5;
 	}
 	if (button == MICE_LEFT && status == FTX_KEY_STATUS_RELEASED && (up = 1))
 	{
@@ -316,10 +280,11 @@ void	fractol(void)
 								(const uint64_t *)"fractol")) == NULL)
 		return ;
 	ftx_key_hook(KEY_EXIT, &call_exit, NULL);
-	ftx_key_hook(KEY_R, &call_key_0, NULL);
-	ftx_key_hook(KEY_B, &call_key_0, NULL);
-	ftx_key_hook(KEY_W, &call_key_0, NULL);
-	ftx_key_hook(KEY_S, &call_key_0, NULL);
+	ftx_key_hook(KEY_R, &call_key_0, ftx_data()->focused_window);
+	ftx_key_hook(KEY_B, &call_key_0, ftx_data()->focused_window);
+	ftx_key_hook(KEY_W, &call_key_0, ftx_data()->focused_window);
+	ftx_key_hook(KEY_S, &call_key_0, ftx_data()->focused_window);
+	ftx_key_hook(KEY_L, &call_key_0, ftx_data()->focused_window);
 	ftx_key_hook(KEY_LEFT, &call_key_1, ft_fractol_data());
 	ftx_key_hook(KEY_RIGHT, &call_key_1, ft_fractol_data());
 	ftx_key_hook(KEY_UP, &call_key_1, ft_fractol_data());
@@ -434,6 +399,7 @@ int		main(int argc, char **argv, char **env)
 		return (-1);
 	ftocl_make_program(ftocl_str_to_id64("fractol"), ft_str_clear_commentaries(ft_readfile(fd)));
 	close(fd);
+	ft_fractol_data()->lock = ftocl_str_to_id64(argv[2]) != ftocl_str_to_id64("julia");
 	if (!(fd = ftocl_set_current_kernel(ftocl_str_to_id64(argv[2]))))
 		fractol();
 	if (fd == 1)

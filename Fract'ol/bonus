@@ -1,12 +1,15 @@
 TODO:
--julia
--burning_ship
--gestion de julia a la souris
--zoom correct
+
 -gestion de multiples fractales/fenêtres (bonus, dernier soucis)
 -5 fractales en plus des 3 de base (bonus, indispensable)
+-ruler (cote proc, en double)
 
 FINISHED:
+-gestion de julia a la souris
+-zoom correct
+-mandelbrot
+-julia
+-burning_ship
 -gestion de la couleur
 -gestion des entres standard et arret sur parametre invalide (eventuellement, bonus du fait que le message s'adapte aux source .cl)
 -utiliser la MLX (lol, no joke)
