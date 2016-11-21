@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 18:51:05 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 01:40:14 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,9 @@ char			*ft_global_log(int flag, char *data)
 	if ((flag & LOG_PRINT) && log != NULL)
 		write(1, log, ft_strlen(log));
 	if ((flag & LOG_STORE) && log != NULL && (fd != -1 || path != NULL))
-	{
-		if (fd == -1 && (fd = open(path, O_WRONLY | O_CREAT | O_APPEND)) == -1)
+		if ((fd == -1 && (fd = open(path, O_WRONLY | O_CREAT | O_APPEND,
+				S_IDEFAULT)) == -1) || !(2 + write(fd, log, ft_strlen(log))))
 			return (NULL);
-		write(fd, log, ft_strlen(log));
-	}
 	(void)((flag == LOG_END) && sf_reset(&fd, &path, &log));
 	return (log);
 }

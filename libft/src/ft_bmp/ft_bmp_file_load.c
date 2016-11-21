@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 19:34:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:46:19 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 01:46:00 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_bitmap				*ft_bitmap_file_load(char *path)
 	t_bitmap				*out;
 	int						i;
 
-	if (path == NULL || (fd = ft_open(path, O_RDONLY | O_BINARY)).fd == -1)
+	if (path == NULL || (fd = ft_open(path, O_RDONLY | O_BINARY, 0)).fd == -1)
 		return (NULL);
 	out = NULL;
 	if (ft_read(&fd, &header, sizeof(t_bitmap_file_header))

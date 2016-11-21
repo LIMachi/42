@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/20 12:26:06 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 13:47:44 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 01:33:31 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int					ft_default_config_file(void)
 	int	fd;
 	int	i;
 
-	if ((fd = open(".config", O_RDONLY | O_CREAT)) == -1)
+	if ((fd = open(".config", O_RDONLY | O_CREAT, S_IDEFAULT)) == -1)
 	{
 		ft_error(ERROR_ERRNO,
 			"ft_default_config_file failed to open .config (1)\n");

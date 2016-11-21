@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/20 13:50:07 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 18:03:33 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 01:17:08 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ int		ft_file_to_normed_write_file(const char *dst, const char *src)
 	ft_strncat(ft_strcat(ft_strncpy(name, src, 508), "->"), dst, 508);
 	if ((fd1 = open(src, O_RDONLY)) == -1)
 		return (-1);
-	fd2 = open(ft_strcat(name, ".tmp"), O_CREAT | O_TRUNC | O_WRONLY);
+	fd2 = open(ft_strcat(name, ".tmp"), O_CREAT | O_TRUNC | O_WRONLY, S_IDEFAULT);
 	if (fd2 == -1)
 		return (-1 + !0 * close(fd1));
 	len = 0;
@@ -223,7 +223,7 @@ int		ft_file_to_normed_write_file(const char *dst, const char *src)
 	name[1023] |= close(fd1) | close(fd2);
 	if (name[1023] == -1 || (fd2 = open(name, O_RDONLY)) == -1)
 		return (-1);
-	if ((fd1 = open(dst, O_CREAT | O_TRUNC | O_WRONLY)) == -1)
+	if ((fd1 = open(dst, O_CREAT | O_TRUNC | O_WRONLY, S_IDEFAULT)) == -1)
 		return (-1 + !0 * close(fd2));
 	sf_normalize(fd1, fd2, '0', len);
 	return (close(fd1) | close(fd2));

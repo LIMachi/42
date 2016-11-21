@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 19:34:13 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/25 21:06:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 01:36:17 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int			ft_bitmap_file_save(char *path, t_bitmap *bmp)
 
 	if (path == NULL || bmp == NULL || bmp->bmp == NULL ||
 		bmp->info.dib_size <= 0 || bmp->info.size_image <= 0 ||
-		(fd = ft_open(path, O_WRONLY | O_BINARY | O_CREAT | O_TRUNC)).fd == -1)
+		(fd = ft_open(path, O_WRONLY | O_BINARY | O_CREAT | O_TRUNC,
+			S_IDEFAULT)).fd == -1)
 		return (-1);
 	header.file_type = 0x4D42;
 	header.file_size = sizeof(t_bitmap_file_header) + bmp->info.dib_size +

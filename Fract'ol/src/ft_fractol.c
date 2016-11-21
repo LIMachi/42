@@ -21,7 +21,10 @@ void	ft_fractol_data_init(t_fractol_data	*data)
 
 t_fractol_data	*ft_fractol_data(void)
 {
-	static t_fractol_data	data = {.args = (t_fractol_args){.size = (t_cl_point){0, 0}}};
+	static t_fractol_data	data = {.args = {.iterations = 0u,
+		.z0 = (t_cl_comp){0.0f, 0.0f}, .size = (t_cl_point){0, 0},
+		.vp_ul = (t_cl_comp){0.0f, 0.0f}, .vp_dr = (t_cl_comp){0.0f, 0.0f},
+		.anti_alias = 0u}, .array_size = 0ul, .rbmp = NULL};
 
 	if (data.args.size.x == 0 && data.args.size.y == 0)
 		ft_fractol_data_init(&data);

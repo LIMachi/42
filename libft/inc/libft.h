@@ -6,18 +6,53 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/19 15:11:51 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 01:43:30 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+/*
+**
+*/
+
 # include <limits.h>
+
+/*
+**
+*/
+
 # include <unistd.h>
+
+/*
+**
+*/
+
 # include <fcntl.h>
+
+/*
+**
+*/
+
 # include <stdlib.h>
+
+/*
+** used to get precise int size
+*/
+
 # include <stdint.h>
+
+/*
+** sys/stat.h: for right of file creation
+*/
+
+# include <sys/stat.h>
+
+# ifdef S_IDEFAULT
+#  undef S_IDEFAULT
+# endif
+# define S_IDEFAULT (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
 
 # ifndef NORM_42
 #  define NORM_42 1
@@ -380,6 +415,7 @@ typedef	struct			s_ft_fd
 	int			pos;
 	char		*path;
 	int			flags;
+	int			rights;
 }						t_ft_fd;
 
 /*
@@ -990,7 +1026,7 @@ void					ft_bmp_print_info(t_bitmap *bmp);
 ** wrapper functions for file acces
 */
 
-t_ft_fd					ft_open(const char *path, int flags);
+t_ft_fd					ft_open(const char *path, int flags, int rights);
 int						ft_close(t_ft_fd *fd);
 t_ft_fd					ft_reopen(t_ft_fd *fd);
 ssize_t					ft_write(t_ft_fd *fd, const void *buf, size_t count);

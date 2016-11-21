@@ -6,13 +6,19 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 19:43:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:50:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 02:15:27 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-static uint32_t	sf_apply_mask(uint32_t value, uint32_t mask)
+/*
+** can only do compression 0 and compression 3, it should work with most
+** 8x8r8g8b, 8a8r8g8b, 0x8r8g8b, 0x5r6g5b and 1x5r5g5g bmp (32,24,16,15 bits)
+** theorically can work with some 1,2,4 and 8 bits, but not all and not tested
+*/
+
+inline static uint32_t	sf_apply_mask(uint32_t value, uint32_t mask)
 {
 	uint32_t	i;
 
@@ -30,7 +36,8 @@ static uint32_t	sf_apply_mask(uint32_t value, uint32_t mask)
 		return ((uint32_t)(((double)0xFF) * (double)i / (double)mask));
 }
 
-static	void	sf_bmp_to_ubmp(t_bitmap *bitmap, t_ubmp *out, t_point p, int x)
+inline static void		sf_bmp_to_ubmp(t_bitmap *bitmap, t_ubmp *out, t_point p,
+									int x)
 {
 	int	t1;
 	int	t2;
@@ -59,13 +66,7 @@ static	void	sf_bmp_to_ubmp(t_bitmap *bitmap, t_ubmp *out, t_point p, int x)
 		out->data[t1] |= 0xFF000000;
 }
 
-/*
-** can only do compression 0 and compression 3, it should work with most
-** 8x8r8g8b, 8a8r8g8b, 0x8r8g8b, 0x5r6g5b and 1x5r5g5g bmp (32,24,16,15 bits)
-** theorically can work with some 1,2,4 and 8 bits, but not all and not tested
-*/
-
-t_ubmp			*ft_bmp_to_ubmp(t_bitmap *bitmap)
+t_ubmp					*ft_bmp_to_ubmp(t_bitmap *bitmap)
 {
 	t_ubmp	*out;
 	t_point	p;
