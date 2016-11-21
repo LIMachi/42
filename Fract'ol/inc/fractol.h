@@ -13,10 +13,10 @@
 #ifndef FRACTOL_H
 # define FRACTOL_H
 
-#include <libftocl.h>
+# include <libftocl.h>
 
-#define WIDTH	(1920 * 1)
-#define HEIGHT	(1080 * 1)
+# define WIDTH	(1920 * 1)
+# define HEIGHT	(1080 * 1)
 
 typedef struct	s_fractol_args
 {

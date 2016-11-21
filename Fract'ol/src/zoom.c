@@ -31,7 +31,7 @@ static void	sf_view_port_cut(t_fractol_args *args, t_point a, t_point b)
 	args->vp_dr = tmp_dr;
 }
 
-void	view_port_cut(t_fractol_args *args, t_point a, t_point b)
+void		view_port_cut(t_fractol_args *args, t_point a, t_point b)
 {
 	cl_float	r;
 	t_point		t;
@@ -39,7 +39,7 @@ void	view_port_cut(t_fractol_args *args, t_point a, t_point b)
 	if (ft_point_equal(a, b))
 		return ;
 	if (a.x > b.x)
-	 	ft_int_swap(&a.x, &b.x);
+		ft_int_swap(&a.x, &b.x);
 	if (a.y > b.y)
 		ft_int_swap(&a.y, &b.y);
 	if (*ftx_key_status(KEY_R) != FTX_KEY_STATUS_PRESSED)
@@ -52,7 +52,7 @@ void	view_port_cut(t_fractol_args *args, t_point a, t_point b)
 	sf_view_port_cut(args, a, b);
 }
 
-void	zoom(cl_float zoom)
+void		zoom(cl_float zoom)
 {
 	t_fractol_args	*args;
 	t_point			mice;

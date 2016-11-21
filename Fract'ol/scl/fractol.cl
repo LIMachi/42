@@ -24,7 +24,7 @@ comp	ccomp(float r, float i);
 comp	comp_sqr(comp z);
 comp	comp_add(comp a, comp b);
 int		hsv2rgb(float hue, float saturation, float value);
-int		coloration(int iteration, int max);
+int		coloration(int iteration, int max, float shift);
 
 comp	ccomp(float r, float i)
 {
@@ -75,11 +75,11 @@ int		hsv2rgb(float hue, float saturation, float value)
 			(int)(tmp[2] * 255.0f));
 }
 
-int		coloration(int iteration, int max)
+int		coloration(int iteration, int max, float shift)
 {
 	if (iteration == max)
 		return (0);
-	return (hsv2rgb(360.0f * (float)iteration / (float)max, 1.0f, 1.0f));
+	return (hsv2rgb(shift + 360.0f * (float)iteration / (float)max, 1.0f, 1.0f));
 }
 
 __kernel void	mandelbrot( __global const t_fractol_args *args,
@@ -98,7 +98,7 @@ __kernel void	mandelbrot( __global const t_fractol_args *args,
 		z = comp_add(comp_sqr(z), c);
 		++iteration;
 	}
-	color[kindex] = coloration(iteration, args->iterations);
+	color[kindex] = coloration(iteration, args->iterations, args->color);
 }
 
 __kernel void	julia( __global const t_fractol_args *args,
@@ -117,7 +117,7 @@ __kernel void	julia( __global const t_fractol_args *args,
 		z = comp_add(comp_sqr(z), c);
 		++iteration;
 	}
-	color[kindex] = coloration(iteration, args->iterations);
+	color[kindex] = coloration(iteration, args->iterations, args->color);
 }
 
 __kernel void	burning_ship( __global const t_fractol_args *args,
@@ -138,5 +138,5 @@ __kernel void	burning_ship( __global const t_fractol_args *args,
 		z = comp_add(comp_sqr(z), c);
 		++iteration;
 	}
-	color[kindex] = coloration(iteration, args->iterations);
+	color[kindex] = coloration(iteration, args->iterations, args->color);
 }

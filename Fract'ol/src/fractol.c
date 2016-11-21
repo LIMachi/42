@@ -50,7 +50,7 @@ void	first_args(void)
 	refresh_fractol_window(ftx_data()->focused_window);
 }
 
-int	call_exit(int key, int status, void *data)
+int		call_exit(int key, int status, void *data)
 {
 	(void)data;
 	if (key == KEY_EXIT && status == FTX_KEY_STATUS_PRESSED)

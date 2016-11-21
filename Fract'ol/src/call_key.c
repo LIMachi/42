@@ -14,9 +14,9 @@
 #include <libftx.h>
 #include <fractol.h>
 
-int	call_key_0(int key, int status, void *data)
+int			call_key_0(int key, int status, void *data)
 {
-	int 		up;
+	int			up;
 	t_window	*win;
 
 	win = (t_window*)data;
@@ -48,7 +48,7 @@ static int	sf_call_key(int up, t_fractol_data *f)
 	return (0);
 }
 
-int	call_key_2(int key, int status, void *data)
+int			call_key_2(int key, int status, void *data)
 {
 	int				up;
 	t_fractol_data	*f;
@@ -75,7 +75,7 @@ int	call_key_2(int key, int status, void *data)
 	return (sf_call_key(up, f));
 }
 
-int	call_key_1(int key, int status, void *data)
+int			call_key_1(int key, int status, void *data)
 {
 	int				up;
 	t_fractol_data	*f;
@@ -97,7 +97,7 @@ int	call_key_1(int key, int status, void *data)
 		> 50) + 90 * (f->args.iterations > 500) > 0) ? f->args.iterations : 1;
 	if (*ftx_key_status(KEY_C) && (key == KEY_PAD_MINUS || key == KEY_PAD_PLUS)
 			&& (up = 1))
-		f->args.color += (cl_float)((key == KEY_PAD_PLUS) - (key == KEY_PAD_MINUS));
+		f->args.color += (key == KEY_PAD_PLUS) - (key == KEY_PAD_MINUS);
 	if (key == KEY_H && (up = 1))
 		f->info = 1 - f->info;
 	return (sf_call_key(up, f));
