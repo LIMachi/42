@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:00:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 18:42:44 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 07:14:59 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libftocl.h>
 
-static void CL_CALLBACK	notify(const char *errinfo, const void *private_info,
+static void	notify(const char *errinfo, const void *private_info,
 								size_t cb, void *user_data)
 {
 	static unsigned int	n = 0;
@@ -33,8 +33,8 @@ static void CL_CALLBACK	notify(const char *errinfo, const void *private_info,
 t_ocl_data	*ftocl_data(void)
 {
 	static t_ocl_data	data = {.platform = 0};
-	cl_uint		n;
-	cl_int		e;
+	cl_uint				n;
+	cl_int				e;
 
 	if (data.platform == 0)
 	{

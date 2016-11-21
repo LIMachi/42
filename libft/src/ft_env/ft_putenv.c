@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/15 19:00:26 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 14:16:49 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 06:31:36 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	sf_search(t_object *node, void *data)
 	return (*str1 == '\0' || *str1 == '=');
 }
 
-int	ft_putenv(char *string)
+int			ft_putenv(char *string)
 {
 	t_object	*lst;
 

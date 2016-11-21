@@ -6,35 +6,16 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 01:43:30 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 06:56:25 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-/*
-**
-*/
-
 # include <limits.h>
-
-/*
-**
-*/
-
 # include <unistd.h>
-
-/*
-**
-*/
-
 # include <fcntl.h>
-
-/*
-**
-*/
-
 # include <stdlib.h>
 
 /*
@@ -58,10 +39,10 @@
 #  define NORM_42 1
 # endif
 
-#define USE_DEBUG 1
+# define USE_DEBUG 0
 
 # if defined(USE_DEBUG) && USE_DEBUG != 0
-#  define DEBUG ft_putstr("function: "); ft_putstr(__func__); ft_putstr(", line: "); ft_putnbr(__LINE__); ft_putchar('\n');
+#  define DEBUG ft_putendl(__func__); ft_putnbr(__LINE__);
 # else
 #  define DEBUG
 # endif
@@ -83,7 +64,7 @@
 #  define EXIT(v) exit (v)
 # else
 #  define EXIT(v) return (v)
-#endif
+# endif
 
 /*
 ** optimisation flags to replace code with macro, assembler or other code
@@ -297,12 +278,12 @@ typedef	union			u_ldouble16c
 ** memory related defines
 */
 
-# define MEM_K * 1024
-# define MEM_M MEM_K MEM_K
-# define MEM_G MEM_M MEM_K
-# define MEM_T MEM_G MEM_K
-# define BUFF_SIZE 1 MEM_K
-# define PAGE_SIZE 1 MEM_G
+# define MEM_K 1024
+# define MEM_M (MEM_K * MEM_K)
+# define MEM_G (MEM_M * MEM_K)
+# define MEM_T (MEM_G * MEM_K)
+# define BUFF_SIZE MEM_K
+# define PAGE_SIZE MEM_G
 
 /*
 ** debug and protection related defines
@@ -638,7 +619,7 @@ struct					s_list
 # define OBJECT_FUNCTION_DLLIST 0
 
 typedef struct s_2list	t_2list;
-struct 					s_2list
+struct					s_2list
 {
 	const uint32_t	object_type;
 	const uint64_t	object_functions;
@@ -1215,15 +1196,15 @@ t_page_3gs				ft_page(void);
 ** intern flags to modify the beaving of certain functions
 */
 
-uint64_t			*ft_global_flags(void);
-int					ft_env_init(char **env);
-int					ft_putenv(char *string);
-t_object			**ft_global_env(void);
-char				*ft_getenv(const char *name);
-t_object			*ft_object_search(t_object *lst, int (*f)(t_object *node,
-										void *user_data), void *user_data);
-t_object			*ft_object_new(void *data);
-t_object			**ft_object_add(t_object **list, t_object *node);
-void				*ft_object_free_node(t_object *node);
+uint64_t				*ft_global_flags(void);
+int						ft_env_init(char **env);
+int						ft_putenv(char *string);
+t_object				**ft_global_env(void);
+char					*ft_getenv(const char *name);
+t_object				*ft_object_search(t_object *lst, int (*f)(t_object
+								*node, void *user_data), void *user_data);
+t_object				*ft_object_new(void *data);
+t_object				**ft_object_add(t_object **list, t_object *node);
+void					*ft_object_free_node(t_object *node);
 
 #endif

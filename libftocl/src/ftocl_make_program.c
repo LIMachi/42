@@ -6,20 +6,14 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:02:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 19:07:57 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 07:15:42 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libftocl.h>
 
-static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
-												char *kernel_start)
+static inline char			*sf_the_thing(char *kernel_start)
 {
-	char	*kernel_end;
-	t_ocl_kernel	*out;
-	cl_int			e;
-	char	name_buff[128];
-
 	kernel_start += 8;
 	while (ft_isspace(*kernel_start))
 		++kernel_start;
@@ -27,6 +21,18 @@ static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 		++kernel_start;
 	while (ft_isspace(*kernel_start))
 		++kernel_start;
+	return (kernel_start);
+}
+
+static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
+												char *kernel_start)
+{
+	char			*kernel_end;
+	t_ocl_kernel	*out;
+	cl_int			e;
+	char			name_buff[128];
+
+	sf_the_thing(kernel_start);
 	out = (t_ocl_kernel*)ft_malloc(sizeof(t_ocl_kernel));
 	e = 0;
 	while (ft_isunix(*kernel_start))
@@ -48,13 +54,24 @@ static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 	return (out);
 }
 
+static inline void			sf_return_of_the_random_name(t_ocl_data *data,
+														char *ptr)
+{
+	t_ocl_kernel	*kernel;
+
+	kernel = sf_parse_and_create_kernel(data, ptr);
+	if (data->current_kernel == NULL)
+		data->current_kernel = kernel;
+	(void)ft_2lstadd(&data->current_program->kernels,
+						ft_2lstnew(0, (void*)kernel, 0));
+}
+
 cl_int						ftocl_make_program(uint64_t id, const char *src)
 {
 	cl_int			err;
 	t_ocl_data		*data;
 	t_ocl_program	*program;
 	char			*ptr;
-	t_ocl_kernel	*kernel;
 
 	data = ftocl_data();
 	program = (t_ocl_program*)ft_malloc(sizeof(t_ocl_program));
@@ -70,13 +87,7 @@ cl_int						ftocl_make_program(uint64_t id, const char *src)
 	data->current_program = program;
 	ptr = (char*)src - 1;
 	while ((ptr = ft_strstr(ptr + 1, "__kernel")) != NULL)
-	{
-		kernel = sf_parse_and_create_kernel(data, ptr);
-		if (data->current_kernel == NULL)
-			data->current_kernel = kernel;
-		(void)ft_2lstadd(&data->current_program->kernels,
-							ft_2lstnew(0, (void*)kernel, 0));
-	}
+		sf_return_of_the_random_name(data, ptr);
 	if (data->current_kernel == NULL)
 		ft_error(EINTERN, "No kernel was founs in program sources\n");
 	return (err);

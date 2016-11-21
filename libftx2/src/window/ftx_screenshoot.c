@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/18 16:15:01 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/18 16:37:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 06:56:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ftx_screenshoot(t_window *win, const char *folder_path)
 {
 	t_ubmp		ubmp;
 	t_bitmap	*bmp;
-	char		buff[1 MEM_K];
+	char		buff[BUFF_SIZE];
 	size_t		len;
 
 	if (win == NULL)

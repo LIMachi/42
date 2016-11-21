@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/05 19:10:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 18:38:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 07:04:34 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@
 # define GDX_NEW 1
 # define GDX_FREE 2
 # define GDX_ACCES 4
-
 
 /*
 ** UNASCII is a 8 * 8 bmp used to print unrecognized characters
@@ -145,8 +144,9 @@
 #  define KEY_PAD_MINUS 78
 #  define KEY_CTRL_LEFT 256
 #  define KEY_PAD_0 82
-#  define KEY_B 0
-#  define KEY_R 0
+#  define KEY_B 11
+#  define KEY_R 15
+#  define KEY_L 37
 #  define KEY_X 7
 #  define KEY_Y 16
 #  define KEY_Z 6

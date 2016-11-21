@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/30 18:52:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/14 09:56:46 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 06:31:05 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	sf_putdata(void *data, size_t size)
 	}
 }
 
-void	ft_putlist(t_list **sl)
+void		ft_putlist(t_list **sl)
 {
 	int		i;
 	t_list	*current;

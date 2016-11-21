@@ -108,9 +108,9 @@ auteur:
 	@echo $(AUTHOR) > auteur
 
 norm:
-	@clear
-	norminette $(SRCDIR)
-	norminette $(SRCINC)
+	norminette $(DOTC)
+	norminette $(INCDIR)
+	$(foreach V, $(CLIB), make norm -C $(V);)
 
 items:
 	@echo "ITEMS = \\" > items;
@@ -118,5 +118,8 @@ items:
 	@less items
 
 test: all
+	./$(NAME) $(EXEARGS)
+
+grind: all
 	clear
 	valgrind ./$(NAME) $(EXEARGS)

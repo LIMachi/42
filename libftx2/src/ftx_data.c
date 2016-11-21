@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:19:22 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/20 18:33:53 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 06:54:55 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #if OS == LINUX
 
-void	*sf_protected_mlx_init(void)
+void		*sf_protected_mlx_init(void)
 {
 	void	*mlx;
 	int		err;
@@ -31,17 +31,19 @@ void	*sf_protected_mlx_init(void)
 		ft_log("DISPLAY' must have been there earlier, this filthy stealer. O");
 		ft_log("h well, no show tonight\n");
 	}
-	if (!err && (mlx = mlx_init()) == NULL && (err = 1))
+	if (!err && (mlx = mlx_init()) == NULL)
+	{
+		err = 1;
 		ft_log("mlx_init() failed, and I just don't know what went wrong :(\n");
+	}
 	if (err == 1)
-		//ft_global_callback(EXIT, "error on mlx_init()");
-		exit (-1);
+		exit(-1);
 	return (mlx);
 }
 
 #else
 
-void	*sf_protected_mlx_init(void)
+void		*sf_protected_mlx_init(void)
 {
 	void	*mlx;
 	int		err;
@@ -52,11 +54,13 @@ void	*sf_protected_mlx_init(void)
 		ft_log("Bad corrector, 'env -i' is bad, and you should fell bad for ");
 		ft_log("doing this :´(\nShuting down gracefully anyway\n");
 	}
-	if (!err && (mlx = mlx_init()) == NULL && (err = 1))
+	if (!err && (mlx = mlx_init()) == NULL)
+	{
+		err = 1;
 		ft_log("mlx_init() failed, and I just don't know what went wrong :(\n");
+	}
 	if (err == 1)
-		//ft_global_callback(EXIT, "error on mlx_init()");
-		exit (-1);
+		exit(-1);
 	return (mlx);
 }
 

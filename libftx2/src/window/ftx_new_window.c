@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 08:28:55 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/18 16:33:10 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 06:58:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,12 @@ static int	sf_call_keyup(int key)
 	return (0);
 }
 
+static int	sf_exit(void)
+{
+	exit(0);
+	return (0);
+}
+
 t_window	*ftx_new_window(const t_point size, const char *name,
 							const uint64_t *id)
 {
@@ -48,14 +54,16 @@ t_window	*ftx_new_window(const t_point size, const char *name,
 
 	if ((window = (t_window*)ft_memalloc(sizeof(t_window))) == NULL)
 		return (NULL);
-	if ((mlx = ftx_data()->mlx) != NULL &&
-			(window->win = mlx_new_window(mlx, size.x, size.y, (char*)name)) != NULL
-			&& (window->vbuffer = ftx_new_image(size)) != NULL && (window->name = ft_strdup(name)) != NULL)
+	window->win = mlx_new_window(mlx, size.x, size.y, (char*)name);
+	if ((mlx = ftx_data()->mlx) != NULL && window->win != NULL
+		&& (window->vbuffer = ftx_new_image(size)) != NULL
+		&& (window->name = ft_strdup(name)) != NULL)
 	{
 		window->size = size;
-		mlx_expose_hook(window->win , &ftx_refresh_window, window);
+		mlx_expose_hook(window->win, &ftx_refresh_window, window);
 		mlx_hook(window->win, 2, (1L << 0), &sf_call_keydown, NULL);
 		mlx_hook(window->win, 3, (1L << 1), &sf_call_keyup, NULL);
+		mlx_hook(window->win, 17, 0, &sf_exit, NULL);
 		ft_2lstadd(&ftx_data()->windows, ft_2lstnew(id, window, 0));
 		ftx_data()->focused_window = window;
 	}

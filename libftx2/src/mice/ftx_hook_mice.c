@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 09:51:11 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/19 12:34:28 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 07:03:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,15 @@
 
 static int	sf_motion_hook(int x, int y, void *p)
 {
-	((t_mice*)p)->pos = ft_point(x, y);
-	if (((t_mice*)p)->callback != NULL)
-		return (((t_mice*)p)->callback(((t_mice*)p)->pos,
-				((t_mice*)p)->click_pos, ((t_mice*)p)->data));
+	t_mice	*m;
+
+	m = (t_mice)p;
+	if (x < 0 || y < 0 || x >= ftx_data()->focused_window->size.x
+			|| y >= ftx_data()->focused_window->size.y)
+		return (0);
+	m->pos = ft_point(x, y);
+	if (m->callback != NULL)
+		return (m->callback(m->pos, m->click_pos, m->data));
 	return (0);
 }
 
@@ -38,6 +43,9 @@ static int	sf_button_press_hook(int key, int x, int y, void *p)
 {
 	t_key_data	*k;
 
+	if (x < 0 || y < 0 || x >= ftx_data()->focused_window->size.x
+			|| y >= ftx_data()->focused_window->size.y)
+		return (0);
 	((t_mice*)p)->pos = ft_point(x, y);
 	((t_mice*)p)->click_pos = ft_point(x, y);
 	k = &((t_mice*)p)->keymap[key];
@@ -52,6 +60,9 @@ static int	sf_button_release_hook(int key, int x, int y, void *p)
 {
 	t_key_data	*k;
 
+	if (x < 0 || y < 0 || x >= ftx_data()->focused_window->size.x
+			|| y >= ftx_data()->focused_window->size.y)
+		return (0);
 	((t_mice*)p)->pos = ft_point(x, y);
 	k = &((t_mice*)p)->keymap[key];
 	k->status = FTX_KEY_STATUS_RELEASED;
@@ -74,7 +85,7 @@ int			ftx_hook_mice_move(t_window *window, int (*callback)(t_point pos,
 	}
 	mice = &window->mice;
 	mice->pos = ft_point(!0, !0);
-	mice->click_pos = ft_point(!0, !0),
+	mice->click_pos = ft_point(!0, !0);
 	mice->callback = callback;
 	mice->data = data;
 	mlx_hook(window->win, 6, (1L << 6), &sf_motion_hook, (void*)mice);

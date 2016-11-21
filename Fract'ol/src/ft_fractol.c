@@ -393,14 +393,22 @@ int		main(int argc, char **argv, char **env)
 	int	fd;
 
 	ft_init(env);
-	if (argc < 2)
+	if (argc < 2 || argc > 3)
 		return (print_usage(argv[0]));
-	if ((fd = open(argv[1], O_RDONLY)) == -1)
-		return (-1);
+	if (argc == 3)
+	{
+		if ((fd = open(argv[1], O_RDONLY)) == -1)
+			return (-1);
+	}
+	else
+	{
+		if ((fd = open("./scl/fractol.cl", O_RDONLY)) == -1)
+			return (-1);
+	}
 	ftocl_make_program(ftocl_str_to_id64("fractol"), ft_str_clear_commentaries(ft_readfile(fd)));
 	close(fd);
-	ft_fractol_data()->lock = ftocl_str_to_id64(argv[2]) != ftocl_str_to_id64("julia");
-	if (!(fd = ftocl_set_current_kernel(ftocl_str_to_id64(argv[2]))))
+	ft_fractol_data()->lock = ftocl_str_to_id64(argv[argc - 1]) != ftocl_str_to_id64("julia");
+	if (!(fd = ftocl_set_current_kernel(ftocl_str_to_id64(argv[argc - 1]))))
 		fractol();
 	if (fd == 1)
 		ft_putendl("There was no fractal correcponding to the id passed in arg");
