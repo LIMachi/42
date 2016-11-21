@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/18 14:32:51 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/18 14:53:15 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:11:11 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 t_image	*ftx_slerp_pixel(t_image *img, const t_point pos, const int color,

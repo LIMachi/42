@@ -98,6 +98,8 @@ ITEMS = \
 		ft_lst/ft_lstnew \
 		ft_math/ft_acos \
 		ft_math/ft_asin \
+		ft_math/ft_modf \
+		ft_math/ft_modd \
 		ft_math/ft_cos \
 		ft_math/ft_pow10d \
 		ft_math/ft_pow10f \

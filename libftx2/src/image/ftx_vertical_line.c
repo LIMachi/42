@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/02 12:47:51 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 12:26:55 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:11:18 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 inline static void	sf_vertical_line(t_image *img, t_point a, t_point b,

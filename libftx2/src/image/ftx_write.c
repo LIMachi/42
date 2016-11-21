@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 08:43:44 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 12:28:01 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 19:15:42 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 static int64_t	sf_code_to_ascii(unsigned char code)
@@ -51,7 +52,7 @@ static int		sf_print_char(t_image *img, t_point *pos, int color, char c)
 
 	if (c == '\n')
 	{
-		*pos = ft_point(img->size.x + 1, pos->y + 10);
+		*pos = ft_point(1, pos->y + 10);
 		return (pos->y + 10 < img->size.y);
 	}
 	y = -1;

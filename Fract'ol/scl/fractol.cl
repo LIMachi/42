@@ -17,14 +17,12 @@ typedef struct
 	point			size;
 	comp			vp_ul;
 	comp			vp_dr;
-	unsigned int	anti_alias;
+	float			color;
 }	t_fractol_args;
 
 comp	ccomp(float r, float i);
 comp	comp_sqr(comp z);
 comp	comp_add(comp a, comp b);
-float	ft_absf(float v);
-float	ft_modf(float v, float m);
 int		hsv2rgb(float hue, float saturation, float value);
 int		coloration(int iteration, int max);
 
@@ -55,25 +53,6 @@ comp	comp_add(comp a, comp b)
 	return (out);
 }
 
-float	ft_absf(float v)
-{
-	if (v < 0.0f)
-		return (-v);
-	return (v);
-}
-
-float	ft_modf(float v, float m)
-{
-	if (m == 0.0f)
-		return (-1.0f);
-	m = ft_absf(m);
-	while (v < 0.0f)
-		v += m;
-	while (v >= m)
-		v -= m;
-	return (v);
-}
-
 int		hsv2rgb(float hue, float saturation, float value)
 {
 	float	c;
@@ -83,8 +62,8 @@ int		hsv2rgb(float hue, float saturation, float value)
 	float	tmp[3];
 
 	c = value * saturation;
-	h = ft_modf(hue, 360.0f) / 60.0f;
-	x = c * (1.0f - ft_absf(ft_modf(h, 2.0f) - 1.0f));
+	h = fmod(hue, 360.0f) / 60.0f;
+	x = c * (1.0f - fabs(fmod(h, 2.0f) - 1.0f));
 	m = value - c;
 	tmp[0] = m + c * ((h >= 0.0f && h < 1.0f) || (h >= 5.0f && h < 6.0f))
 			+ x * ((h >= 1.0f && h < 2.0f) || (h >= 4.0f && h < 5.0f));
@@ -100,7 +79,7 @@ int		coloration(int iteration, int max)
 {
 	if (iteration == max)
 		return (0);
-	return (hsv2rgb(360 * (float)iteration / (float)max, 1.0f, 1.0f));
+	return (hsv2rgb(360.0f * (float)iteration / (float)max, 1.0f, 1.0f));
 }
 
 __kernel void	mandelbrot( __global const t_fractol_args *args,

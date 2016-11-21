@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 06:56:25 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 19:48:04 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1206,5 +1206,7 @@ t_object				*ft_object_search(t_object *lst, int (*f)(t_object
 t_object				*ft_object_new(void *data);
 t_object				**ft_object_add(t_object **list, t_object *node);
 void					*ft_object_free_node(t_object *node);
+
+float					ft_modf(float v, float d);
 
 #endif

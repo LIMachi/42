@@ -6,10 +6,12 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 09:16:55 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 09:19:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:20:00 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
+#include <mlx.h>
 #include <libftx.h>
 
 int		ftx_free_image(t_image *img)

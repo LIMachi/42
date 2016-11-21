@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 08:28:55 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 06:58:57 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:21:40 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
+#include <mlx.h>
 #include <libftx.h>
-
-#define FTX_DOUBLETAP_TICK 20
 
 static int	sf_call_keydown(int key)
 {
@@ -54,9 +54,9 @@ t_window	*ftx_new_window(const t_point size, const char *name,
 
 	if ((window = (t_window*)ft_memalloc(sizeof(t_window))) == NULL)
 		return (NULL);
-	window->win = mlx_new_window(mlx, size.x, size.y, (char*)name);
-	if ((mlx = ftx_data()->mlx) != NULL && window->win != NULL
-		&& (window->vbuffer = ftx_new_image(size)) != NULL
+	mlx = ftx_data()->mlx;
+	if (mlx != NULL && (window->win = mlx_new_window(mlx, size.x, size.y,
+		(char*)name)) != NULL && (window->vbuffer = ftx_new_image(size)) != NULL
 		&& (window->name = ft_strdup(name)) != NULL)
 	{
 		window->size = size;

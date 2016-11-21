@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:22:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 12:13:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:10:32 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 inline static void	sf_line1(t_image *img, t_ftx_line_data v, t_point color)

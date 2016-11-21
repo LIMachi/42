@@ -1,42 +1,137 @@
-#include "../../minilibx_X11/mlx.h"
-#include "../../libft/inc/libft.h"
-#include <stdio.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/11/21 16:49:56 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/21 18:11:02 by hmartzol         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-//DISPLAY
+#include <libftocl.h>
+#include <libftx.h>
+#include <fractol.h>
 
-void	*protected_mlx_init(const char **env)
+/*
+** return print all kernel names found in source and return the number of
+** names print this way (return -1 on error)
+*/
+
+int		print_kernel_names(const char *ocl_src)
 {
-	void	*mlx;
+	char	*tmp;
+	int		out;
+	char	name_buff[128];
 	int		i;
-	int		err;
 
-	err = 0;
-	if (*env == NULL && (err = 1))
+	tmp = ((char*)ocl_src) - 1;
+	out = 0;
+	while ((tmp = ft_strstr(tmp + 1, "__kernel")) != NULL && ++out)
 	{
-		ft_log("Bad corrector, 'env -i' is bad, and you should fell bad for ");
-		ft_log("doing this :´(\nShuting down gracefully anyway\n");
+		tmp += 8;
+		while (ft_isspace(*tmp))
+			++tmp;
+		while (ft_isalnum(*tmp))
+			++tmp;
+		while (ft_isspace(*tmp))
+			++tmp;
+		i = 0;
+		while (ft_isunix(*tmp) && i < 127)
+			name_buff[i++] = *tmp++;
+		name_buff[i] = '\0';
+		ft_putendl(name_buff);
 	}
-	i = -1;
-	while (env[++i])
-		if (env[i] == ft_strstr((char *)env[i], "DISPLAY="))
-			break ;
-	if ((err == 0) && !env[i] && (err = 1))
-	{
-		ft_log("Weird, I can't found that damn display... oh, right, 'env -u ");
-		ft_log("DISPLAY' must have been here earlier, this filthy stealer. Oh");
-		ft_log(" well, no show tonight\n");
-	}
-	if (err == 0 && (mlx = mlx_init()) == NULL && (err = 1))
-		ft_log("mlx_init() failed, and I just don't know what went wrong :(\n");
-	if (err == 1)
-		ft_global_callback(EXIT, "reason: error on mlx_init()");
-	return (mlx);
+	return (out);
 }
 
-int	main(const int argc, const char **argv, const char **env)
-{
-	void	*mlx;
+/*
+** ft_str_clear_commentaries will set all character in comentaries to ' '
+** (except '\n')
+*/
 
-	mlx = protected_mlx_init(env);
+char	*ft_str_clear_commentaries(char *str)
+{
+	char	*out;
+
+	out = str;
+	while (*str != '\0')
+		if (*str++ == '/' && (*str == '/' || *str == '*') && (str[-1] = ' '))
+		{
+			if (*str == '/')
+				while (*str != '\0' && *str != '\n' && (*str = ' '))
+					++str;
+			else if (*str == '*')
+			{
+				while (*str != '\0' && !(str[-1] == '*' && *str == '/'))
+					if (*(str++ - 1) != '\n')
+						str[-2] = ' ';
+				if (str[-1] != '\n')
+					str[-1] = ' ';
+			}
+		}
+	return (out);
+}
+
+int		print_usage(char *name)
+{
+	char	*tmp;
+	int		fd;
+
+	ft_putstr("Usage: ");
+	if ((tmp = ft_strrchr(name, '/')) == NULL)
+		ft_putstr(name);
+	else
+		ft_putstr(tmp + 1);
+	ft_putstr(" [source.cl] <kernel_id>\n");
+	ft_putstr("Kernel ids found in default ./scl/fractol.cl:\n");
+	if ((fd = open("./scl/fractol.cl", O_RDONLY)) == -1)
+		ft_putstr("./scl/fractol.cl can't be oppened\n");
+	else
+	{
+		if ((tmp = ft_readfile(fd)) == NULL)
+			ft_putstr("./scl/fractol.cl can't be read\n");
+		close(fd);
+		if (print_kernel_names(ft_str_clear_commentaries(tmp)) == 0)
+			ft_putstr("Can't find kernel names in ./scl/fractol.cl\n");
+		ft_free(tmp);
+	}
+	ft_end();
+	return (0);
+}
+
+void	print_no_id(char *src, char *ptr)
+{
+	ft_putstr("There was no fractal correcponding to the id passed in arg");
+	ft_putstr(". Valid id for ");
+	ft_putstr(src);
+	ft_putstr(" are:\n");
+	print_kernel_names(ptr);
+}
+
+int		main(int argc, char **argv, char **env)
+{
+	int		fd;
+	char	*src;
+	char	*ptr;
+
+	ft_init(env);
+	if (argc < 2 || argc > 3)
+		return (print_usage(argv[0]));
+	src = argc == 2 ? "./scl/fractol.cl" : argv[1];
+	if ((fd = open(src, O_RDONLY)) == -1)
+		return (-1);
+	ftocl_make_program(ftocl_str_to_id64("fractol"),
+						ft_str_clear_commentaries(ptr = ft_readfile(fd)));
+	close(fd);
+	fractol_data()->lock = ftocl_str_to_id64(argv[argc - 1]) !=
+												ftocl_str_to_id64("julia");
+	if (!(fd = ftocl_set_current_kernel(ftocl_str_to_id64(argv[argc - 1]))))
+		fractol();
+	if (fd == 1)
+		print_no_id(src, ptr);
+	ft_free(ptr);
+	ftocl_end();
+	return (0);
 }

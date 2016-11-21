@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 11:58:05 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/16 12:25:34 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:10:15 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 t_image	*ftx_img_to_img(t_image *out, const t_point pos, const t_image *img,

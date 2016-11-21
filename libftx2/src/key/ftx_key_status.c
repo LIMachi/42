@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 13:28:41 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/19 11:30:37 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:18:52 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 int	*ftx_key_status(int key)

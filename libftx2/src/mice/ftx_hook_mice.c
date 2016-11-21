@@ -6,10 +6,12 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 09:51:11 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 07:03:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:21:21 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
+#include <mlx.h>
 #include <libftx.h>
 
 /*
@@ -29,7 +31,7 @@ static int	sf_motion_hook(int x, int y, void *p)
 {
 	t_mice	*m;
 
-	m = (t_mice)p;
+	m = (t_mice*)p;
 	if (x < 0 || y < 0 || x >= ftx_data()->focused_window->size.x
 			|| y >= ftx_data()->focused_window->size.y)
 		return (0);

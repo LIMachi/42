@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/18 16:15:01 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 06:56:51 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:15:05 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 int	ftx_screenshoot(t_window *win, const char *folder_path)

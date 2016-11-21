@@ -27,6 +27,7 @@ ITEMS = \
 		image/ftx_pixel \
 		image/ftx_put_pixel_img \
 		image/ftx_selection_square \
+		image/ftx_set_cursor \
 		image/ftx_slerp_pixel \
 		image/ftx_vertical_line \
 		image/ftx_write \

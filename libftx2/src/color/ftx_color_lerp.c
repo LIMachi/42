@@ -6,11 +6,9 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/15 17:31:53 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/18 14:54:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:08:25 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <libftx.h>
 
 /*
 ** will return a color lerp (blending/interpolation), of color front (f) on

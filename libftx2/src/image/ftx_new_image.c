@@ -6,10 +6,12 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 09:21:21 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/17 15:06:47 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:20:29 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
+#include <mlx.h>
 #include <libftx.h>
 
 t_image	*ftx_new_image(t_point size)

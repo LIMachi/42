@@ -6,12 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 09:28:39 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/18 14:20:35 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:14:48 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
+#include <mlx.h>
 #include <libftx.h>
-#include <stdio.h>
 
 int	ftx_refresh_window(t_window *win)
 {

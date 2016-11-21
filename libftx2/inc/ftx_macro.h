@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/05 19:10:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 07:04:34 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:14:02 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,11 +174,18 @@
 # define MICE_SCROLL_UP 4
 # define MICE_SCROLL_DOWN 5
 
+# define FTX_KEY_STATUS_PRESSED 1
+# define FTX_KEY_STATUS_HOLD 2
+# define FTX_KEY_STATUS_RELEASED 0
+# define FTX_KEY_STATUS_DOUBLED 3
+
 # define FTX_BUTTON 0
 # define FTX_BUTTON_CLICK 1
 # define FTX_BUTTON_MAINTAIN 2
 # define FTX_BUTTON_TOGGLE 3
 # define FTX_BUTTON_SLIDER 4
 # define FTX_BUTTON_TEXT_BOX 5
+
+# define FTX_DOUBLETAP_TICK 20
 
 #endif

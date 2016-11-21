@@ -6,14 +6,17 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:04:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 04:27:19 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 20:41:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FRACTOL_H
 # define FRACTOL_H
 
-# include <libftocl.h>
+#include <libftocl.h>
+
+#define WIDTH	(1920 * 1)
+#define HEIGHT	(1080 * 1)
 
 typedef struct	s_fractol_args
 {
@@ -22,7 +25,7 @@ typedef struct	s_fractol_args
 	t_cl_point	size;
 	t_cl_comp	vp_ul;
 	t_cl_comp	vp_dr;
-	cl_uint		anti_alias;
+	cl_float	color;
 }				t_fractol_args;
 
 typedef struct	s_fractol_data
@@ -33,5 +36,17 @@ typedef struct	s_fractol_data
 	int				lock;
 	int				info;
 }				t_fractol_data;
+
+void			fractol(void);
+void			zoom(cl_float zoom);
+void			view_port_cut(t_fractol_args *args, t_point a, t_point b);
+t_fractol_data	*fractol_data(void);
+int				refresh_fractol_window(t_window *win);
+int				call_key_0(int key, int status, void *data);
+int				call_key_1(int key, int status, void *data);
+int				call_key_2(int key, int status, void *data);
+int				call_mice_button(int button, int status, void *data);
+int				call_mice_move(t_point pos, t_point click_pos, void *data);
+void			print_info(t_fractol_data *data, t_image *img);
 
 #endif

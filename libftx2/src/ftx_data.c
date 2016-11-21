@@ -6,10 +6,12 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:19:22 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 06:54:55 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:19:22 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
+#include <mlx.h>
 #include <libftx.h>
 
 #if OS == LINUX

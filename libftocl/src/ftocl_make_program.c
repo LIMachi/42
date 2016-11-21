@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:02:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 07:15:42 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 08:27:55 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static inline t_ocl_kernel	*sf_parse_and_create_kernel(t_ocl_data *data,
 	cl_int			e;
 	char			name_buff[128];
 
-	sf_the_thing(kernel_start);
+	kernel_start = sf_the_thing(kernel_start);
 	out = (t_ocl_kernel*)ft_malloc(sizeof(t_ocl_kernel));
 	e = 0;
 	while (ft_isunix(*kernel_start))

@@ -6,10 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/18 14:30:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/18 14:59:10 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 17:11:07 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <libft.h>
 #include <libftx.h>
 
 t_image	*ftx_put_selection_square(t_image *img, const t_point a,

@@ -6,20 +6,14 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 11:11:43 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 07:12:40 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/21 18:44:23 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFTX_H
 # define LIBFTX_H
-# include <libft.h>
-# include <ftx_macro.h>
-# include <mlx.h>
 
-# define FTX_KEY_STATUS_PRESSED 1
-# define FTX_KEY_STATUS_HOLD 2
-# define FTX_KEY_STATUS_RELEASED 0
-# define FTX_KEY_STATUS_DOUBLED 3
+# include <ftx_macro.h>
 
 typedef struct s_image		t_image;
 typedef struct s_mice		t_mice;
@@ -333,5 +327,6 @@ int							ftx_screenshoot(t_window *win,
 											const char *folder_path);
 
 int							*ftx_button_status(int button);
+t_image						*ftx_set_cursor(t_image *img, int x, int y);
 
 #endif

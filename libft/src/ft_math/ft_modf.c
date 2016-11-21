@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ftx_key_hook.c                                     :+:      :+:    :+:   */
+/*   ft_modf.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/17 12:56:42 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 17:18:45 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/21 19:45:26 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/21 19:47:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
-#include <libftx.h>
 
-int	ftx_key_hook(int key, int (*callback)(int key, int status, void *data),
-				void *data)
+float	ft_modf(float v, float d)
 {
-	if (key >= KEYMAP_SIZE)
-	{
-		ft_error(EINVAL, "ftx_key_hook got wrong key code\n");
-		return (-1);
-	}
-	ftx_data()->keymap[key] = (t_key_data){
-		.status = FTX_KEY_STATUS_RELEASED,
-		.callback = callback,
-		.data = data,
-		.tick = !0u};
-	return (0);
+	if (d == 0.0f)
+		return (-1.0f);
+	if (v == 0)
+		return (0.0f);
+	if (d < 0.0f)
+		d = -d;
+	while (v < 0.0f)
+		v += d;
+	while (v >= d)
+		v -= d;
+	return (v);
 }

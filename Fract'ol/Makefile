@@ -13,7 +13,13 @@ INCDIR = ./inc
 OBJDIR = ./OBJ
 
 #name of files to compile without the extension
-ITEMS = ft_fractol
+ITEMS = call_key \
+		call_mice \
+		fractol_data \
+		fractol \
+		main \
+		print_info \
+		zoom
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
