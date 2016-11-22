@@ -38,22 +38,12 @@ t_bitmap			*ft_ubmp_to_bmp(t_ubmp *ubmp)
 	if (ubmp == NULL || ubmp->size.x < 1 || ubmp->size.y < 1 || ubmp->data ==
 			NULL || ((out = (t_bitmap*)ft_memalloc(sizeof(t_bitmap))) == NULL))
 		return (NULL);
-	out->info.size_image = sizeof(unsigned char) * 4 * ubmp->size.x *
-														ubmp->size.y;
-	out->info.dib_size = 124;
-	out->info.width = ubmp->size.x;
-	out->info.height = ubmp->size.y;
-	out->info.planes = 1;
-	out->info.bit_count = 32;
-	out->info.bit_compression = 3;
-	out->info.x_pixels_meter = 1024;
-	out->info.y_pixels_meter = 1024;
-	out->info.colors_in_tab = 0;
-	out->info.color_important = 0;
-	out->info.alpha_bmask = 0xFF000000;
-	out->info.red_bmask = 0x00FF0000;
-	out->info.green_bmask = 0x0000FF00;
-	out->info.blue_bmask = 0x000000FF;
+	out->info = (t_dib_header){.dib_size = 56, .width = ubmp->size.x,
+		.height = ubmp->size.y, .planes = 1, .bit_count = 32,
+		.bit_compression = 3, .size_image = 4 * ubmp->size.x * ubmp->size.y,
+		.x_pixels_meter = 3777, .y_pixels_meter = 3777, .colors_in_tab = 0,
+		.color_important = 0, .red_bmask = 0xFF0000, .green_bmask = 0xFF00,
+		.blue_bmask = 0xFF, .alpha_bmask = 0xFF000000};
 	if (sf_ubmp_to_bmp(ubmp, out) == -1)
 		return (ft_free(ubmp));
 	return (out);

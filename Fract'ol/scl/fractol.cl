@@ -1,7 +1,15 @@
+#define USE_DOUBLE 0
+
+#if USE_DOUBLE
+typedef double		t_float;
+#else
+typedef float		t_float;
+#endif
+
 typedef struct
 {
-	float r;
-	float i;
+	t_float r;
+	t_float i;
 }	comp;
 
 typedef struct
@@ -20,20 +28,34 @@ typedef struct
 	float			color;
 }	t_fractol_args;
 
-float	comp_abs(comp z);
-comp	ccomp(float r, float i);
+comp	comp_divide(comp a, comp b);
+t_float	comp_abs(comp z);
+comp	ccomp(t_float r, t_float i);
 comp	comp_sqr(comp z);
 comp	comp_cube(comp z);
 comp	comp_add(comp a, comp b);
 int		hsv2rgb(float hue, float saturation, float value);
 int		coloration(int iteration, int max, float shift);
 
-float	comp_abs(comp z)
+comp	comp_divide(comp a, comp b)
+{
+	comp	out;
+
+	if(b.r == 0)
+		b.r = 0.00000001;
+	if(b.i == 0)
+		b.i = 0.00000001;
+	out.r = (a.r * b.r + a.i * b.i) / (b.r * b.r + b.i * b.i);
+	out.i = (a.i * b.r - a.r * b.i) / (b.r * b.r + b.i * b.i);
+	return (out);
+}
+
+t_float	comp_abs(comp z)
 {
 	return (sqrt(z.r * z.r + z.i * z.i));
 }
 
-comp	ccomp(float r, float i)
+comp	ccomp(t_float r, t_float i)
 {
 	comp	out;
 
@@ -78,7 +100,7 @@ int		hsv2rgb(float hue, float saturation, float value)
 	float	tmp[3];
 
 	c = value * saturation;
-	h = fmod(hue, 360.0f) / 60.0f;
+	h = fmod(fabs(hue), 360.0f) / 60.0f;
 	x = c * (1.0f - fabs(fmod(h, 2.0f) - 1.0f));
 	m = value - c;
 	tmp[0] = m + c * ((h >= 0.0f && h < 1.0f) || (h >= 5.0f && h < 6.0f))
@@ -104,8 +126,8 @@ __kernel void	mandelbrot(__global const t_fractol_args *args, __global int *colo
 	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	c;
-	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
 	comp	z = args->z0;
 	unsigned int		iteration = 0;
 	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
@@ -122,8 +144,8 @@ __kernel void	julia(__global const t_fractol_args *args, __global int *color)
 	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	z;
-	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	z.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	z.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
 	comp	c = args->z0;
 	unsigned int		iteration = 0;
 	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
@@ -140,8 +162,8 @@ __kernel void	burning_ship(__global const t_fractol_args *args, __global int *co
 	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	c;
-	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
 	comp	z = args->z0;
 	unsigned int		iteration = 0;
 	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
@@ -154,39 +176,14 @@ __kernel void	burning_ship(__global const t_fractol_args *args, __global int *co
 	color[kindex] = coloration(iteration, args->iterations, args->color);
 }
 
-__kernel void	circle(__global const t_fractol_args *args, __global int *color)
-{
-	size_t		kindex =	get_global_id(0);
-	if (kindex >= (size_t)(args->size.x * args->size.y))
-		return ;
-	comp	c;
-	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
-	unsigned int		iteration = 0;
-	comp	z;
-	z = args->z0;
-	comp	t;
-	while ((unsigned int)iteration < args->iterations)
-	{
-		t.r = z.r * z.r;
-		t.i = z.i * z.i;
-		if (!(t.r + t.i) || (t.r + t.i) > 4.0f)
-			break ;
-		z.r = z.r / (t.r + t.i) + c.r;
-		z.i = z.i / (t.r + t.i) + c.i;
-		++iteration;
-	}
-	color[kindex] = coloration(iteration, args->iterations, args->color);
-}
-
 __kernel void	custom(__global const t_fractol_args *args, __global int *color)
 {
 	size_t		kindex =	get_global_id(0);
 	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	c;
-	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
 	unsigned int		iteration = 0;
 	comp	z;
 	z = args->z0;
@@ -211,8 +208,8 @@ __kernel void	multibrot(__global const t_fractol_args *args, __global int *color
 	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	c;
-	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
 	comp	z = args->z0;
 	unsigned int		iteration = 0;
 	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
@@ -223,14 +220,14 @@ __kernel void	multibrot(__global const t_fractol_args *args, __global int *color
 	color[kindex] = coloration(iteration, args->iterations, args->color);
 }
 
-__kernel void	newton(__global const t_fractol_args *args, __global int *color)
+__kernel void	newtonbug(__global const t_fractol_args *args, __global int *color)
 {
 	size_t		kindex =	get_global_id(0);
 	if (kindex >= (size_t)(args->size.x * args->size.y))
 		return ;
 	comp	c;
-	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
+	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
 	comp	z;
 	z = c;
 	comp	r1;
@@ -260,23 +257,110 @@ __kernel void	newton(__global const t_fractol_args *args, __global int *color)
 	color[kindex] = coloration(iteration, args->iterations, args->color);
 }
 
-__kernel void	thorn(__global const t_fractol_args *args, __global int *color)
+__kernel void	spider(__global const t_fractol_args *args, __global int *color)
 {
-		size_t		kindex =	get_global_id(0);
-		if (kindex >= (size_t)(args->size.x * args->size.y))
-			return ;
-		comp	c;
-		c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((float)((kindex % args->size.x)) / (float)args->size.x);
-		c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((float)((kindex / args->size.x)) / (float)args->size.y);
-		comp	z = args->z0;
-		float	t;
-		unsigned int		iteration = 0;
-		while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
-		{
-			t = z.r / cos(z.i) + c;
-			z.i = z.i / sin(z.r) + c;
-			z.r = t;
+	size_t		kindex =	get_global_id(0);
+	if (kindex >= (size_t)(args->size.x * args->size.y))
+		return ;
+	comp	z;
+	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	z.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
+	comp	c;
+	c = z;
+	unsigned int		iteration = 0;
+
+	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
+	{
+			z = comp_add(comp_sqr(z), c);
+			c = comp_add(comp_divide(c, ccomp(2, 0)), z);
 			++iteration;
-		}
-		color[kindex] = coloration(iteration, args->iterations, args->color);
+	}
+	color[kindex] = coloration(iteration, args->iterations, args->color);
+}
+
+__kernel void	circle(__global const t_fractol_args *args, __global int *color)
+{
+	size_t		kindex =	get_global_id(0);
+	if (kindex >= (size_t)(args->size.x * args->size.y))
+		return ;
+	comp	z;
+	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	z.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
+	comp	c;
+	c = args->z0;
+	unsigned int		iteration = 0;
+
+	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
+	{
+			z = comp_add(comp_sqr(z), ccomp(sin(comp_abs(z)), cos(comp_abs(c))));
+			c = ccomp(-z.i, z.r);
+			++iteration;
+	}
+	color[kindex] = coloration(iteration, args->iterations, args->color);
+}
+
+__kernel void	trijulia(__global const t_fractol_args *args, __global int *color)
+{
+	size_t		kindex =	get_global_id(0);
+	if (kindex >= (size_t)(args->size.x * args->size.y))
+		return ;
+	comp	z;
+	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	z.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
+	comp	c;
+	c = args->z0;
+	unsigned int		iteration = 0;
+
+	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
+	{
+			z = comp_add(comp_cube(z), c);
+			++iteration;
+	}
+	color[kindex] = coloration(iteration, args->iterations, args->color);
+}
+
+__kernel void	halfwing(__global const t_fractol_args *args, __global int *color)
+{
+	size_t		kindex =	get_global_id(0);
+	if (kindex >= (size_t)(args->size.x * args->size.y))
+		return ;
+	comp	z;
+	z.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	z.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
+	comp	c;
+	c = args->z0;
+	unsigned int		iteration = 0;
+
+	while (z.r * z.r + z.i * z.i < 4 && (unsigned int)iteration < args->iterations)
+	{
+			z = comp_add(z, c);
+			c = comp_cube(comp_add(z, ccomp(c.i, -c.r)));
+			++iteration;
+	}
+	color[kindex] = coloration(iteration, args->iterations, args->color);
+}
+
+__kernel void	brotiverse(__global const t_fractol_args *args, __global int *color)
+{
+	size_t		kindex =	get_global_id(0);
+	if (kindex >= (size_t)(args->size.x * args->size.y))
+		return ;
+	comp	c;
+	c.r = args->vp_ul.r + (args->vp_dr.r - args->vp_ul.r) * ((t_float)((kindex % args->size.x)) / (t_float)args->size.x);
+	c.i = args->vp_ul.i + (args->vp_dr.i - args->vp_ul.i) * ((t_float)((kindex / args->size.x)) / (t_float)args->size.y);
+	unsigned int		iteration = 0;
+	comp	z;
+	z = args->z0;
+	comp	t;
+	while ((unsigned int)iteration < args->iterations)
+	{
+		t.r = z.r * z.r * 2;
+		t.i = z.i * z.i;
+		if ((t.r + t.i) > 4.0f)
+			break ;
+		z.i = (3.0f * z.i * z.r) + cos(c.i);
+		z.r = t.r - t.i + sin(c.r);
+		++iteration;
+	}
+	color[kindex] = coloration(iteration, args->iterations, args->color);
 }

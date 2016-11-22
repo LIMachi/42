@@ -16,7 +16,7 @@
 
 size_t	print_float_3_8(t_image *img, float f, int color)
 {
-	char	buff[10];
+	char	buff[8];
 	size_t	out;
 
 	if (f > 999.999999f || f < -999.999999f)
@@ -35,9 +35,7 @@ size_t	print_float_3_8(t_image *img, float f, int color)
 	buff[5] = '0' + (int)ft_modf(f * 100.0f, 10.0f);
 	buff[6] = '0' + (int)ft_modf(f * 1000.0f, 10.0f);
 	buff[7] = '0' + (int)ft_modf(f * 10000.0f, 10.0f);
-	buff[8] = '0' + (int)ft_modf(f * 100000.0f, 10.0f);
-	buff[9] = '0' + (int)ft_modf(f * 1000000.0f, 10.0f);
-	return (out + ftx_write(img, buff, 10, color));
+	return (out + ftx_write(img, buff, 8, color));
 }
 
 size_t	print_complex_3_8(t_image *img, t_cl_comp c, int color)

@@ -131,7 +131,6 @@ int		main(int argc, char **argv, char **env)
 		fractol();
 	if (fd == 1)
 		print_no_id(src, ptr);
-	ft_free(ptr);
 	ftocl_end();
 	return (0);
 }

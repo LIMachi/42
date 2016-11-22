@@ -14,29 +14,6 @@
 #include <libftx.h>
 #include <fractol.h>
 
-int			call_key_0(int key, int status, void *data)
-{
-	int			up;
-	t_window	*win;
-
-	win = (t_window*)data;
-	up = 0;
-	if (key == KEY_R && status == FTX_KEY_STATUS_PRESSED)
-		up = 1;
-	if (key == KEY_B && status == FTX_KEY_STATUS_PRESSED && (up = 1))
-		ftx_fill_image(win->vbuffer, 0, 0.01);
-	if (key == KEY_W && status == FTX_KEY_STATUS_PRESSED && (up = 1))
-		ftx_fill_image(win->vbuffer, 0xFFFFFF, 0.01);
-	if (key == KEY_S && status == FTX_KEY_STATUS_PRESSED &&
-			*ftx_key_status(KEY_CTRL_LEFT) == FTX_KEY_STATUS_PRESSED)
-		ftx_screenshoot(win, "./");
-	if (key == KEY_L && status == FTX_KEY_STATUS_PRESSED)
-		fractol_data()->lock = 1 - fractol_data()->lock;
-	if (up)
-		refresh_fractol_window(win);
-	return (0);
-}
-
 static int	sf_call_key(int up, t_fractol_data *f)
 {
 	if (up == 0)
@@ -46,6 +23,29 @@ static int	sf_call_key(int up, t_fractol_data *f)
 								sizeof(t_fractol_args), &f->args);
 	refresh_fractol_window(ftx_data()->focused_window);
 	return (0);
+}
+
+int			call_key_0(int key, int status, void *data)
+{
+	int				up;
+	t_fractol_data	*f;
+
+	f = (t_fractol_data*)data;
+	up = 0;
+	if (key == KEY_R && status == FTX_KEY_STATUS_PRESSED)
+		up = 1;
+	if (key == KEY_S && status == FTX_KEY_STATUS_PRESSED &&
+			*ftx_key_status(KEY_CTRL_LEFT) == FTX_KEY_STATUS_PRESSED)
+		ftx_screenshoot(ftx_data()->focused_window, "./");
+	if (key == KEY_L && status == FTX_KEY_STATUS_PRESSED)
+		fractol_data()->lock = 1 - fractol_data()->lock;
+	if (key == KEY_PAD_0 && (up = 1))
+		*f = (t_fractol_data){(t_fractol_args){.iterations = 750u,
+		.z0 = (t_cl_comp){0.0, 0.0}, .size = (t_cl_point){WIDTH, HEIGHT},
+		.vp_ul = (t_cl_comp){-1.77, -1.0}, .vp_dr = (t_cl_comp){1.77, 1.0},
+		.color = 0.0}, .array_size = f->array_size, .rbmp = f->rbmp, .lock = 1,
+		.info = 1};
+	return (sf_call_key(up, f));
 }
 
 int			call_key_2(int key, int status, void *data)
@@ -83,21 +83,16 @@ int			call_key_1(int key, int status, void *data)
 	if (!(up = 0) && status != FTX_KEY_STATUS_PRESSED)
 		return (0);
 	f = (t_fractol_data*)data;
-	if (key == KEY_PAD_0 && (up = 1))
-		*f = (t_fractol_data){(t_fractol_args){.iterations = 750u,
-		.z0 = (t_cl_comp){0.0f, 0.0f}, .size = (t_cl_point){WIDTH, HEIGHT},
-		.vp_ul = (t_cl_comp){-1.77f, -1.0f}, .vp_dr = (t_cl_comp){1.77f, 1.0f},
-		.color = 0.0f}, .array_size = f->array_size, .rbmp = f->rbmp, .lock = 1,
-		.info = 1};
 	if (*ftx_key_status(KEY_I) && key == KEY_PAD_PLUS && (up = 1))
-		f->args.iterations = (f->args.iterations += 1 + 9 * (f->args.iterations
-	> 50) + 90 * (f->args.iterations > 500) < 5000) ? f->args.iterations : 5000;
+		f->args.iterations = ((f->args.iterations 
+		+= (1 + 49 * (f->args.iterations > 200))) < 5000) ? f->args.iterations : 5000;
 	if (*ftx_key_status(KEY_I) && key == KEY_PAD_MINUS && (up = 1))
-		f->args.iterations = (f->args.iterations -= 1 + 9 * (f->args.iterations
-		> 50) + 90 * (f->args.iterations > 500) > 0) ? f->args.iterations : 1;
-	if (*ftx_key_status(KEY_C) && (key == KEY_PAD_MINUS || key == KEY_PAD_PLUS)
-			&& (up = 1))
-		f->args.color += (key == KEY_PAD_PLUS) - (key == KEY_PAD_MINUS);
+		f->args.iterations = ((f->args.iterations 
+		-= (1 + 49 * (f->args.iterations > 200))) > 1) ? f->args.iterations : 1;
+	if (*ftx_key_status(KEY_C) && key == KEY_PAD_PLUS && (up = 1))
+		f->args.color = f->args.color > 358.0 ? 0.0 : f->args.color + 1.0;
+	if (*ftx_key_status(KEY_C) && key == KEY_PAD_MINUS && (up = 1))
+		f->args.color = f->args.color < 1.0 ? 359.0 : f->args.color - 1.0;
 	if (key == KEY_H && (up = 1))
 		f->info = 1 - f->info;
 	return (sf_call_key(up, f));
