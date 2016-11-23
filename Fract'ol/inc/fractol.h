@@ -15,8 +15,13 @@
 
 # include <libftocl.h>
 
-# define WIDTH	(1920 * 1)
-# define HEIGHT	(1080 * 1)
+# if OS == MACINTOCH
+#  define WIDTH		2560
+#  define HEIGHT	1440
+# else
+#  define WIDTH		1920
+#  define HEIGHT	1080
+# endif
 
 typedef struct	s_fractol_args
 {
@@ -38,7 +43,7 @@ typedef struct	s_fractol_data
 }				t_fractol_data;
 
 void			fractol(void);
-void			zoom(cl_float zoom);
+void			zoom(t_cl_float zoom);
 void			view_port_cut(t_fractol_args *args, t_point a, t_point b);
 t_fractol_data	*fractol_data(void);
 int				refresh_fractol_window(t_window *win);

@@ -33,7 +33,7 @@ static void	sf_view_port_cut(t_fractol_args *args, t_point a, t_point b)
 
 void		view_port_cut(t_fractol_args *args, t_point a, t_point b)
 {
-	cl_float	r;
+	t_cl_float	r;
 	t_point		t;
 
 	if (ft_point_equal(a, b))
@@ -52,7 +52,7 @@ void		view_port_cut(t_fractol_args *args, t_point a, t_point b)
 	sf_view_port_cut(args, a, b);
 }
 
-void		zoom(cl_float zoom)
+void		zoom(t_cl_float zoom)
 {
 	t_fractol_args	*args;
 	t_point			mice;
@@ -66,8 +66,8 @@ void		zoom(cl_float zoom)
 	s = (t_cl_comp){.r = args->vp_dr.r - args->vp_ul.r,
 					.i = args->vp_dr.i - args->vp_ul.i};
 	s = (t_cl_comp){.r = s.r * zoom - s.r, .i = s.i * zoom - s.i};
-	args->vp_dr.r -= (1.0f - p.r) * s.r;
+	args->vp_dr.r -= (1.0 - p.r) * s.r;
 	args->vp_ul.r += p.r * s.r;
-	args->vp_dr.i -= (1.0f - p.i) * s.i;
+	args->vp_dr.i -= (1.0 - p.i) * s.i;
 	args->vp_ul.i += p.i * s.i;
 }

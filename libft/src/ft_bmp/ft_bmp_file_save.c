@@ -31,7 +31,7 @@ int			ft_bitmap_file_save(char *path, t_bitmap *bmp)
 	header.file_size = sizeof(t_bitmap_file_header) + bmp->info.dib_size +
 													bmp->info.size_image;
 	header.reserved = 0;
-	header.offset = 0;
+	header.offset = sizeof(t_bitmap_file_header) + bmp->info.dib_size;
 	if (ft_write(&fd, &header, sizeof(header)) == -1 ||
 		ft_write(&fd, &(bmp->info), bmp->info.dib_size) == -1 ||
 		ft_write(&fd, bmp->bmp, bmp->info.size_image) == -1)

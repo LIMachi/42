@@ -18,8 +18,8 @@ t_fractol_data	*fractol_data(void)
 {
 	static t_fractol_data	data = {.args = {.iterations = 750u,
 
-	.z0 = (t_cl_comp){0.0f, 0.0f}, .size = (t_cl_point){WIDTH, HEIGHT},
-	.vp_ul = (t_cl_comp){-1.77f, -1.0f}, .vp_dr = (t_cl_comp){1.77f, 1.0f},
+	.z0 = (t_cl_comp){0.0, 0.0}, .size = (t_cl_point){WIDTH, HEIGHT},
+	.vp_ul = (t_cl_comp){-1.77, -1.0}, .vp_dr = (t_cl_comp){1.77, 1.0},
 	.color = 0}, .array_size = sizeof(cl_int) * WIDTH * HEIGHT,
 	.rbmp = NULL, .lock = 1, .info = 1};
 	if (data.rbmp == NULL)

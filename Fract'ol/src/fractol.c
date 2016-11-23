@@ -62,20 +62,18 @@ void	fractol(void)
 {
 	t_window		*win;
 
-	if ((win = ftx_new_window(ft_point(1920, 1080), "fractol",
+	if ((win = ftx_new_window(ft_point(WIDTH, HEIGHT), "fractol",
 								(const uint64_t *)"fractol")) == NULL)
 		return ;
 	ftx_key_hook(KEY_EXIT, &call_exit, NULL);
-	ftx_key_hook(KEY_R, &call_key_0, ftx_data()->focused_window);
-	ftx_key_hook(KEY_B, &call_key_0, ftx_data()->focused_window);
-	ftx_key_hook(KEY_W, &call_key_0, ftx_data()->focused_window);
-	ftx_key_hook(KEY_S, &call_key_0, ftx_data()->focused_window);
-	ftx_key_hook(KEY_L, &call_key_0, ftx_data()->focused_window);
+	ftx_key_hook(KEY_R, &call_key_0, fractol_data());
+	ftx_key_hook(KEY_S, &call_key_0, fractol_data());
+	ftx_key_hook(KEY_L, &call_key_0, fractol_data());
 	ftx_key_hook(KEY_LEFT, &call_key_2, fractol_data());
 	ftx_key_hook(KEY_RIGHT, &call_key_2, fractol_data());
 	ftx_key_hook(KEY_UP, &call_key_2, fractol_data());
 	ftx_key_hook(KEY_DOWN, &call_key_2, fractol_data());
-	ftx_key_hook(KEY_PAD_0, &call_key_1, fractol_data());
+	ftx_key_hook(KEY_PAD_0, &call_key_0, fractol_data());
 	ftx_key_hook(KEY_PAD_PLUS, &call_key_1, fractol_data());
 	ftx_key_hook(KEY_PAD_MINUS, &call_key_1, fractol_data());
 	ftx_key_hook(KEY_H, &call_key_1, fractol_data());
