@@ -1,21 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_end.c                                           :+:      :+:    :+:   */
+/*   printf_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/22 17:30:50 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/11/23 05:25:17 by hmartzol          #+#    #+#             */
+/*   Updated: 2016/11/23 05:25:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include "printf.h"
 
-void	ft_end(void)
+void	prf_init(t_env *env)
 {
-	if (ft_global_log(LOG_SET | LOG_STORE, "Log ended\n") == NULL)
-		ft_error(ERROR_ERRNO, 0);
-	ft_global_log(LOG_END, NULL);
-	ft_env_clear();
+	env->flag = 0;
+	env->pressi = -1;
+	env->field = 0;
+	env->modif = 0;
+	env->pos = 0;
+	env->ret = 0;
+	env->err = 0;
+}
+
+void	prf_loop(t_env *env)
+{
+	env->flag = 0;
+	env->pressi = -1;
+	env->field = 0;
+	env->modif = 0;
 }

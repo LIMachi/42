@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 19:48:04 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/22 22:58:48 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,33 +324,35 @@ typedef	union			u_ldouble16c
 ** math defines
 */
 
-# if LOCAL_ENDIAN == BIG_ENDIAN
-#  define __QNAN_BYTES		{0x7f, 0xc0, 0, 0}
-# endif
-# if LOCAL_ENDIAN == LITTLE_ENDIAN
-#  define __QNAN_BYTES		{0, 0, 0xc0, 0x7f}
-# endif
-# define NAN	(((t_float4c){.c = __QNAN_BYTES}).f)
-# if LOCAL_ENDIAN == BIG_ENDIAN
-#  define __HUGE_VALF_BYTES	{0x7f, 0x80, 0, 0}
-# endif
-# if LOCAL_ENDIAN == LITTLE_ENDIAN
-#  define __HUGE_VALF_BYTES	{0, 0, 0x80, 0x7f}
-# endif
-# define HUGE_VALF	(((t_float4c){.c = __HUGE_VALF_BYTES}).f)
+# ifndef _MATH_H
+#  if LOCAL_ENDIAN == BIG_ENDIAN
+#   define __QNAN_BYTES		{0x7f, 0xc0, 0, 0}
+#  endif
+#  if LOCAL_ENDIAN == LITTLE_ENDIAN
+#   define __QNAN_BYTES		{0, 0, 0xc0, 0x7f}
+#  endif
+#  define NAN	(((t_float4c){.c = __QNAN_BYTES}).f)
+#  if LOCAL_ENDIAN == BIG_ENDIAN
+#   define __HUGE_VALF_BYTES	{0x7f, 0x80, 0, 0}
+#  endif
+#  if LOCAL_ENDIAN == LITTLE_ENDIAN
+#   define __HUGE_VALF_BYTES	{0, 0, 0x80, 0x7f}
+#  endif
+#  define HUGE_VALF	(((t_float4c){.c = __HUGE_VALF_BYTES}).f)
 
-# if LOCAL_ENDIAN == BIG_ENDIAN
-#  define __HUGE_VAL_BYTES	{0x7f, 0xf0, 0, 0, 0, 0, 0, 0}
-# endif
-# if LOCAL_ENDIAN == LITTLE_ENDIAN
-#  define __HUGE_VAL_BYTES	{0, 0, 0, 0, 0, 0, 0xf0, 0x7f}
-# endif
-# define HUGE_VAL	(((t_double8c){.c = __HUGE_VAL_BYTES}).d)
+#  if LOCAL_ENDIAN == BIG_ENDIAN
+#   define __HUGE_VAL_BYTES	{0x7f, 0xf0, 0, 0, 0, 0, 0, 0}
+#  endif
+#  if LOCAL_ENDIAN == LITTLE_ENDIAN
+#   define __HUGE_VAL_BYTES	{0, 0, 0, 0, 0, 0, 0xf0, 0x7f}
+#  endif
+#  define HUGE_VAL	(((t_double8c){.c = __HUGE_VAL_BYTES}).d)
 
-# define __HUGE_VALL_BYTES	{ 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0 }
-# define HUGE_VALL	(((t_ldouble16c){.c = __HUGE_VALL_BYTES}).ld)
+#  define __HUGE_VALL_BYTES	{ 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0 }
+#  define HUGE_VALL	(((t_ldouble16c){.c = __HUGE_VALL_BYTES}).ld)
 
-# define INFINITY	HUGE_VALF
+#  define INFINITY	HUGE_VALF
+# endif
 
 # define M_E			2.7182818284590452354
 # define M_LOG2E		1.4426950408889634074
@@ -1208,5 +1210,6 @@ t_object				**ft_object_add(t_object **list, t_object *node);
 void					*ft_object_free_node(t_object *node);
 
 float					ft_modf(float v, float d);
+void					ft_env_clear(void);
 
 #endif

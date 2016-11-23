@@ -241,7 +241,8 @@ ITEMS = \
 		ft_vector/ft_vector_substract \
 		ft_xtree/ft_xtree_add_next \
 		ft_xtree/ft_xtree_add_shild \
-		ft_xtree/ft_xtree_new
+		ft_xtree/ft_xtree_new \
+		ft_env/ft_env_clear
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
