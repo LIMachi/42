@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/18 10:36:24 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/10/29 06:04:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/25 23:39:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_bonus_read(const char *filepath, char **out)
 
 	if (filepath == NULL || out == NULL || (stat(filepath, &st)) == -1
 		|| !S_ISREG(st.st_mode) || st.st_size < 1
-		|| (fd = ft_open(filepath, O_RDONLY)).fd == -1)
+		|| (fd = ft_open(filepath, O_RDONLY, 0)).fd == -1)
 		return (-1);
 	if ((*out = (char*)ft_malloc(sizeof(char) * st.st_size)) == NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:00:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 07:14:59 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/12/15 17:10:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,12 @@ static void	notify(const char *errinfo, const void *private_info,
 
 t_ocl_data	*ftocl_data(void)
 {
-	static t_ocl_data	data = {.platform = 0};
 	cl_uint				n;
 	cl_int				e;
+	static t_ocl_data	data = {.platform = 0, .device = 0, .context = 0,
 
+	.queue = 0, .programs = NULL, .current_program = NULL,
+	.current_kernel = NULL};
 	if (data.platform == 0)
 	{
 		ft_log("Initializing OpenCL environement...\n");

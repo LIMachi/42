@@ -5,7 +5,7 @@ AUTHOR = hmartzol
 NAME = fractol
 
 #args passed to executable if executed from "make test"
-EXEARGS = scl/cl_fractol.cl mandelbrot
+EXEARGS = mandelbrot
 
 #path to folder containing source files, project header and resulting objects
 SRCDIR = ./src
@@ -61,6 +61,8 @@ endif
 ################################################################################
 ################################################################################
 
+DATE = $(shell date +'%G-%m-%d-%Hh%Mm%Ss')
+
 DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
 DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
 
@@ -68,7 +70,7 @@ INCLUDES = $(patsubst %, -I%, $(INCDIR)) $(patsubst %, -I%, $(PINC))
 
 SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(notdir $(shell find $(SRCDIR) -type d -not -path $(SRCDIR))))
 
-.PHONY: all libs clean fclean re norm relibs fcleanlibs items test
+.PHONY: all libs clean fclean re norm relibs fcleanlibs items test hell grind
 
 all: dirs auteur libs $(NAME)
 
@@ -126,6 +128,17 @@ items:
 test: all
 	./$(NAME) $(EXEARGS)
 
-grind: all
+valgrind_logs:
+	mkdir -p valgrind_logs
+
+grind: valgrind_logs all
 	clear
-	valgrind ./$(NAME) $(EXEARGS)
+	@echo "`valgrind --log-fd=1 ./$(NAME) $(EXEARGS)`" > ./valgrind_logs/valgrind_$(DATE).log
+
+hell: valgrind_logs all
+	clear
+	@echo "hell has come to earth..."
+	@echo "`valgrind -v --log-fd=1 --track-fds=yes --read-inline-info=yes --read-var-info=yes --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(EXEARGS)`" > ./valgrind_logs/hellgrind_$(DATE).log
+	@echo "time to look your fate"
+	@sleep 2
+	less ./valgrind_logs/hellgrind_$(DATE).log

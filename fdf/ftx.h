@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:17:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:41:07 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/25 23:39:07 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 
 # include <libft.h>
 # include <mlx.h>
+# if !defined(DEBUG)
+#  define DEBUG 0
+# endif
 # if NORM42 == 0
 #  include <time.h>
-# endif
-# if DEBUG == 1
-#  include <stdio.h>
 # endif
 
 # define GDX_NEW 1

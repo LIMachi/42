@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/22 22:58:48 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/12/15 00:13:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1183,10 +1183,10 @@ char					*ft_log(char *str);
 void					ft_init(char **env);
 
 /*
-** closing function used to free all global data
+** closing function used to free all global data and exit with code r
 */
 
-void					ft_end(void);
+void					ft_end(int r);
 
 /*
 ** pseudo malloc trickery
@@ -1211,5 +1211,15 @@ void					*ft_object_free_node(t_object *node);
 
 float					ft_modf(float v, float d);
 void					ft_env_clear(void);
+char					*ft_pwd(void);
+char					*ft_path_name(char *path);
+
+extern int				ft_printf(const char *restrict format, ...);
+
+int						ft_isinset(const char c, const char *set);
+size_t					ft_strcspn(const char *str, const char *reject);
+size_t					ft_strspn(const char *str, const char *accept);
+
+char					*ft_str_clear_commentaries(char *str);
 
 #endif

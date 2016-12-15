@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/19 15:03:54 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/19 15:10:25 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/12/13 16:51:51 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_putnstr_fd(char *str, int n, int fd)
 	int	t;
 
 	if (str == NULL || n <= 0)
-		return ;
+		return (-1);
 	t = ft_strlen(str);
 	n = n < t ? n : t;
 	write(fd, str, n);

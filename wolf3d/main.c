@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/21 16:49:56 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 04:14:08 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/29 07:08:10 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ typedef double	t_mat2[2][2];
 typedef struct	s_player
 {
 	t_vector2	pos;
-	t_vector2	dir;
-	t_vector2	scr;
+	double		dir;
+	double		fov;
+	double		speed;
 }				t_player;
 
 typedef struct	s_raycasting_data
@@ -39,6 +40,7 @@ typedef struct	s_raycasting_data
 	t_vector2	side_dis;
 	t_vector2	delta;
 	t_point		sign_step;
+	double		cam;
 }				t_raycasting_data;
 
 typedef struct	s_map
@@ -50,8 +52,9 @@ typedef struct	s_map
 t_player	*player(void)
 {
 	static t_player	player = {.pos = {1, 1},
-								.dir = {-1.0, 0.0},
-								.scr = {0.0, 0.66}};
+								.dir = 0.0,
+								.fov = 30 * M_PI / 180.0,
+								.speed = 1.0};
 
 	return (&player);
 }
@@ -66,12 +69,13 @@ t_map		*map(void)
 inline static void	prepare(t_raycasting_data *rcd, const t_player *p,
 							const int x, const int screen_width)
 {
-	double	cam;
-
-	cam = 2.0 * (double)x / (double)screen_width - 1.0;
+	rcd->cam = ((double)x - (double)screen_width / 2.0) * (p->fov / (double)screen_width);
+//	cam = 2.0 * (double)x / (double)screen_width - 1.0;
 	rcd->map_pos = (t_point){.x = p->pos.x, .y = p->pos.y};
-	rcd->ray_dir.x = p->dir.x + p->scr.x * cam;
-	rcd->ray_dir.y = p->dir.y + p->scr.y * cam;
+	rcd->ray_dir.x = sin(rcd->cam + p->dir);
+	rcd->ray_dir.y = cos(rcd->cam + p->dir);
+//	rcd->ray_dir. = p->dir.x + p->scr.x * cam;
+//	rcd->ray_dir.y = p->dir.y + p->scr.y * cam;
 	rcd->delta.x = sqrt(1 + (rcd->ray_dir.y * rcd->ray_dir.y) / (rcd->ray_dir.x
 															* rcd->ray_dir.x));
 	rcd->delta.y = sqrt(1 + (rcd->ray_dir.x * rcd->ray_dir.x) / (rcd->ray_dir.y
@@ -95,6 +99,8 @@ inline static t_point	dda_side_height(t_raycasting_data *rcd,
 {
 	int	side;
 
+	(void)p;
+//	printf("pos: %f, %f\n", p->pos.x, p->pos.y);
 	side = rcd->side_dis.y < rcd->side_dis.x;
 	while (rcd->map_pos.y >= 0 && rcd->map_pos.y < m->size.y &&
 			rcd->map_pos.x >= 0 && rcd->map_pos.x < m->size.x &&
@@ -111,21 +117,28 @@ inline static t_point	dda_side_height(t_raycasting_data *rcd,
 			rcd->map_pos.y += rcd->sign_step.y;
 			side = 1;
 		}
-	printf("\nside: %i\n", side);
-	printf("screen: %i\n", screen_height);
-	printf("collision: %i, %i\n", rcd->map_pos.x, rcd->map_pos.y);
-	printf("player: %f, %f\n", p->pos.x, p->pos.y);
-	printf("step: %i, %i\n", rcd->sign_step.x, rcd->sign_step.y);
-	printf("dir: %f, %f\n", rcd->ray_dir.x, rcd->ray_dir.y);
-	printf("test: %f\n",
-(double)-screen_height / (((double)rcd->map_pos.x -
-(double)p->pos.x + (1.0 - (double)rcd->sign_step.x) / 2.0) / rcd->ray_dir.x)
-);
-	if (side == 1)
-		return ((t_point){.x = side, .y = (double)-screen_height / ((double)rcd->map_pos.x -
-				(double)p->pos.x + (1.0 - (double)rcd->sign_step.x) / 2.0) / rcd->ray_dir.x});
-	return ((t_point){.x = side, .y = (double)-screen_height / ((double)rcd->map_pos.y -
-			(double)p->pos.y + (1.0 - (double)rcd->sign_step.y) / 2.0) / rcd->ray_dir.y});
+//	printf("\nside: %i\n", side);
+//	printf("screen: %i\n", screen_height);
+//	printf("collision: %i, %i\n", rcd->map_pos.x, rcd->map_pos.y);
+//	printf("player: %f, %f\n", p->pos.x, p->pos.y);
+//	printf("step: %i, %i\n", rcd->sign_step.x, rcd->sign_step.y);
+//	printf("dir: %f, %f\n", rcd->ray_dir.x, rcd->ray_dir.y);
+//	printf("test: %f\n",
+//(double)-screen_height / (((double)rcd->map_pos.x -
+//(double)p->pos.x + (1.0 - (double)rcd->sign_step.x) / 2.0) / rcd->ray_dir.x)
+//);
+//	if (side == 1)
+//		return ((t_point){.x = side, .y = (double)-screen_height / ((double)rcd->map_pos.x -
+//				(double)p->pos.x + (1.0 - (double)rcd->sign_step.x) / 2.0) / rcd->ray_dir.x});
+//	return ((t_point){.x = side, .y = (double)-screen_height / ((double)rcd->map_pos.y -
+//			(double)p->pos.y + (1.0 - (double)rcd->sign_step.y) / 2.0) / rcd->ray_dir.y});
+double s = sqrt(rcd->side_dis.x * rcd->side_dis.x + rcd->side_dis.y * rcd->side_dis.y);
+double c = cos(rcd->cam);
+	c = c < 0.0 ? -c : c;
+	s = s * c;
+	if (s > 1.0)
+		return ((t_point){.x = side, .y = screen_height / s});
+	return ((t_point){.x = side, .y = screen_height});
 }
 
 #define COLOR_SEIL 0x00559F
@@ -137,7 +150,7 @@ inline static void	print_line(t_image *img, const int x,
 	int	start;
 	int	end;
 
-	printf("line: %i\n", side_height.y);
+//	printf("line: %i\n", side_height.y);
 
 	if ((start = -side_height.y / 2 + img->size.y / 2) < 0)
 		start = 0;
@@ -146,7 +159,10 @@ inline static void	print_line(t_image *img, const int x,
 	if (start != 0)
 		ftx_vertical_line(img, (t_point){x, 0}, (t_point){x, start - 1}, (t_point){COLOR_SEIL, COLOR_SEIL});
 //		verLine(x, 0, start - 1, COLOR_SEIL);
-	ftx_vertical_line(img, (t_point){x, start}, (t_point){x, end}, (t_point){0xFFFFFF, 0xFFFFFF});
+	if (side_height.x == 0)
+		ftx_vertical_line(img, (t_point){x, start}, (t_point){x, end}, (t_point){0xFFFFFF, 0xFFFFFF});
+	else
+		ftx_vertical_line(img, (t_point){x, start}, (t_point){x, end}, (t_point){0, 0});
 //	verLine(x, start, end, color);
 	if (end != img->size.y - 1)
 		ftx_vertical_line(img, (t_point){x, end + 1}, (t_point){x, img->size.y}, (t_point){COLOR_FLOOR, COLOR_FLOOR});
@@ -167,14 +183,7 @@ void	print(t_image *img)
 }
 
 
-int		call_test(int key, int status, void *data)
-{
-	(void)key;
-	(void)status;
-	print(((t_window*)data)->vbuffer);
-	ftx_refresh_window((t_window*)data);
-	return (0);
-}
+
 
 
 
@@ -188,27 +197,66 @@ int		call_exit(int key, int status, void *data)
 	return (0);
 }
 
+int		sf_call_move(t_window *win, int up)
+{
+	if (player()->pos.x < 0.0)
+		player()->pos.x = 0.0;
+	if (player()->pos.x > map()->size.x - 1)
+		player()->pos.x = map()->size.x - 1;
+	if (player()->pos.y < 0.0)
+		player()->pos.y = 0.0;
+	if (player()->pos.y > map()->size.y - 1)
+		player()->pos.y = map()->size.y - 1;
+	if (up)
+	{
+		print(win->vbuffer);
+		ftx_refresh_window(win);
+	}
+	return (0);
+}
+
 int		call_move(int key, int status, void *data)
 {
 	int		up;
-	(void)data;
 
 	up = 0;
-	if (key == KEY_UP && status == FTX_KEY_STATUS_PRESSED && (up = 1))
-		(void)0;
-	(void)up;
-	return (0);
+	if (key == KEY_W && status == FTX_KEY_STATUS_PRESSED && (up = 1))
+	{
+		player()->pos.x += sin(player()->dir) * player()->speed;
+		player()->pos.y += cos(player()->dir) * player()->speed;
+	}
+	if (key == KEY_D && status == FTX_KEY_STATUS_PRESSED && (up = 1))
+	{
+		player()->pos.x += sin(player()->dir + M_PI_2) * player()->speed;
+		player()->pos.y += cos(player()->dir + M_PI_2) * player()->speed;
+	}
+	if (key == KEY_S && status == FTX_KEY_STATUS_PRESSED && (up = 1))
+	{
+		player()->pos.x += sin(player()->dir + M_PI) * player()->speed;
+		player()->pos.y += cos(player()->dir + M_PI) * player()->speed;
+	}
+	if (key == KEY_A && status == FTX_KEY_STATUS_PRESSED && (up = 1))
+	{
+		player()->pos.x += sin(player()->dir + M_PI + M_PI_2) * player()->speed;
+		player()->pos.y += cos(player()->dir + M_PI + M_PI_2) * player()->speed;
+	}
+	return (sf_call_move((t_window*)data, up));
 }
 
 int		call_turn(int key, int status, void *data)
 {
 	int		up;
-	(void)data;
 
 	up = 0;
-	if (key == KEY_UP && status == FTX_KEY_STATUS_PRESSED && (up = 1))
-		(void)0;
-	(void)up;
+	if (key == KEY_RIGHT && status == FTX_KEY_STATUS_PRESSED && (up = 1))
+		player()->dir += player()->fov / 8;
+	if (key == KEY_LEFT && status == FTX_KEY_STATUS_PRESSED && (up = 1))
+		player()->dir -= player()->fov / 8;
+	if (up)
+	{
+		print(((t_window*)data)->vbuffer);
+		ftx_refresh_window((t_window*)data);
+	}
 	return (0);
 }
 
@@ -221,12 +269,12 @@ void	wolf3d(void)
 								(const uint64_t *)"wolf")) == NULL)
 		return ;
 	ftx_key_hook(KEY_EXIT, &call_exit, win);
-	ftx_key_hook(KEY_UP, &call_move, win);
-	ftx_key_hook(KEY_RIGHT, &call_move, win);
-	ftx_key_hook(KEY_DOWN, &call_move, win);
-	ftx_key_hook(KEY_LEFT, &call_move, win);
-	ftx_key_hook(KEY_R, &call_test, win);
-	ftx_key_hook(KEY_L, &call_turn, win);
+	ftx_key_hook(KEY_W, &call_move, win);
+	ftx_key_hook(KEY_A, &call_move, win);
+	ftx_key_hook(KEY_S, &call_move, win);
+	ftx_key_hook(KEY_D, &call_move, win);
+	ftx_key_hook(KEY_RIGHT, &call_turn, win);
+	ftx_key_hook(KEY_LEFT, &call_turn, win);
 	print(win->vbuffer);
 	ftx_refresh_window(win);
 	ftx_start();
@@ -241,7 +289,7 @@ int		main(int argc, char **argv, char **env)
 	map()->size = (t_point){10, 10};
 	for (int y = 0; y < 10; ++y)
 		for (int x = 0; x < 10; ++x)
-			map()->map[y][x] = ((x == y) || (x == 0) || (y == 0) || (x == 9) || (y == 9));
+			map()->map[y][x] = ((x == 0) || (y == 0) || (x == 9) || (y == 9));
 	player()->pos = (t_vector2){5.0, 2.0};
 	wolf3d();
 	return (0);

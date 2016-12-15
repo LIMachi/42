@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/21 16:49:56 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 18:11:02 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/12/15 01:08:00 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,34 +46,6 @@ int		print_kernel_names(const char *ocl_src)
 	return (out);
 }
 
-/*
-** ft_str_clear_commentaries will set all character in comentaries to ' '
-** (except '\n')
-*/
-
-char	*ft_str_clear_commentaries(char *str)
-{
-	char	*out;
-
-	out = str;
-	while (*str != '\0')
-		if (*str++ == '/' && (*str == '/' || *str == '*') && (str[-1] = ' '))
-		{
-			if (*str == '/')
-				while (*str != '\0' && *str != '\n' && (*str = ' '))
-					++str;
-			else if (*str == '*')
-			{
-				while (*str != '\0' && !(str[-1] == '*' && *str == '/'))
-					if (*(str++ - 1) != '\n')
-						str[-2] = ' ';
-				if (str[-1] != '\n')
-					str[-1] = ' ';
-			}
-		}
-	return (out);
-}
-
 int		print_usage(char *name)
 {
 	char	*tmp;
@@ -97,7 +69,7 @@ int		print_usage(char *name)
 			ft_putstr("Can't find kernel names in ./scl/fractol.cl\n");
 		ft_free(tmp);
 	}
-	ft_end();
+	ft_end(0);
 	return (0);
 }
 

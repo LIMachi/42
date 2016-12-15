@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/15 00:21:53 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/03 19:47:18 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/11/25 23:37:31 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	fdf(int ***map, t_point size)
 	mlx_loop(data->mlx);
 }
 
-int		main(int argc, char **argv)
+int		main(int argc, char **argv, char **env)
 {
 	int		***map;
 	t_point	size;
@@ -37,7 +37,7 @@ int		main(int argc, char **argv)
 		write(1, " <filename>\n", 25);
 		return (0);
 	}
-	ft_init();
+	ft_init(env);
 	size = fdf_parse_file0(argv[1]);
 	if (size.y == -1)
 		return (0);

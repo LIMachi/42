@@ -1,0 +1,9 @@
+ITEMS = \
+		ft_dscanf \
+		ft_fscanf \
+		ft_scanf \
+		ft_sscanf \
+		ft_vdscanf \
+		ft_vfscanf \
+		ft_vscanf \
+		ft_vsscanf \
