@@ -134,6 +134,7 @@ valgrind_logs:
 grind: valgrind_logs all
 	clear
 	@echo "`valgrind --log-fd=1 ./$(NAME) $(EXEARGS)`" > ./valgrind_logs/valgrind_$(DATE).log
+	less ./valgrind_logs/valgrind_$(DATE).log
 
 hell: valgrind_logs all
 	clear

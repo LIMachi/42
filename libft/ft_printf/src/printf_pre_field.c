@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   printf_pre_field.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 05:27:07 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 05:27:24 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2016/06/19 11:37:52 by hmarot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-int		prf_pressi(char *form, int i, t_env *env)
+int		prf_pressi(char *form, int i, t_penv *env)
 {
 	int		j;
 
@@ -31,7 +31,7 @@ int		prf_pressi(char *form, int i, t_env *env)
 	return (i);
 }
 
-void	prf_pos_pressi(t_env *env, int len)
+void	prf_pos_pressi(t_penv *env, int len)
 {
 	if (env->pressi != -1)
 	{
@@ -43,7 +43,7 @@ void	prf_pos_pressi(t_env *env, int len)
 	}
 }
 
-int		prf_field(char *form, int i, t_env *env)
+int		prf_field(char *form, int i, t_penv *env)
 {
 	int		j;
 
@@ -56,7 +56,7 @@ int		prf_field(char *form, int i, t_env *env)
 	return (i);
 }
 
-void	prf_pos_field(t_env *env, int len)
+void	prf_pos_field(t_penv *env, int len)
 {
 	while (len < env->field)
 	{

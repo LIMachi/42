@@ -1,0 +1,19 @@
+New log started
+Initializing OpenCL environement...
+New log started
+Usage: fractol [source.cl] <kernel_id>
+Kernel ids found in default ./scl/fractol.cl:
+mandelbrot
+julia
+burning_ship
+custom
+multibrot
+newtonbug
+spider
+circle
+trijulia
+halfwing
+brotiverse
+Log ended
+New log started
+Initializing OpenCL environement...

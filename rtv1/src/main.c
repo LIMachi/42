@@ -6,11 +6,24 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 09:15:54 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/12/15 17:41:55 by hmartzol         ###   ########.fr       */
+/*   Updated: 2016/12/27 12:43:40 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <rtv1.h>
+
+char	debug[]="__kernel void example1(void)\n{\n}\n";
+
+cl_float4	_cl_float4(cl_float x, cl_float y, cl_float z, cl_float w)
+{
+	cl_float4	out;
+
+	out.x = x;
+	out.y = y;
+	out.z = z;
+	out.w = w;
+	return (out);
+}
 
 /*
 ** prepare a ray array from a camera "cam" to a virtual screen of size
@@ -35,11 +48,11 @@ cl_float4	*ray_plane(const t_camera *cam, const cl_int2 screen_size)
 		return (NULL);
 	while (++i.y < screen_size.y && (i.x = -1))
 		while (++i.x < screen_size.x)
-			out[i.y * screen_size.x + i.x] = (cl_float4){
-				.x = (cl_float)(vpul.x + cam->right.x * i.x - cam->up.x *i.y),
-				.y = (cl_float)(vpul.y + cam->right.y * i.x - cam->up.y *i.y),
-				.z = (cl_float)(vpul.z + cam->right.z * i.x - cam->up.z *i.y),
-				.w = 0};
+			out[i.y * screen_size.x + i.x] = _cl_float4(
+				(cl_float)(vpul.x + cam->right.x * i.x - cam->up.x *i.y),
+				(cl_float)(vpul.y + cam->right.y * i.x - cam->up.y *i.y),
+				(cl_float)(vpul.z + cam->right.z * i.x - cam->up.z *i.y),
+				(cl_float)0);
 	return (out);
 }
 
@@ -49,43 +62,29 @@ void	rtv1(void)
 				(char*)&ftocl_data()->current_kernel->id);
 }
 
-//typedef struct		s_ocl_data
-//{
-//	cl_platform_id		platform;
-//	cl_device_id		device;
-//	cl_context			context;
-//	cl_command_queue	queue;
-//}					t_ocl_data;
-
 int	main(const int argc, char **argv, char **env)
 {
-	(void)argc;
-	(void)argv;
-	(void)env;
-//	void		*ptr;
-//	int			fd;
-	t_ocl_data	data;
+	void	*ptr;
+	int		fd;
 
-//	ft_init(env);
-//	if (argc != 2)
-//	{
-//		ft_printf("\nUsage: \t%s/%s <scene.json>\n\n", ft_pwd(),
-//				ptr = ft_path_name(argv[0]));
-//		ft_free(ptr);
-//		ft_end(0);
-//	}
-//	if ((fd = open(OCL_SOURCE_PATH, O_RDONLY)) == -1)
-//		ft_end(-1);
-//	close(fd);
-	clGetPlatformIDs(1, &data.platform, NULL); //possibly lost: 1,768 bytes in 13 blocks
-//	clGetDeviceIDs(data.platform, CL_DEVICE_TYPE_GPU, 1, &data.device, NULL);
-//	data.context = clCreateContext(NULL, 1, &data.device, NULL, NULL, NULL);
-//	data.queue = clCreateCommandQueue(data.context, data.device, 0, NULL);
-//	clReleaseCommandQueue(data.queue);
-//	clReleaseContext(data.context);
-//	clUnloadPlatformCompiler(data.platform);
-//	free(data.device);
-//	free(data.platform);
-//	ftocl_end();
-//	ft_end(0);
+	ft_init(env);
+	if (argc != 2)
+	{
+		ft_printf("\nUsage: \t%s/%s <scene.json>\n\n", ft_pwd(),
+					ptr = ft_path_name(argv[0]));
+		ft_free(ptr);
+		ft_end(0);
+	}
+	if ((fd = open(OCL_SOURCE_PATH, O_RDONLY)) == -1)
+		ft_end(-1);
+	ftocl_make_program(ftocl_str_to_id64("rtv1"),
+		ft_str_clear_commentaries(ft_readfile(fd)));
+	close(fd);
+	if (!(fd = ftocl_set_current_kernel(ftocl_str_to_id64("example2"))))
+		rtv1();
+	if (fd == 1)
+		ft_end(0 * ft_printf("kernel was not found\n"));
+	ftocl_end();
+	ft_end(0);
+	return (0);
 }

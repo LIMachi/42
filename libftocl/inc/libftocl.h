@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 09:53:54 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 17:23:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/01/29 21:55:09 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,10 @@
 
 # define FTOCL_ALL_ARGS ((cl_uint)-1)
 
-# define USE_DOUBLE 0
-
-# if USE_DOUBLE
-
-typedef cl_double	t_cl_float;
-typedef double		t_float;
-
-# else
-
-typedef cl_float	t_cl_float;
-typedef float		t_float;
-
-# endif
-
 typedef struct		s_cl_comp
 {
-	t_cl_float	r;
-	t_cl_float	i;
+	cl_float	r;
+	cl_float	i;
 }					t_cl_comp;
 
 typedef struct		s_cl_point
@@ -92,7 +78,8 @@ typedef struct		s_ocl_data
 }					t_ocl_data;
 
 t_ocl_data			*ftocl_data(void);
-cl_int				ftocl_make_program(uint64_t id, const char *src);
+cl_int				ftocl_make_program(uint64_t id, const char *src,
+												const char *opt);
 void				ftocl_end(void);
 void				ftocl_clear_current_kernel_arg(cl_uint index);
 void				ftocl_read_current_kernel_arg(cl_uint index, void *ptr);
@@ -101,8 +88,7 @@ int					ftocl_set_current_kernel_arg(cl_mem_flags flags,
 int					ftocl_set_current_kernel(uint64_t kernel_id);
 int					ftocl_set_current_program(uint64_t program_id);
 void				ftocl_start_current_kernel(cl_uint work_dim,
-						const size_t *global_work_size,
-						const size_t *local_work_size);
-uint64_t			ftocl_str_to_id64(char *str);
-
+				const size_t *global_work_size, const size_t *local_work_size);
+cl_int				ftocl_run_percent_callback(const size_t global_work_size,
+		int arg_index, void (*callback)(int percent, void *data), void *data);
 #endif

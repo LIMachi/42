@@ -1,0 +1,80 @@
+==7649== Memcheck, a memory error detector
+==7649== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==7649== Using Valgrind-3.12.0 and LibVEX; rerun with -h for copyright info
+==7649== Command: ./rtv1 test.json
+==7649== 
+==7649== Conditional jump or move depends on uninitialised value(s)
+==7649==    at 0x40315D: ft_strcpy (ft_strcpy.c:49)
+==7649==    by 0x402AA4: ft_readfile (ft_readfile.c:32)
+==7649==    by 0x400B65: main (main.c:70)
+==7649== 
+==7649== Conditional jump or move depends on uninitialised value(s)
+==7649==    at 0x402AE7: ft_readfile (ft_readfile.c:39)
+==7649==    by 0x400B65: main (main.c:70)
+==7649== 
+==7649== Conditional jump or move depends on uninitialised value(s)
+==7649==    at 0x4033C1: ft_str_clear_commentaries (ft_str_clear_commentaries.c:27)
+==7649==    by 0x400B6D: main (main.c:70)
+==7649== 
+Initializing OpenCL environement...
+==7649== Warning: set address range perms: large range [0x200000000, 0x600000000) (noaccess)
+==7649== Warning: set address range perms: large range [0x600000000, 0x800000000) (noaccess)
+==7649== Conditional jump or move depends on uninitialised value(s)
+==7649==    at 0x4C2DBB8: strlen (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7649==    by 0x664CB1B: ??? (in /usr/lib/libnvidia-opencl.so.375.26)
+==7649==    by 0x663A12A: ??? (in /usr/lib/libnvidia-opencl.so.375.26)
+==7649==    by 0x4E42220: clCreateProgramWithSource (in /usr/lib/libOpenCL.so.1.0.0)
+==7649==    by 0x40141C: ftocl_make_program (ftocl_make_program.c:89)
+==7649==    by 0x400B85: main (main.c:69)
+==7649== 
+==7649== Conditional jump or move depends on uninitialised value(s)
+==7649==    at 0x4C2DBB8: strlen (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7649==    by 0x664CB3E: ??? (in /usr/lib/libnvidia-opencl.so.375.26)
+==7649==    by 0x663A12A: ??? (in /usr/lib/libnvidia-opencl.so.375.26)
+==7649==    by 0x4E42220: clCreateProgramWithSource (in /usr/lib/libOpenCL.so.1.0.0)
+==7649==    by 0x40141C: ftocl_make_program (ftocl_make_program.c:89)
+==7649==    by 0x400B85: main (main.c:69)
+==7649== 
+0xc49ff40
+0xc49ff40
+0xc49ff40
+node: 0xc4a0920
+top: 0xc4a0920
+0xc49ff40
+0xc4a09a0
+0xc4a09a0
+==7649== Conditional jump or move depends on uninitialised value(s)
+==7649==    at 0x403105: ft_strchr (ft_strchr.c:48)
+==7649==    by 0x4015C6: sf_parse_and_create_kernel (ftocl_make_program.c:48)
+==7649==    by 0x4015C6: sf_return_of_the_random_name (ftocl_make_program.c:65)
+==7649==    by 0x4015C6: ftocl_make_program (ftocl_make_program.c:99)
+==7649==    by 0x400B85: main (main.c:69)
+==7649== 
+0xc4a09a0
+node: 0xc4a1380
+top: 0xc4a1380
+0xc4a09a0
+==7649== Conditional jump or move depends on uninitialised value(s)
+==7649==    at 0x403105: ft_strchr (ft_strchr.c:48)
+==7649==    by 0x403376: ft_strstr (ft_strstr.c:58)
+==7649==    by 0x40148E: ftocl_make_program (ftocl_make_program.c:98)
+==7649==    by 0x400B85: main (main.c:69)
+==7649== 
+Kernel: example2 was succesfully loaded
+==7649== 
+==7649== HEAP SUMMARY:
+==7649==     in use at exit: 180,409 bytes in 164 blocks
+==7649==   total heap usage: 17,688 allocs, 17,524 frees, 12,848,707 bytes allocated
+==7649== 
+==7649== LEAK SUMMARY:
+==7649==    definitely lost: 0 bytes in 0 blocks
+==7649==    indirectly lost: 0 bytes in 0 blocks
+==7649==      possibly lost: 1,768 bytes in 13 blocks
+==7649==    still reachable: 178,641 bytes in 151 blocks
+==7649==         suppressed: 0 bytes in 0 blocks
+==7649== Reachable blocks (those to which a pointer was found) are not shown.
+==7649== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==7649== 
+==7649== For counts of detected and suppressed errors, rerun with: -v
+==7649== Use --track-origins=yes to see where uninitialised values come from
+==7649== ERROR SUMMARY: 21 errors from 19 contexts (suppressed: 0 from 0)

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/15 09:19:22 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 17:19:22 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/01/07 19:52:06 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,9 @@ void		*sf_protected_mlx_init(void)
 		ft_log("mlx_init() failed, and I just don't know what went wrong :(\n");
 	}
 	if (err == 1)
-		exit(-1);
+		ft_end(-1);
+	if (err == 1)
+		return (NULL);
 	return (mlx);
 }
 
@@ -62,7 +64,9 @@ void		*sf_protected_mlx_init(void)
 		ft_log("mlx_init() failed, and I just don't know what went wrong :(\n");
 	}
 	if (err == 1)
-		exit(-1);
+		ft_end(-1);
+	if (err == 1)
+		return (NULL);
 	return (mlx);
 }
 
@@ -70,8 +74,9 @@ void		*sf_protected_mlx_init(void)
 
 t_ftx_data	*ftx_data(void)
 {
-	static t_ftx_data	data = {.mlx = NULL};
+	static t_ftx_data	data = {.mlx = NULL, .windows = NULL, .images = NULL,
 
+	.focused_window = NULL, .tick = 0, .loop_callback = NULL};
 	if (data.mlx == NULL)
 		data.mlx = sf_protected_mlx_init();
 	return (&data);

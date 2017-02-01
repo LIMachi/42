@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 09:51:11 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 17:21:21 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/01/24 11:00:02 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,16 @@ static int	sf_motion_hook(int x, int y, void *p)
 static int	sf_button_press_hook(int key, int x, int y, void *p)
 {
 	t_key_data	*k;
+	t_mice		*m;
 
-	if (x < 0 || y < 0 || x >= ftx_data()->focused_window->size.x
-			|| y >= ftx_data()->focused_window->size.y)
+	if (x < 0 || y < 0 || x >= ((t_window*)p)->size.x
+			|| y >= ((t_window*)p)->size.y)
 		return (0);
-	((t_mice*)p)->pos = ft_point(x, y);
-	((t_mice*)p)->click_pos = ft_point(x, y);
-	k = &((t_mice*)p)->keymap[key];
+	ftx_data()->focused_window = (t_window*)p;
+	m = &((t_window*)p)->mice;
+	m->pos = ft_point(x, y);
+	m->click_pos = ft_point(x, y);
+	k = &m->keymap[key];
 	k->status = FTX_KEY_STATUS_PRESSED;
 	k->tick = ftx_data()->tick;
 	if (k->callback != NULL)
@@ -115,7 +118,7 @@ int			ftx_hook_mice_button(t_window *window, int button,
 	k->callback = callback;
 	k->data = data;
 	mlx_hook(window->win, 4, (1L << 2), &sf_button_press_hook,
-				(void*)&window->mice);
+				(void*)window);
 	mlx_hook(window->win, 5, (1L << 3), &sf_button_release_hook,
 				(void*)&window->mice);
 	return (0);

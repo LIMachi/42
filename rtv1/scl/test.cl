@@ -39,10 +39,12 @@ __kernel void	example2(						//main kernel, called for each ray
 {
 	//mode 2: we use 1D Kernels:
 	int i = get_global_id(0);	//id of the kernel in the global call
-	int x = i % argn->screen_size.x;
-	int y = i / argn->screen_size.x;
 
 	if (i >= argn->screen_size.x * argn->screen_size.y)	//the number of kernel executed can overflow the number initialy needed, this is a simple protection to avoid bad memory acces
 		return ;
+
+	int x = i % argn->screen_size.x;
+	int y = i / argn->screen_size.x;
+
 	out[i] = 0x00FFFFFF; //example: we discard all info and just set the output to a white screen
 }

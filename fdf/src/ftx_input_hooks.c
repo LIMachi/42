@@ -53,7 +53,7 @@ int	ftx_keypress_hook(int key, void *p)
 	if (key == KEY_EXIT)
 	{
 		ftx_data(GDX_FREE);
-		ft_end();
+		ft_end(0);
 		exit(0);
 	}
 	data->keymap[key] = 1;

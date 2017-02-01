@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   printf_conv_c.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 05:17:27 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 05:17:30 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2016/04/05 10:18:20 by hmarot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-void	prf_con_id(t_env *env, va_list ap)
+void	prf_con_id(t_penv *env, va_list ap)
 {
 	long	arg;
 	int		len;
@@ -32,7 +32,7 @@ void	prf_con_id(t_env *env, va_list ap)
 	|| env->flag & SPACE)) : 0;
 }
 
-void	prf_con_o(t_env *env, va_list ap)
+void	prf_con_o(t_penv *env, va_list ap)
 {
 	unsigned long	arg;
 	int				len;
@@ -51,13 +51,13 @@ void	prf_con_o(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, i + (env->flag & SHARP)) : 0;
 }
 
-void	prf_con_lo(t_env *env, va_list ap)
+void	prf_con_lo(t_penv *env, va_list ap)
 {
 	env->modif = 3;
 	prf_con_o(env, ap);
 }
 
-void	prf_con_u(t_env *env, va_list ap)
+void	prf_con_u(t_penv *env, va_list ap)
 {
 	unsigned long	arg;
 	int				len;
@@ -73,7 +73,7 @@ void	prf_con_u(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, i) : 0;
 }
 
-void	prf_con_lu(t_env *env, va_list ap)
+void	prf_con_lu(t_penv *env, va_list ap)
 {
 	env->modif = 3;
 	prf_con_u(env, ap);

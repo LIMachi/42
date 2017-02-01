@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   printf_modif.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 05:26:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 05:26:39 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2016/06/19 11:28:59 by hmarot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-int		prf_modif(char *form, int i, t_env *env)
+int		prf_modif(char *form, int i, t_penv *env)
 {
 	if (form[i] == 'h' && form[i + 1] == 'h')
 		env->modif = 1;

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   printf_conv_b.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 05:11:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 05:11:57 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2016/09/26 13:30:48 by hmarot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-void	prf_conv_mod(t_env *env, va_list ap)
+void	prf_conv_mod(t_penv *env, va_list ap)
 {
 	if (ap == NULL)
 		ap = NULL;
@@ -21,7 +21,7 @@ void	prf_conv_mod(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, 1) : 0;
 }
 
-void	prf_con_s(t_env *env, va_list ap)
+void	prf_con_s(t_penv *env, va_list ap)
 {
 	char	*str;
 	int		i;
@@ -44,7 +44,7 @@ void	prf_con_s(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, j) : 0;
 }
 
-void	prf_con_ls(t_env *env, va_list ap)
+void	prf_con_ls(t_penv *env, va_list ap)
 {
 	wchar_t	*str;
 	int		i;
@@ -73,27 +73,14 @@ void	prf_con_ls(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, j) : 0;
 }
 
-void	prf_con_p(t_env *env, va_list ap)
+void	prf_con_p(t_penv *env, va_list ap)
 {
-	unsigned long	arg;
-	int				len;
-	int				i;
-
 	env->modif = 3;
 	env->flag |= SHARP;
-	arg = prf_u_arg(ap, *env);
-	env->pressi == 0 && arg == 0 ? env->field++ : 0;
-	len = nb_len_b(arg, 16);
-	i = len < env->pressi ? env->pressi : len;
-	env->flag & ZERO ? aply_sharp(env, (env->flag & SHARP)) : 0;
-	env->flag & LESS ? 0 : prf_pos_field(env, i + (2 * (env->flag & SHARP)));
-	env->flag & ZERO ? 0 : aply_sharp(env, (env->flag & SHARP));
-	prf_pos_pressi(env, len);
-	env->pressi == 0 && arg == 0 ? 0 : prf_itoa_b(arg, env, 16, 0);
-	env->flag & LESS ? prf_pos_field(env, i + (2 * (env->flag & SHARP))) : 0;
+	prf_con_x(env, ap);
 }
 
-void	prf_con_ld(t_env *env, va_list ap)
+void	prf_con_ld(t_penv *env, va_list ap)
 {
 	env->modif = 3;
 	prf_con_id(env, ap);

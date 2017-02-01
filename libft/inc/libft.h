@@ -6,12 +6,49 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/12/15 00:13:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/01 16:18:01 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
+# define CC_CLANG 1
+# if defined(__clang__)
+#  define COMPILER CC_CLANG
+# endif
+
+# define CC_GCC 2
+# if defined(__GNUC__) || defined(__GNUG__)
+#  define COMPILER CC_GCC
+# endif
+
+# define CC_UNKNOWN
+# ifndef COMPILER
+#  define COMPILER CC_UNKNOWN
+# endif
+
+# if defined(__STDC__)
+#  if defined(__STDC__VERSION__)
+#   if __STDC__VERSION__ >= 199409L
+#    if __STDC__VERSION__ >= 199901L
+#     if __STDC__VERSION__ >= 201112L
+#      define STD_VER 2011
+#     else
+#      define STD_VER 1999
+#     endif
+#    else
+#     define STD_VER 1994
+#    endif
+#   else
+#    define STD_VER 1989
+#   endif
+#  else
+#   define STD_VER 0
+#  endif
+# else
+#  define STD_VER -1
+# endif
 
 # include <limits.h>
 # include <unistd.h>
@@ -25,7 +62,7 @@
 # include <stdint.h>
 
 /*
-** sys/stat.h: for right of file creation
+** sys/stat.h: for rights of file creation
 */
 
 # include <sys/stat.h>
@@ -35,8 +72,14 @@
 # endif
 # define S_IDEFAULT (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
 
-# ifndef NORM_42
-#  define NORM_42 1
+# define NORM_LIBFT 0
+
+# ifndef FT_USE_FINAL_FREE
+#  define FT_USE_FINAL_FREE 0
+# endif
+
+# ifndef NORM_LIBFT
+#  define NORM_LIBFT 1
 # endif
 
 # define USE_DEBUG 0
@@ -117,6 +160,7 @@
 #  define EDOM		33
 #  define ERANGE	34
 #  define EINTERN	((unsigned int)-1)
+#  define ENOENV	((unsigned int)-2)
 # endif
 
 # define MAXERRNOD 34
@@ -478,24 +522,24 @@ typedef struct			s_matrix
 ** structure to manipulate first in last out piles
 */
 
-typedef struct			s_pile_filo
+typedef struct			s_pile
 {
 	void				**data;
 	unsigned int		size;
 	unsigned int		head;
-}						t_pile_filo;
+}						t_pile;
 
 /*
 ** structure to manipulate first in first out piles (or also named files)
 */
 
-typedef struct			s_pile_fifo
+typedef struct			s_queue
 {
 	void				**data;
 	unsigned int		size;
 	unsigned int		head;
 	unsigned int		tail;
-}						t_pile_fifo;
+}						t_queue;
 
 /*
 ** stores the default alignement in a pile then set the alignement to 1
@@ -698,6 +742,12 @@ typedef struct			s_fixpoint
 	t_fix				y;
 }						t_fixpoint;
 
+typedef struct			s_xorshift1024star
+{
+	int					p;
+	unsigned long long	s[16];
+}						t_xorshift1024star;
+
 # define TIME_DEFAULT_WEEKDAY_0 "Sunday"
 # define TIME_DEFAULT_WEEKDAY_1 "Monday"
 # define TIME_DEFAULT_WEEKDAY_2 "Tuesday"
@@ -791,12 +841,6 @@ typedef struct			s_gnl_tcf
 int						get_next_line(const int fd, char **line);
 
 /*
-** int manipulation functions
-*/
-
-void					ft_int_swap(int *a, int *b);
-
-/*
 ** type conversion function
 */
 
@@ -888,9 +932,9 @@ t_2list					*ft_2lstdelnode(t_2list *lst, void (*del)(void *,
 ** table related functions
 */
 
-void					**ft_taballoc(int x, int y, size_t block);
-void					ft_tabfree(void **tab, int y);
-void					***ft_tab3dalloc(int x, int y, int z, size_t block);
+void					**ft_tab_alloc(int x, int y, size_t block);
+void					ft_tab_free(void **tab, int y);
+void					***ft_tab3d_alloc(int x, int y, int z, size_t block);
 
 /*
 ** terminal and fd output functions
@@ -1126,19 +1170,24 @@ unsigned long long int	ft_bswap64(const unsigned long long int x);
 /*
 ** piles functions
 */
-t_pile_filo				*ft_pile_new_filo(unsigned int size);
-int						ft_pile_is_empty_filo(t_pile_filo *pile);
-t_pile_filo				*ft_pile_push_filo(t_pile_filo *pile, void *data);
-t_pile_filo				*ft_pile_look_filo(t_pile_filo *pile, void *data);
-t_pile_filo				*ft_pile_pull_filo(t_pile_filo *pile, void *data);
-void					ft_pile_free_filo(t_pile_filo *pile);
 
-t_pile_fifo				*ft_pile_new_fifo(unsigned int size);
-int						ft_pile_is_empty_fifo(t_pile_fifo *pile);
-t_pile_fifo				*ft_pile_push_fifo(t_pile_fifo *pile, void *data);
-t_pile_fifo				*ft_pile_look_fifo(t_pile_fifo *pile, void *data);
-t_pile_fifo				*ft_pile_pull_fifo(t_pile_fifo *pile, void *data);
-void					ft_pile_free_fifo(t_pile_fifo *pile);
+t_pile					*ft_pile_new(unsigned int size);
+int						ft_pile_is_empty(t_pile *pile);
+t_pile					*ft_pile_push(t_pile *pile, void *data);
+t_pile					*ft_pile_look(t_pile *pile, void **data);
+t_pile					*ft_pile_pull(t_pile *pile, void **data);
+void					ft_pile_free(t_pile *pile);
+
+/*
+** queue functions
+*/
+
+t_queue					*ft_queue_new(unsigned int size);
+int						ft_queue_is_empty(t_queue *queue);
+t_queue					*ft_queue_push(t_queue *queue, void *data);
+t_queue					*ft_queue_look(t_queue *queue, void **data);
+t_queue					*ft_queue_pull(t_queue *queue, void **data);
+void					ft_queue_free(t_queue *queue);
 
 /*
 ** error related defines (passed to ft_global_error)
@@ -1146,9 +1195,9 @@ void					ft_pile_free_fifo(t_pile_fifo *pile);
 
 # define ERROR_CHECK	1
 # define ERROR_SET		2
-# define ERROR_CLEAR	3
-# define ERROR_PRINT	4
-# define ERROR_ERRNO	5
+# define ERROR_CLEAR	4
+# define ERROR_PRINT	8
+# define ERROR_ERRNO	16
 
 /*
 ** the following defines are single flags, they can't be mixed with standard
@@ -1157,7 +1206,7 @@ void					ft_pile_free_fifo(t_pile_fifo *pile);
 
 # define ERROR_SILENT_ON	-1
 # define ERROR_SILENT_OFF	-2
-# define ERROR_GET_SILENT	-3
+# define ERROR_GET_SILENT	-4
 
 /*
 ** log related defines (passed to ft_global_log)
@@ -1210,11 +1259,12 @@ t_object				**ft_object_add(t_object **list, t_object *node);
 void					*ft_object_free_node(t_object *node);
 
 float					ft_modf(float v, float d);
+double					ft_modd(double v, double d);
 void					ft_env_clear(void);
 char					*ft_pwd(void);
 char					*ft_path_name(char *path);
 
-extern int				ft_printf(const char *restrict format, ...);
+extern int				ft_printf(const char *format, ...);
 
 int						ft_isinset(const char c, const char *set);
 size_t					ft_strcspn(const char *str, const char *reject);
@@ -1222,4 +1272,50 @@ size_t					ft_strspn(const char *str, const char *accept);
 
 char					*ft_str_clear_commentaries(char *str);
 
+# define FT_GLOBAL_MALLOC_STACK_SIZE (4 * MEM_M)
+# define FT_GLOBAL_ATEND_STACK_SIZE 32
+# define FT_STACK_LOOK 0
+# define FT_STACK_PUT 1
+# define FT_STACK_POP 2
+
+t_pile					*ft_global_malloc_stack(void);
+void					ft_final_free(void);
+void					**ft_tab_block_alloc(size_t x, size_t y, size_t block);
+t_pile					*ft_global_atend_stack(void);
+int						ft_atend(void (*func)(void));
+uint64_t				ft_str_to_id64(char *str);
+double					ft_atod(const char *str);
+int						ft_is_double(const char *str);
+char					*ft_strmerge(char *a, char *b);
+double					ft_clampd(double v, double min, double max);
+int						ft_clampi(int v, int min, int max);
+void					ft_swapd(double *p1, double *p2);
+void					ft_swapi(int *p1, int *p2);
+
+# define XORSHIFT1024STAR 1
+
+# define RAND_MODE XORSHIFT1024STAR
+
+unsigned long long		ft_xorshift1024star(void);
+void					ft_srand(int seed);
+t_xorshift1024star		*ft_global_xorshift1024star(void);
+int						ft_rand(void);
+char					*ft_dirname(char *path);
+void					*ft_memrchr(const void *s, int c, size_t n);
+
+# ifndef PATH_MAX
+
+/*
+** Posix-ly correct PATH_MAX (posix recommend at least 256)
+*/
+
+#  define PATH_MAX 1024
+# endif
+
+char					*ft_realpath(char *path, char resolved_path[PATH_MAX]);
+char					*ft_path_clean_slashes(char *path);
+
+void					*ft_reallocf(void *ptr, size_t size_original,
+												size_t size_new);
+inline void				ft_void(long long voidable_content);
 #endif

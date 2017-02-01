@@ -38,7 +38,9 @@ ITEMS = \
 		window/ftx_free_window \
 		window/ftx_new_window \
 		window/ftx_refresh_window \
-		window/ftx_screenshoot
+		window/ftx_screenshoot \
+		image/ftx_put_ubmp_img \
+		ftx_loop_hook
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
@@ -60,7 +62,7 @@ endif
 ifeq ($(shell uname),Darwin)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 #path to external includes
 PINC = ../libft/inc ../minilibx_macos
 #path to libs to compile

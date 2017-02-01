@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_lib.c                                         :+:      :+:    :+:   */
+/*   printf_main.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 04:47:55 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 04:48:19 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2016/09/09 15:08:17 by hmarot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		nb_len(long nb)
 	return (i);
 }
 
-void	aply_sharp(t_env *env, int conv)
+void	aply_sharp(t_penv *env, int conv)
 {
 	if (conv == 1)
 	{
@@ -58,7 +58,7 @@ int		nb_len_b(unsigned long nb, int b)
 	return (i);
 }
 
-void	prf_itoa(long nb, t_env *env)
+void	prf_itoa(long nb, t_penv *env)
 {
 	long	tmp;
 
@@ -68,7 +68,7 @@ void	prf_itoa(long nb, t_env *env)
 	push_buff(((tmp < 0 ? -tmp : tmp) + '0'), env);
 }
 
-void	prf_itoa_b(unsigned long nb, t_env *env, int b, int maj)
+void	prf_itoa_b(unsigned long nb, t_penv *env, int b, int maj)
 {
 	char	*base;
 

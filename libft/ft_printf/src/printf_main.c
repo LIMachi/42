@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   printf_main.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <hmarot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/19 10:35:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 05:27:48 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2017/02/01 15:03:29 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int		ft_printf(const char *format, ...)
 {
 	char		*form;
-	t_env		env;
+	t_penv		env;
 	int			i;
 	va_list		ap;
 
@@ -30,12 +30,12 @@ int		ft_printf(const char *format, ...)
 		if (i == -1)
 			return (-1);
 	}
-	write(1, env.buffer, env.pos);
+	ft_void(write(1, env.buffer, env.pos));
 	va_end(ap);
 	return (env.ret + env.pos);
 }
 
-int		prf_main_b(char *form, t_env *env, int i, va_list ap)
+int		prf_main_b(char *form, t_penv *env, int i, va_list ap)
 {
 	if (form[i] != '%')
 		push_buff(form[i], env);

@@ -27,7 +27,7 @@ CLIB = ../libft ../libftx2 ../minilibx_X11 ../libftocl
 #exact path of lib files to add in source
 LIB = ../libftx2/libftx2.a ../libftocl/libftocl.a ../libft/libft.a ../minilibx_X11/libmlx.a
 #args passed to gcc depending on the os
-ARGS = -lOpenCL -ICL -lXext -lX11
+ARGS = -lOpenCL -ICL -lXext /usr/lib/x86_64-linux-gnu/libX11.a
 
 endif
 
@@ -127,7 +127,8 @@ valgrind_logs:
 
 grind: valgrind_logs all
 	clear
-	@echo "`valgrind --log-fd=1 ./$(NAME) $(EXEARGS)`" > ./valgrind_logs/valgrind_$(DATE).log
+	@echo "`valgrind --log-fd=1 --leak-check=full --show-leak-kinds=definite,indirect ./$(NAME) $(EXEARGS)`" > ./valgrind_logs/valgrind_$(DATE).log
+	less ./valgrind_logs/valgrind_$(DATE).log
 
 hell: valgrind_logs all
 	clear

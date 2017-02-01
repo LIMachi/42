@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   printf_conv_d.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 05:18:44 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 05:18:47 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2016/09/26 13:33:03 by hmarot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-void	prf_con_x(t_env *env, va_list ap)
+void	prf_con_x(t_penv *env, va_list ap)
 {
 	unsigned long	arg;
 	int				len;
@@ -30,7 +30,7 @@ void	prf_con_x(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, i + (2 * (env->flag & SHARP))) : 0;
 }
 
-void	prf_con_lx(t_env *env, va_list ap)
+void	prf_con_lx(t_penv *env, va_list ap)
 {
 	unsigned long	arg;
 	int				len;
@@ -47,7 +47,7 @@ void	prf_con_lx(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, i + (2 * (env->flag & SHARP))) : 0;
 }
 
-void	prf_con_c(t_env *env, va_list ap)
+void	prf_con_c(t_penv *env, va_list ap)
 {
 	char	c;
 
@@ -58,7 +58,7 @@ void	prf_con_c(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, 1) : 0;
 }
 
-void	prf_con_lc(t_env *env, va_list ap)
+void	prf_con_lc(t_penv *env, va_list ap)
 {
 	wchar_t	c;
 
@@ -69,7 +69,7 @@ void	prf_con_lc(t_env *env, va_list ap)
 	env->flag & LESS ? prf_pos_field(env, 1) : 0;
 }
 
-void	return_null(t_env *env)
+void	return_null(t_penv *env)
 {
 	char	*str;
 	int		i;

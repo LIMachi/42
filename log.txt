@@ -1,0 +1,45 @@
+New log started
+Bitmap info:
+	DIB Header:
+		DIB Size: 124
+		Image size (pixels): 2560, 1440
+		Planes: 1
+		Bit count: 32
+		Bit compression: 3
+		Image size (bytes): 14745600
+		Pixels per meter: 1024, 1024
+		Colors in table: 0
+		Important colors: 0
+		Mask red: 0xFF0000
+		Mask green: 0xFF00
+		Mask blue: 0xFF
+		Mask alpha: 0x/000000
+		Color space type: 0
+		Gamma red: 0x0
+		Gamma green: 0x0
+		Gamma blue: 0x0
+		Intent: 0
+		ICC profile data: 0
+		ICC profile size: 0New log started
+Bitmap info:
+	DIB Header:
+		DIB Size: 124
+		Image size (pixels): 2560, 1440
+		Planes: 1
+		Bit count: 32
+		Bit compression: 3
+		Image size (bytes): 14745600
+		Pixels per meter: 1024, 1024
+		Colors in table: 0
+		Important colors: 0
+		Mask red: 0xFF0000
+		Mask green: 0xFF00
+		Mask blue: 0xFF
+		Mask alpha: 0x/000000
+		Color space type: 0
+		Gamma red: 0x0
+		Gamma green: 0x0
+		Gamma blue: 0x0
+		Intent: 0
+		ICC profile data: 0
+		ICC profile size: 0

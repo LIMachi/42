@@ -43,7 +43,7 @@ int		main(int argc, char **argv, char **env)
 		return (0);
 	if ((fd = open(argv[1], O_RDONLY)) < 0)
 		return (0);
-	if ((map = (int ***)ft_tab3dalloc(size.x + 1, size.y + 1, 2,
+	if ((map = (int ***)ft_tab3d_alloc(size.x + 1, size.y + 1, 2,
 											sizeof(int))) == NULL)
 		return (0);
 	fdf_parse_file(map, fd, 0x00FFFF);

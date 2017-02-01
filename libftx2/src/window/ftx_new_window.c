@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/17 08:28:55 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 17:21:40 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/01/07 18:30:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	sf_call_keyup(int key)
 
 static int	sf_exit(void)
 {
-	exit(0);
+	ft_end(0);
 	return (0);
 }
 

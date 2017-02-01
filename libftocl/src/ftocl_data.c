@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:00:20 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/12/15 17:10:51 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/01/03 10:44:01 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,11 @@ static void	notify(const char *errinfo, const void *private_info,
 	(void)cb;
 	(void)user_data;
 	*ft_global_flags() |= GF_FORCE_LOG;
-	ft_putendl("\n___________________________________________________________");
-	ft_putstr("OpenCL notify error (nb: ");
+	ft_putstr("\nOpenCL notify error (nb: ");
 	ft_putnbr(n);
 	ft_putstr("): \n");
 	ft_putstr(errinfo);
-	ft_putendl("\n___________________________________________________________");
+	ft_putchar('\n');
 }
 
 t_ocl_data	*ftocl_data(void)
@@ -54,6 +53,7 @@ t_ocl_data	*ftocl_data(void)
 		data.queue = clCreateCommandQueue(data.context, data.device, 0, &e);
 		if (e != CL_SUCCESS)
 			ft_error(EINTERN, "Error on creation of command queue");
+		(void)ft_atend(&ftocl_end);
 	}
 	return (&data);
 }

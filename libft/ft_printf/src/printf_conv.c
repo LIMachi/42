@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   printf_conv.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <hmarot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 04:35:33 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 04:35:36 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2017/01/22 03:32:41 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-int		prf_conv(char *format, int i, t_env *env, va_list ap)
+int		prf_conv(char *format, int i, t_penv *env, va_list ap)
 {
 	int		j;
-	void	(*tab_conv[15])(t_env *env, va_list ap);
+	void	(*tab_conv[15])(t_penv *env, va_list ap);
 
 	tab_conv[0] = prf_conv_mod;
 	tab_conv[1] = prf_con_id;

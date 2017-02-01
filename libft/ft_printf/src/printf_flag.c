@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   printf_flag.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 05:19:11 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 05:19:13 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2016/04/05 10:18:20 by hmarot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-int		prf_flag(char *form, int i, t_env *env)
+int		prf_flag(char *form, int i, t_penv *env)
 {
 	int		j;
-	void	(*tab_conv[5])(t_env *env);
+	void	(*tab_conv[5])(t_penv *env);
 
 	tab_conv[0] = prf_flag_sharp;
 	tab_conv[1] = prf_flag_zero;

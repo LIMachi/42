@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 11:11:43 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 18:44:23 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/01/07 19:39:15 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ typedef struct s_mice		t_mice;
 typedef struct s_window		t_window;
 typedef struct s_key_data	t_key_data;
 typedef struct s_ftx_data	t_ftx_data;
+typedef struct s_cimg		t_cimg;
+
+struct						s_cimg
+{
+	int		width;
+	int		height;
+	char	*buffer;
+	float	vertex[8];
+	t_cimg	*next;
+};
 
 /*
 ** t_image:
@@ -35,7 +45,7 @@ typedef struct s_ftx_data	t_ftx_data;
 
 struct						s_image
 {
-	void			*img;
+	t_cimg			*img;
 	int				*data;
 	int				bpp;
 	int				size_line;
@@ -114,6 +124,7 @@ struct						s_ftx_data
 	t_2list				*images;
 	t_window			*focused_window;
 	unsigned int		tick;
+	int					(*loop_callback)(t_ftx_data *data);
 	t_key_data			keymap[KEYMAP_SIZE];
 };
 
@@ -328,5 +339,9 @@ int							ftx_screenshoot(t_window *win,
 
 int							*ftx_button_status(int button);
 t_image						*ftx_set_cursor(t_image *img, int x, int y);
+t_image						*ftx_put_ubmp_img(t_image *out, const t_point pos,
+												const t_ubmp *img, int mask);
 
+int							ftx_loop_hook(
+										int (*loop_callback)(t_ftx_data *data));
 #endif

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   mini_lib_b.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hmarot <hmarot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/23 04:48:42 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/23 04:48:45 by hmartzol         ###   ########.fr       */
+/*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
+/*   Updated: 2017/02/01 15:01:08 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-void	push_buff(char c, t_env *env)
+void	push_buff(char c, t_penv *env)
 {
 	if (env->pos < BUFF_SIZE)
 	{
@@ -21,14 +21,14 @@ void	push_buff(char c, t_env *env)
 	}
 	else
 	{
-		write(1, env->buffer, BUFF_SIZE);
+		ft_void(write(1, env->buffer, BUFF_SIZE));
 		env->ret += env->pos;
 		env->pos = 0;
 		push_buff(c, env);
 	}
 }
 
-int		push_uni(wchar_t c, t_env *env, int nbbi)
+int		push_uni(wchar_t c, t_penv *env, int nbbi)
 {
 	if (nbbi >= 1 && nbbi <= 7)
 		push_buff(c, env);
