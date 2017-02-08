@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/30 18:52:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/12/21 02:38:30 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/07 00:59:12 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	sf_putdata(void *data, size_t size)
 {
 	char	*buff;
 
-	(void)(write(1, data, size) == 0);
+	ft_void(write(1, data, size));
 	if ((*ft_global_flags() & GF_FORCE_LOG) == GF_FORCE_LOG)
 	{
 		buff = (char*)ft_malloc(size + 1);

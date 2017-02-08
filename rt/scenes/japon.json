@@ -1,0 +1,175 @@
+{
+	"render_options":
+	{
+		"size": [1000, 1000],
+		"lighting":
+		{
+			"direct": 1.0,
+			"ambient": 0.05
+		},
+		"filter": "none"
+	},
+	"camera":
+	{
+		"position": [0, 0, 0],
+		"direction": [0, 0, 1],
+		"up": [0, 1, 0],
+		"right": [1, 0, 0],
+		"vp_size": [1000, 1000],
+		"dist": 600
+	},
+	"materials":
+	{
+		"white":
+		{
+			"color": [1, 1, 1],
+			"diffuse": 1.0,
+			"specular": 1.0
+		}
+	},
+	"objects":
+	[
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0, 1, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.2, 0.8, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.4, 0.6, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.6, 0.4, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.8, 0.2, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [1, 0, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.8, -0.2, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.6, -0.4, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.4, -0.6, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "cone",
+			"position": [0, 0, 500],
+			"direction": [0.2, -0.8, 0],
+			"radius": 5,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "sphere",
+			"position": [0, 0, 500],
+			"direction": [0, 0, 0],
+			"radius": 100,
+			"material":
+			{
+				"color": [1, 0, 0],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "plane",
+			"position": [0, 0, 1000],
+			"direction": [0, 0, 1],
+			"material": "white"
+		}
+	],
+	"lights":
+	[
+		{ "position": [0, 0, 0], "color": [1, 1, 1] }
+	]
+}

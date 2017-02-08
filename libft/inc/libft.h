@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/01 16:18:01 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/08 23:53:36 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 # endif
 
 # define CC_GCC 2
-# if defined(__GNUC__) || defined(__GNUG__)
+# if !defined(COMPILER) && (defined(__GNUC__) || defined(__GNUG__))
 #  define COMPILER CC_GCC
 # endif
 
-# define CC_UNKNOWN
+# define CC_UNKNOWN 0
 # ifndef COMPILER
 #  define COMPILER CC_UNKNOWN
 # endif
@@ -50,7 +50,10 @@
 #  define STD_VER -1
 # endif
 
-# include <limits.h>
+/*
+** # include <limits.h>
+*/
+
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdlib.h>
@@ -65,7 +68,9 @@
 ** sys/stat.h: for rights of file creation
 */
 
-# include <sys/stat.h>
+/*
+** # include <sys/stat.h>
+*/
 
 # ifdef S_IDEFAULT
 #  undef S_IDEFAULT
@@ -75,17 +80,23 @@
 # define NORM_LIBFT 0
 
 # ifndef FT_USE_FINAL_FREE
-#  define FT_USE_FINAL_FREE 0
+#  define FT_USE_FINAL_FREE 1
+# endif
+
+# ifndef FT_LOG_FINAL_FREE
+#  define FT_LOG_FINAL_FREE 0
 # endif
 
 # ifndef NORM_LIBFT
 #  define NORM_LIBFT 1
 # endif
 
-# define USE_DEBUG 0
+# ifndef USE_DEBUG
+#  define USE_DEBUG 0
+# endif
 
-# if defined(USE_DEBUG) && USE_DEBUG != 0
-#  define DEBUG ft_putendl(__func__); ft_putnbr(__LINE__);
+# if USE_DEBUG != 0
+#  define DEBUG ft_printf("[%s]: %d\n", __func__, __LINE__);
 # else
 #  define DEBUG
 # endif
@@ -159,8 +170,8 @@
 #  define EPIPE		32
 #  define EDOM		33
 #  define ERANGE	34
-#  define EINTERN	((unsigned int)-1)
-#  define ENOENV	((unsigned int)-2)
+#  define EINTERN	(-1u)
+#  define ENOENV	(-2u)
 # endif
 
 # define MAXERRNOD 34
@@ -191,14 +202,14 @@ typedef	union			u_ldouble16c
 ** pseudo posix defines
 */
 
-# if !(defined (READ_MAX) && (READ_MAX <= (4294967296ULL)))
+# if !(defined (READ_MAX) && (READ_MAX <= (4294967296ull)))
 #  ifdef READ_MAX
 #   undef READ_MAX
 #  endif
-#  if defined(SSIZE_MAX) && (SSIZE_MAX <= (4294967296ULL))
+#  if defined(SSIZE_MAX) && (SSIZE_MAX <= (4294967296ull))
 #   define READ_MAX SSIZE_MAX
 #  else
-#   define READ_MAX (4294967295UL)
+#   define READ_MAX (4294967295ul)
 #  endif
 # endif
 
@@ -286,39 +297,6 @@ typedef	union			u_ldouble16c
 # endif
 
 /*
-** NULL defines
-*/
-
-# ifdef NULL
-#  define CNULL (char*)NULL
-#  define UCNULL (unsigned char*)NULL
-#  define SNULL (short*)NULL
-#  define USNULL (unsigned short*)NULL
-#  define INULL (int*)NULL
-#  define UINULL (unsigned int*)NULL
-#  define LNULL (long*)NULL
-#  define ULNULL (unsigned long*)NULL
-#  define LLNULL (long long*)NULL
-#  define ULLNULL (unsigned long long*)NULL
-#  define FNULL (float*)NULL
-#  define DNULL (double*)NULL
-# else
-#  define NULL (void*)0
-#  define CNULL (char*)0
-#  define UCNULL (unsigned char*)0
-#  define SNULL (short*)0
-#  define USNULL (unsigned short*)0
-#  define INULL (int*)0
-#  define UINULL (unsigned int*)0
-#  define LNULL (long*)0
-#  define ULNULL (unsigned long*)0
-#  define LLNULL (long long*)0
-#  define ULLNULL (unsigned long long*)0
-#  define FNULL (float*)0
-#  define DNULL (double*)0
-# endif
-
-/*
 ** memory related defines
 */
 
@@ -350,11 +328,10 @@ typedef	union			u_ldouble16c
 # define MAX(x, y) ((x) < (y) ? (y) : (x))
 # define ABS(x) ((x) < 0 ? -(x) : (x))
 # define SIGN(x) ((x) < 0 ? -1 : ((x) > 0))
-# define FRAC(x) ((x) - (long long)(x))
-# define FLOOR(x) ((x) - FRAC(x))
-# define CEIL(x) ((x) - FRAC(x) + (FRAC(x) != 0))
-# define ROUND(x) ((x) - FRAC(x) + (FRAC(x) >= 0.5))
-# define INT(x) ((x) - FRAC(x))
+# define FRAC(x) ((double)(x) - (double)(long long)(x))
+# define FLOOR(x) ((double)(x) - FRAC(x))
+# define CEIL(x) ((double)(x) - FRAC(x) + (FRAC(x) != 0.0))
+# define ROUND(x) ((double)(x) - FRAC(x) + (FRAC(x) >= 0.5))
 # define SQR(x) ((x) * (x))
 
 /*
@@ -946,8 +923,8 @@ void					ft_putendl(char const *s);
 void					ft_putendl_fd(char const *s, int fd);
 void					ft_putnbr(int n);
 void					ft_putnbr_fd(int n, int fd);
-void					ft_putnbr_hex(int n);
-void					ft_putnbr_hex_fd(int n, int fd);
+void					ft_putnbr_hex(unsigned long n);
+void					ft_putnbr_hex_fd(unsigned long n, int fd);
 void					ft_putstr(char const *s);
 void					ft_putstr_fd(char const *s, int fd);
 void					ft_puttab(char **tab);
@@ -1317,5 +1294,10 @@ char					*ft_path_clean_slashes(char *path);
 
 void					*ft_reallocf(void *ptr, size_t size_original,
 												size_t size_new);
-inline void				ft_void(long long voidable_content);
+void					ft_void(long long voidable_content);
+void					ft_put_double_fd(double v, int precision, int fd);
+void					ft_put_double(double v);
+void					ft_putnbr_bin_fd(unsigned long nbr, int fd);
+void					ft_putnbr_bin(unsigned long nbr);
+
 #endif

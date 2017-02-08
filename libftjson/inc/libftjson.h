@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/14 18:48:15 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/01 17:18:25 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/08 23:31:35 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,5 +150,11 @@ int								ft_json_check_array_types(
 unsigned int					ft_json_check_string(t_json_value *v,
 					const int nb_strings, char **str, const int default_return);
 t_json_string					*ft_json_string(const char *str);
+void							ft_json_print_path(int fd, t_json_value *v);
+int								ft_json_print_data(int fd, t_json_value *node);
+void							ft_json_print_clike(int fd, t_json_value *root);
+void							ft_json_print(int fd, t_json_value *root);
+void							sf_json_print(int fd, t_json_value *node,
+											int level);
 
 #endif

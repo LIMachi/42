@@ -95,6 +95,9 @@ ITEMS = \
 		./src/global/ft_global_malloc_stack \
 		./src/global/ft_init \
 		./src/global/ft_log \
+		./src/int/ft_int_swap \
+		./src/io/ft_put_double \
+		./src/io/ft_put_double_fd \
 		./src/io/ft_putchar \
 		./src/io/ft_putchar_fd \
 		./src/io/ft_putendl \
@@ -102,6 +105,8 @@ ITEMS = \
 		./src/io/ft_putlist \
 		./src/io/ft_putlist_fd \
 		./src/io/ft_putnbr \
+		./src/io/ft_putnbr_bin \
+		./src/io/ft_putnbr_bin_fd \
 		./src/io/ft_putnbr_fd \
 		./src/io/ft_putnbr_hex \
 		./src/io/ft_putnbr_hex_fd \
@@ -157,14 +162,20 @@ ITEMS = \
 		./src/mem/ft_memdel \
 		./src/mem/ft_memdup \
 		./src/mem/ft_memmove \
+		./src/mem/ft_memrchr \
 		./src/mem/ft_memset \
+		./src/mem/ft_reallocf \
 		./src/mem/ft_swapd \
 		./src/mem/ft_swapi \
+		./src/misc/ft_void \
 		./src/object/ft_object_add \
 		./src/object/ft_object_free_node \
 		./src/object/ft_object_new \
 		./src/object/ft_object_search \
+		./src/path/ft_dirname \
+		./src/path/ft_path_clean_slashes \
 		./src/path/ft_path_name \
+		./src/path/ft_realpath \
 		./src/pile/ft_pile_free \
 		./src/pile/ft_pile_is_empty \
 		./src/pile/ft_pile_look \
@@ -282,13 +293,7 @@ ITEMS = \
 		./src/vector/ft_vector_substract \
 		./src/xtree/ft_xtree_add_next \
 		./src/xtree/ft_xtree_add_shild \
-		./src/xtree/ft_xtree_new \
-		./src/path/ft_dirname \
-		./src/mem/ft_memrchr \
-		./src/path/ft_realpath \
-		./src/path/ft_path_clean_slashes \
-		./src/mem/ft_reallocf \
-		./src/misc/ft_void
+		./src/xtree/ft_xtree_new
 
 #variables for Linux
 ifeq ($(shell uname),Linux)

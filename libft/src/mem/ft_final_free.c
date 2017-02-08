@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/18 01:24:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/12/27 14:47:15 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/08 23:24:43 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	ft_final_free(void)
 
 # else
 
+#  if !defined(FT_LOG_FINAL_FREE) || FT_LOG_FINAL_FREE == 0
+
 void	ft_final_free(void)
 {
 	size_t	i;
@@ -60,6 +62,27 @@ void	ft_final_free(void)
 		}
 	ft_global_malloc_stack()->head = 0;
 }
+
+#  else
+
+void	ft_final_free(void)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < ft_global_malloc_stack()->head)
+		if (ft_global_malloc_stack()->data[i++] != NULL)
+		{
+			ft_void(write(1, "final-freed pointer: ", 21));
+			ft_putnbr_hex((unsigned long)ft_global_malloc_stack()->data[i - 1]);
+			ft_void(write(1, "\n", 1));
+			free(ft_global_malloc_stack()->data[i - 1]);
+			ft_global_malloc_stack()->data[i - 1] = NULL;
+		}
+	ft_global_malloc_stack()->head = 0;
+}
+
+#  endif
 
 # endif
 

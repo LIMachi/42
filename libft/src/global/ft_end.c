@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/22 20:14:49 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/01/07 18:39:33 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/08 23:17:45 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static inline void	sf_endcalls(void)
 {
-	void	(*func)(void);
+	void	(*func)();
 	t_pile	*stack;
 
 	stack = ft_global_atend_stack();
@@ -50,6 +50,7 @@ void				ft_end(int r)
 	if (ft_global_log(LOG_SET | LOG_STORE, "Log ended\n") == NULL)
 		ft_error(ERROR_ERRNO, 0);
 	ft_global_log(LOG_END, NULL);
+	*ft_global_flags() = 0;
 	ft_final_free();
 	EXIT(r);
 }

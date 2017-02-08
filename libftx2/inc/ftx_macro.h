@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/05 19:10:19 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 17:14:02 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/08 18:53:52 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@
 #  define KEY_X 7
 #  define KEY_Y 16
 #  define KEY_Z 6
+#  define KEY_P 35
 #  define KEY_EXIT 53
 #  define KEY_UP 126
 #  define KEY_LEFT 123

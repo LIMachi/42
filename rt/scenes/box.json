@@ -1,0 +1,89 @@
+{
+	"render_options":
+	{
+		"size": [1000, 1000],
+		"lighting":
+		{
+			"ambient": 0.0
+		}
+	},
+	"camera":
+	{
+		"position": [0, 0, -30],
+		"direction": [0, 0, 1],
+		"up": [0, 1, 0],
+		"right": [1, 0, 0],
+		"vp_size": [1000, 1000],
+		"dist": 800
+	},
+	"materials":
+	{
+		"red":
+		{
+			"color": [1, 1, 1],
+			"diffuse": 1.0,
+			"specular": 1.0
+		},
+		"pp":
+		{
+			"color": [1, 1, 1],
+			"diffuse": 1.0,
+			"specular": 1.0,
+			"reflection": 1.0
+		}
+	},
+	"objects":
+	[
+		{
+			"type": "sphere",
+			"position": [0, 0, 0],
+			"radius": 10,
+			"material": "red"
+		},
+		{
+			"type": "plane",
+			"position": [0, 0, 100],
+			"direction": [0, 0, 1],
+			"material": "pp"
+		},
+		{
+			"type": "plane",
+			"position": [0, 0, -100],
+			"direction": [0, 0, 1],
+			"material": "pp"
+		},
+		{
+			"type": "plane",
+			"position": [0, 100, 0],
+			"direction": [0, 1, 0],
+			"material": "pp"
+		},
+		{
+			"type": "plane",
+			"position": [0, -100, 0],
+			"direction": [0, 1, 0],
+			"material": "pp"
+		},
+		{
+			"type": "plane",
+			"position": [100, 0, 0],
+			"direction": [1, 0, 0],
+			"material": "pp"
+		},
+		{
+			"type": "plane",
+			"position": [-100, 0, 0],
+			"direction": [1, 0, 0],
+			"material": "pp"
+		}
+	],
+	"lights":
+	[
+		{ "position": [30, 0, 0], "color": [0, 0, 2] },
+		{ "position": [0, 30, 0], "color": [2, 0, 0] },
+		{ "position": [0, 0, 30], "color": [0, 2, 0] },
+		{ "position": [0, 0, -30], "color": [0, 2, 2] },
+		{ "position": [0, -30, 0], "color": [2, 0, 2] },
+		{ "position": [-30, 0, 0], "color": [2, 2, 0] }
+	]
+}

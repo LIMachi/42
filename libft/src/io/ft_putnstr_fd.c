@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/19 15:03:54 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/12/21 02:39:01 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/07 00:59:42 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_putnstr_fd(char *str, int n, int fd)
 		return (-1);
 	t = ft_strlen(str);
 	n = n < t ? n : t;
-	(void)(write(fd, str, n) == 0);
+	ft_void(write(fd, str, n));
 	if ((*ft_global_flags() & GF_FORCE_LOG) == GF_FORCE_LOG)
 	{
 		t = str[n];

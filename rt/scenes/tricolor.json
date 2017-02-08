@@ -1,0 +1,62 @@
+{
+	"render_options":
+	{
+		"size": [1000, 1000],
+		"lighting":
+		{
+			"ambient": 0.05,
+			"direct": 0.2
+		}
+	},
+	"camera":
+	{
+		"position": [0, 0, 75],
+		"direction": [0, 0, 1],
+		"up": [0, 1, 0],
+		"right": [1, 0, 0],
+		"vp_size": [1000, 1000],
+		"dist": 800
+	},
+	"materials":
+	{
+		"white":
+		{
+			"color": [1, 1, 1],
+			"diffuse": 1.0,
+			"specular": 1.0,
+			"perturbation": 
+			{
+				"normal": 0.2,
+				"color": "sine"
+			},
+			"reflection": 1.0
+		}
+	},
+	"objects":
+	[
+		{
+			"type": "sphere",
+			"position": [0, 0, 500],
+			"direction": [0, 1, 0],
+			"radius": 200,
+			"material": 
+			{
+				"color": [1, 1, 1],
+				"diffuse": 1.0,
+				"specular": 1.0
+			}
+		},
+		{
+			"type": "plane",
+			"position": [0, 0, 1000],
+			"direction": [0, 0, 1],
+			"material": "white"
+		}
+	],
+	"lights":
+	[
+		{ "position": [300, 0, 0], "color": [0, 3, 0] },
+		{ "position": [-150, -250, 0], "color": [3, 0, 0] },
+		{ "position": [-150, 250, 0], "color": [0, 0, 3] }
+	]
+}

@@ -1,0 +1,358 @@
+{
+	"render_options": {
+		"size": [
+			1000,
+			1000
+		],
+		"lighting": {
+			"ambient": ,
+			"direct": 
+		},
+		"antialias": 1,
+		"bounce_depth": 2,
+		"filter": "none",
+		"stereoscopy": true,
+		"skybox": {
+			"file": "textures/sky.bmp"
+		}
+	},
+	"camera": {
+		"position": [
+			0,
+			0,
+			0
+		],
+		"direction": [
+			0,
+			0,
+			1
+		],
+		"up": [
+			0,
+			1,
+			0
+		],
+		"right": [
+			1,
+			0,
+			0
+		],
+		"vp_size": [
+			1000,
+			1000
+		],
+		"dist": 800
+	},
+	"materials": {
+		"red": {
+			"color": [
+				1,
+				0,
+				0
+			],
+			"diffuse": ,
+			"specular": ,
+			"reflection": ,
+			"perturbation": {
+				"normal": ,
+				"color": "none"
+			},
+			"texture": {
+				"file": "textures/cat.bmp",
+				"stretch": [
+					,
+					
+				],
+				"offset": [
+					,
+					
+				]
+			}
+		}
+	},
+	"objects": [
+		{
+			"type": "sphere",
+			"position": [
+				0,
+				0,
+				200
+			],
+			"radius": 20,
+			"material": "red",
+			"limit": {
+				"relative": true,
+				"low": [
+					null,
+					0,
+					null
+				]
+			}
+		},
+		{
+			"type": "plane",
+			"position": [
+				0,
+				-200,
+				0
+			],
+			"direction": [
+				0,
+				1,
+				0
+			],
+			"material": {
+				"color": [
+					,
+					,
+					
+				],
+				"diffuse": ,
+				"specular": ,
+				"reflection": ,
+				"perturbation": {
+					"normal": "none",
+					"color": "none"
+				}
+			}
+		},
+		{
+			"type": "cylinder",
+			"position": [
+				150,
+				0,
+				200
+			],
+			"direction": [
+				1,
+				1,
+				0
+			],
+			"radius": 20,
+			"material": "red"
+		},
+		{
+			"type": "cone",
+			"position": [
+				0,
+				0,
+				500
+			],
+			"direction": [
+				0,
+				1,
+				0
+			],
+			"radius": 30,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [
+				0,
+				50,
+				600
+			],
+			"direction": [
+				0,
+				-1,
+				0
+			],
+			"radius": 2,
+			"material": "red"
+		}
+	],
+	"lights": [
+		{
+			"position": [
+				0,
+				0,
+				0
+			],
+			"color": [
+				1,
+				1,
+				1
+			]
+		}
+	]
+}
+//object size: 5
+root = (t_json_object*)0x7FE3494027B0;
+//object size: 7
+root.render_options = (t_json_object*)0x7FE349402840;
+//array size: 2
+root.render_options.size = (t_json_array*)0x7FE3494028E0;
+root.render_options.size[0] = 1000;
+root.render_options.size[1] = 1000;
+//object size: 2
+root.render_options.lighting = (t_json_object*)0x7FE3494029B0;
+root.render_options.lighting.ambient = ;
+root.render_options.lighting.direct = ;
+root.render_options.antialias = 1;
+root.render_options.bounce_depth = 2;
+root.render_options.filter = "none";
+root.render_options.stereoscopy = true;
+//object size: 1
+root.render_options.skybox = (t_json_object*)0x7FE349402C70;
+root.render_options.skybox.file = "textures/sky.bmp";
+//object size: 6
+root.camera = (t_json_object*)0x7FE349402D60;
+//array size: 3
+root.camera.position = (t_json_array*)0x7FE349402DF0;
+root.camera.position[0] = 0;
+root.camera.position[1] = 0;
+root.camera.position[2] = 0;
+//array size: 3
+root.camera.direction = (t_json_array*)0x7FE349402F00;
+root.camera.direction[0] = 0;
+root.camera.direction[1] = 0;
+root.camera.direction[2] = 1;
+//array size: 3
+root.camera.up = (t_json_array*)0x7FE349403010;
+root.camera.up[0] = 0;
+root.camera.up[1] = 1;
+root.camera.up[2] = 0;
+//array size: 3
+root.camera.right = (t_json_array*)0x7FE349403120;
+root.camera.right[0] = 1;
+root.camera.right[1] = 0;
+root.camera.right[2] = 0;
+//array size: 2
+root.camera.vp_size = (t_json_array*)0x7FE349403230;
+root.camera.vp_size[0] = 1000;
+root.camera.vp_size[1] = 1000;
+root.camera.dist = 800;
+//object size: 1
+root.materials = (t_json_object*)0x7FE349403360;
+//object size: 6
+root.materials.red = (t_json_object*)0x7FE3494033D0;
+//array size: 3
+root.materials.red.color = (t_json_array*)0x7FE349403460;
+root.materials.red.color[0] = 1;
+root.materials.red.color[1] = 0;
+root.materials.red.color[2] = 0;
+root.materials.red.diffuse = ;
+root.materials.red.specular = ;
+root.materials.red.reflection = ;
+//object size: 2
+root.materials.red.perturbation = (t_json_object*)0x7FE349403690;
+root.materials.red.perturbation.normal = ;
+root.materials.red.perturbation.color = "none";
+//object size: 3
+root.materials.red.texture = (t_json_object*)0x7FE3494037D0;
+root.materials.red.texture.file = "textures/cat.bmp";
+//array size: 2
+root.materials.red.texture.stretch = (t_json_array*)0x7FE3494038D0;
+root.materials.red.texture.stretch[0] = ;
+root.materials.red.texture.stretch[1] = ;
+//array size: 2
+root.materials.red.texture.offset = (t_json_array*)0x7FE3494039A0;
+root.materials.red.texture.offset[0] = ;
+root.materials.red.texture.offset[1] = ;
+//array size: 5
+root.objects = (t_json_array*)0x7FE349403A70;
+//object size: 5
+root.objects[0] = (t_json_object*)0x7FE349403AD0;
+root.objects[0].type = "sphere";
+//array size: 3
+root.objects[0].position = (t_json_array*)0x7FE349403BD0;
+root.objects[0].position[0] = 0;
+root.objects[0].position[1] = 0;
+root.objects[0].position[2] = 200;
+root.objects[0].radius = 20;
+root.objects[0].material = "red";
+//object size: 2
+root.objects[0].limit = (t_json_object*)0x7FE349403DB0;
+root.objects[0].limit.relative = true;
+//array size: 3
+root.objects[0].limit.low = (t_json_array*)0x7FE349403E80;
+root.objects[0].limit.low[0] = null;
+root.objects[0].limit.low[1] = 0;
+root.objects[0].limit.low[2] = null;
+//object size: 4
+root.objects[1] = (t_json_object*)0x7FE349403F40;
+root.objects[1].type = "plane";
+//array size: 3
+root.objects[1].position = (t_json_array*)0x7FE349404030;
+root.objects[1].position[0] = 0;
+root.objects[1].position[1] = -200;
+root.objects[1].position[2] = 0;
+//array size: 3
+root.objects[1].direction = (t_json_array*)0x7FE349404140;
+root.objects[1].direction[0] = 0;
+root.objects[1].direction[1] = 1;
+root.objects[1].direction[2] = 0;
+//object size: 5
+root.objects[1].material = (t_json_object*)0x7FE349404250;
+//array size: 3
+root.objects[1].material.color = (t_json_array*)0x7FE3494042E0;
+root.objects[1].material.color[0] = ;
+root.objects[1].material.color[1] = ;
+root.objects[1].material.color[2] = ;
+root.objects[1].material.diffuse = ;
+root.objects[1].material.specular = ;
+root.objects[1].material.reflection = ;
+//object size: 2
+root.objects[1].material.perturbation = (t_json_object*)0x7FE349404510;
+root.objects[1].material.perturbation.normal = "none";
+root.objects[1].material.perturbation.color = "none";
+//object size: 5
+root.objects[2] = (t_json_object*)0x7FE349404630;
+root.objects[2].type = "cylinder";
+//array size: 3
+root.objects[2].position = (t_json_array*)0x7FE349404730;
+root.objects[2].position[0] = 150;
+root.objects[2].position[1] = 0;
+root.objects[2].position[2] = 200;
+//array size: 3
+root.objects[2].direction = (t_json_array*)0x7FE349404840;
+root.objects[2].direction[0] = 1;
+root.objects[2].direction[1] = 1;
+root.objects[2].direction[2] = 0;
+root.objects[2].radius = 20;
+root.objects[2].material = "red";
+//object size: 5
+root.objects[3] = (t_json_object*)0x7FE3494049F0;
+root.objects[3].type = "cone";
+//array size: 3
+root.objects[3].position = (t_json_array*)0x7FE349404AF0;
+root.objects[3].position[0] = 0;
+root.objects[3].position[1] = 0;
+root.objects[3].position[2] = 500;
+//array size: 3
+root.objects[3].direction = (t_json_array*)0x7FE349404C00;
+root.objects[3].direction[0] = 0;
+root.objects[3].direction[1] = 1;
+root.objects[3].direction[2] = 0;
+root.objects[3].radius = 30;
+root.objects[3].material = "red";
+//object size: 5
+root.objects[4] = (t_json_object*)0x7FE349404DB0;
+root.objects[4].type = "paraboloid";
+//array size: 3
+root.objects[4].position = (t_json_array*)0x7FE349404EB0;
+root.objects[4].position[0] = 0;
+root.objects[4].position[1] = 50;
+root.objects[4].position[2] = 600;
+//array size: 3
+root.objects[4].direction = (t_json_array*)0x7FE349404FC0;
+root.objects[4].direction[0] = 0;
+root.objects[4].direction[1] = -1;
+root.objects[4].direction[2] = 0;
+root.objects[4].radius = 2;
+root.objects[4].material = "red";
+//array size: 1
+root.lights = (t_json_array*)0x7FE3494051A0;
+//object size: 2
+root.lights[0] = (t_json_object*)0x7FE3494051E0;
+//array size: 3
+root.lights[0].position = (t_json_array*)0x7FE349405250;
+root.lights[0].position[0] = 0;
+root.lights[0].position[1] = 0;
+root.lights[0].position[2] = 0;
+//array size: 3
+root.lights[0].color = (t_json_array*)0x7FE349405360;
+root.lights[0].color[0] = 1;
+root.lights[0].color[1] = 1;
+root.lights[0].color[2] = 1;

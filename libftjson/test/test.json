@@ -1,0 +1,10 @@
+{
+	"head": "test",
+	"array": "thing",
+	"bool": false,
+	"array": [null, 0, 1],
+	"object": {
+		"dup": 12,
+		"qwjfqwfj": -3
+	}
+}

@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/18 17:17:24 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/18 17:18:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/07 02:51:09 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-void	ft_putnbr_hex(int n)
+void	ft_putnbr_hex(unsigned long n)
 {
 	ft_putnbr_hex_fd(n, 1);
 }

@@ -6,7 +6,7 @@
 /*   By: hmarot <hmarot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/14 12:04:11 by hmarot            #+#    #+#             */
-/*   Updated: 2017/02/01 15:02:53 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/08 18:26:23 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,6 @@ int				push_uni(wchar_t c, t_penv *env, int nbbi);
 int				prf_strlen_uni(wchar_t *str);
 int				prf_main_b(char *form, t_penv *env, int i, va_list ap);
 void			return_null(t_penv *env);
-inline void		ft_void(long long voidable_content);
+void			ft_void(long long voidable_content);
 
 #endif

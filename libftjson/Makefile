@@ -28,10 +28,13 @@ ITEMS = \
 		ft_json_new_value \
 		ft_json_pack_value \
 		ft_json_parse_src \
+		ft_json_print \
+		ft_json_print_clike \
+		ft_json_print_data \
+		ft_json_print_path \
 		ft_json_print_type \
 		ft_json_search_pair_in_object \
-		ft_json_string \
-		ft_json_print_path
+		ft_json_string
 
 #variables for Linux
 ifeq ($(shell uname),Linux)

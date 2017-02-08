@@ -1,0 +1,179 @@
+{
+	"render_options":
+	{
+		"size": [1000, 1000],
+		"lighting":
+		{
+			"ambient": 0.4,
+			"direct": 1.0
+		},
+		"antialias": 1,
+		"bounce_depth": 2,
+		"filter": "none",
+		"stereoscopy": true,
+		"skybox":
+		{
+			"file": "textures/red-sky.bmp"
+		}
+	},
+	"camera":
+	{
+		"position": [0, 0, 0],
+		"direction": [1, 0, 0],
+		"up": [0, 1, 0],
+		"right": [0, 0, -1],
+		"vp_size": [1000, 1000],
+		"dist": 800
+	},
+	"materials":
+	{
+		"red":
+		{
+			"color": [1, 0, 0.4],
+			"diffuse": 1.0,
+			"specular": 1.0,
+			"reflection": 1.0,
+			"perturbation":
+			{
+				"normal": "none",
+				"color": "none"
+			}
+		}
+	},
+	"objects":
+	[
+		{
+			"type": "plane",
+			"position": [0, -200, 0],
+			"direction": [0, 1, 0],
+			"material":
+			{
+				"color": [0.5, 0, 0],
+				"diffuse": 1.0,
+				"specular": 0.0,
+				"reflection": 1.0,
+				"perturbation":
+				{
+					"normal": "none",
+					"color": "none"
+				}
+			}
+		},
+		{
+			"type": "paraboloid",
+			"position": [0, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [0, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [80, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [80, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [160, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [160, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [240, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [240, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [320, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [320, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [400, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [400, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [480, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [480, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [560, 0, -50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		},
+		{
+			"type": "paraboloid",
+			"position": [560, 0, 50],
+			"direction": [0, -1, 0],
+			"radius": 0.21,
+			"material": "red"
+		}
+	],
+	"lights":
+	[
+		{ "position": [0, 100000, 0], "color": [10, 10, 10] }
+	]
+}
