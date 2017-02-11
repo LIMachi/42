@@ -1,49 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   02_null_test.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/11 13:28:21 by hmartzol         ###   ########.fr       */
+/*   Created: 2017/02/11 06:30:59 by hmartzol          #+#    #+#             */
+/*   Updated: 2017/02/11 06:33:53 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
-
-#if !defined(NORM_LIBFT) || NORM_LIBFT == 1
-
-/*
-** norm libft, this function segfault on NULL pointers
-*/
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		++len;
-	return (len);
-}
-
-#else
+#include "libft.h"
+#include <string.h>
 
 /*
-** Other norm: return 0 if s is NULL
+** ft_strlen should segfault on NULL input like strlen
 */
 
-size_t	ft_strlen(const char *s)
+int	null_test(void)
 {
-	size_t	len;
-
-	if (s == NULL)
-		return (0);
-	len = 0;
-	while (s[len])
-		++len;
-	return (len);
+	ft_strlen(NULL);
+	return (-1);
 }
-
-#endif

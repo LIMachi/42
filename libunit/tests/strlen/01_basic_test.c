@@ -1,49 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   01_basic_test.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/11 13:28:21 by hmartzol         ###   ########.fr       */
+/*   Created: 2017/02/11 06:29:08 by hmartzol          #+#    #+#             */
+/*   Updated: 2017/02/11 06:31:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
-
-#if !defined(NORM_LIBFT) || NORM_LIBFT == 1
-
-/*
-** norm libft, this function segfault on NULL pointers
-*/
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		++len;
-	return (len);
-}
-
-#else
+#include "libft.h"
+#include <string.h>
 
 /*
-** Other norm: return 0 if s is NULL
+** length returned by ft_strlen should be the same has strlen for same input
 */
 
-size_t	ft_strlen(const char *s)
+int	basic_test(void)
 {
-	size_t	len;
-
-	if (s == NULL)
+	if (ft_strlen("Hello") == strlen("Hello"))
 		return (0);
-	len = 0;
-	while (s[len])
-		++len;
-	return (len);
+	else
+		return (-1);
 }
-
-#endif
