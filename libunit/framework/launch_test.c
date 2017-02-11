@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 06:24:16 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/11 13:23:08 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/11 15:52:43 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,39 +26,6 @@
 ** 		Return 0 if all test passed, -1 if at least one test failled.
 */
 
-static int	sf_call_test(int (*test_func)(void))
-{
-	int		out;
-	int		state;
-
-	out = -1;
-	if (fork() == 0)
-	{
-		alarm(10);
-		exit(test_func());
-	}
-	else
-	{
-		wait(&state);
-		if (WIFSIGNALED(state))
-		{
-			if (WTERMSIG(state) == SIGBUS)
-				write(1, "[BUS]", 5);
-			else if (WTERMSIG(state) == SIGSEGV)
-				write(1, "[SEGV]", 6);
-			else if (WTERMSIG(state) == SIGALRM)
-				write(1, "[TIMEOUT]", 9);
-			else
-				write(1, "[SIGNAL]", 8);
-		}
-		else if(WIFEXITED(state))
-			write(1, (out = WEXITSTATUS(state)) ? "[KO]" : "[OK]", 4);
-		else
-			write(1, "[STOPED]", 8);
-	}
-	return (out);
-}
-
 static int	sf_strlen(char *str)
 {
 	int	out;
@@ -69,27 +36,55 @@ static int	sf_strlen(char *str)
 	return (out);
 }
 
+static void	sf_putnbr(unsigned int v)
+{
+	unsigned int		p;
+	static const char	base[11] = "0123456789";
+
+	p = 1;
+	while (p * 10 < v)
+		p *= 10;
+	while (p)
+	{
+		write(1, &base[((v / p) % 10)], 1);
+		p /= 10;
+	}
+}
+
+static void	sf_final_count(unsigned int succeded, unsigned int total)
+{
+	write(1, TF_CYAN "\n--- ", 10);
+	sf_putnbr(succeded);
+	write(1, "/", 1);
+	sf_putnbr(total);
+	write(1, " test passed successfully ---\n" TF_RESET, 35);
+}
+
 int			launch_test(t_unit_test **list)
 {
-	t_unit_test	*ptr;
-	t_unit_test	*tmp;
-	int			succeded;
+	t_unit_test		*ptr;
+	t_unit_test		*tmp;
+	unsigned int	succeded;
+	unsigned int	total;
 
 	if (list == NULL && write(2, "launch_test got NULL list\n", 26))
 		exit(-1);
 	ptr = *list;
 	succeded = 0;
+	total = 0;
 	while (ptr != NULL)
 	{
+		++total;
 		write(1, "\t> ", 3);
 		write(1, ptr->name, sf_strlen(ptr->name));
 		write(1, " : ", 3);
-		if (sf_call_test(ptr->test_func))
-			succeded = -1;
+		if (!call_test(ptr->test_func, ptr->expected_status))
+			++succeded;
 		write(1, "\n", 1);
 		tmp = ptr;
 		ptr = ptr->next;
 		free(tmp);
 	}
-	return (succeded);
+	sf_final_count(succeded, total);
+	return (succeded != total);
 }

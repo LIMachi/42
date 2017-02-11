@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 06:23:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/11 08:11:02 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/11 14:14:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@
 ** 			Pointed function should return -1 on test fail or 0 on succes.
 */
 
-void	load_test(t_unit_test **list, char *name, int (*test_func)(void))
+void	load_test(t_unit_test **list, char *name, int (*test_func)(void),
+					int expected_status)
 {
 	t_unit_test	*out;
 	t_unit_test	*tmp;
@@ -50,6 +51,7 @@ void	load_test(t_unit_test **list, char *name, int (*test_func)(void))
 		exit(-1);
 	out->name = name;
 	out->test_func = test_func;
+	out->expected_status = expected_status;
 	out->next = NULL;
 	if (*list == NULL)
 		*list = out;

@@ -4,8 +4,10 @@ NAME := libunit.a
 
 FLAGS := -Wall -Wextra -Werror
 
-OBJECTS := launch_test.o\
-			load_test.o
+OBJECTS := launch_test.o \
+			load_test.o \
+			call_test.o \
+			create_signal_code.o
 
 .PHONY: all clean fclean re
 
