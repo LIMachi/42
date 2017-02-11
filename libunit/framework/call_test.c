@@ -6,11 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 15:52:17 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/11 15:56:36 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/11 18:41:30 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libunit.h"
+#include <stdio.h>
+#include <fcntl.h>
 
 static void	sf_print_signals(int state)
 {
@@ -26,6 +28,21 @@ static void	sf_print_signals(int state)
 		write(1, "[SIGNAL]", 8);
 }
 
+static void	sf_shild(int (*test_func)(void))
+{
+	int		test_stdout;
+
+	alarm(10);
+	if ((test_stdout = open("test_stdoutput", O_RDWR | O_CREAT | O_TRUNC,
+			0755)) == -1 && write(2, "shild's call to open returned -1\n", 33))
+		exit(-1);
+	if ((dup2(test_stdout, 1)) == -1 &&
+			write(2, "shild's call to dup returned -1\n", 32))
+		exit(-1);
+	close(test_stdout);
+	exit(test_func());
+}
+
 int			call_test(int (*test_func)(void), int expected_status)
 {
 	int		out;
@@ -33,10 +50,7 @@ int			call_test(int (*test_func)(void), int expected_status)
 
 	out = 1;
 	if (fork() == 0)
-	{
-		alarm(10);
-		exit(test_func());
-	}
+		sf_shild(test_func);
 	else
 	{
 		wait(&state);
