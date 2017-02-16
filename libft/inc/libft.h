@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/08 23:53:36 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/15 13:42:20 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,6 +353,7 @@ typedef	union			u_ldouble16c
 #   define __QNAN_BYTES		{0, 0, 0xc0, 0x7f}
 #  endif
 #  define NAN	(((t_float4c){.c = __QNAN_BYTES}).f)
+
 #  if LOCAL_ENDIAN == BIG_ENDIAN
 #   define __HUGE_VALF_BYTES	{0x7f, 0x80, 0, 0}
 #  endif

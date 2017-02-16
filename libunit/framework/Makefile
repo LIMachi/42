@@ -7,7 +7,9 @@ FLAGS := -Wall -Wextra -Werror
 OBJECTS := launch_test.o \
 			load_test.o \
 			call_test.o \
-			create_signal_code.o
+			create_signal_code.o \
+			global_fd_log.o \
+			print.o
 
 .PHONY: all clean fclean re
 
