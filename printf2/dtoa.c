@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 15:41:37 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/18 14:02:24 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/18 15:16:56 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,29 @@
 #include <stdio.h>
 #include "ft_float.h"
 
-#define MASK ((__T_FLOAT_UI)-1) >> (__T_FLOAT_BSIZE - __T_FLOAT_MANT_SIZE - 1)
+/*
+** takes __T_FLOAT (float or double, deppending on flags passed at compilation),
+** a precision and try to write in ascii f in buff if buff is non-null. if
+** buff is null, ft_dtoa will try to allocate a string big enougth to contain
+** f. if writen is non-null, after return, writen will have the total characters
+** writen to buff, or the size of buff if buff was null at call.
+** return a pointer to buff (either buff itself or the newly allocated buffer)
+** return NULL on error and writen will have the characters actually writen in
+** buff
+*/
 
-void	print_all_defined()
-{
-	printf("__T_FLOAT_SIZE: %d\n", __T_FLOAT_SIZE);
-	printf("__T_FLOAT_EXP_SIZE: %d\n", __T_FLOAT_EXP_SIZE);
-	printf("__T_FLOAT_MANT_SIZE: %d\n", __T_FLOAT_MANT_SIZE);
-	printf("__T_FLOAT_BSIZE: %d\n", __T_FLOAT_BSIZE);
-	printf("__T_FLOAT_EXP_BIAS: %d\n", __T_FLOAT_EXP_BIAS);
-	printf("__T_FLOAT_MANT_COMP: %d\n", __T_FLOAT_MANT_COMP);
-	printf("__INFINITY_EXP: %d\n", __INFINITY_EXP);
-	printf("INFINITY: %d\n", INFINITY);
-}
-
-void	print_binary(__T_FLOAT_UI v, int bites)
-{
-	while (bites--)
-		printf("%d", (v >> bites) & 1);
-}
-
-char	*ft_dtoa_a(double f, int precision, char *buff)
-{
-	t_float	v;
-
-	return (NULL);
-}
-
-char	*ft_ulltoa(__UINT64_TYPE__ v, char *buff)
+inline static void	sf_dtoa()
 {
 
 }
 
-char	*ft_dtoa(__T_FLOAT f, int precision, char *buff)
+char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 {
 	t_float			v;
 	__T_FLOAT_I		expo;
 	__T_FLOAT_UI	mant;
 	__T_FLOAT_UI	frac;
+	__T_FLOAT_UI	mask;
 
 	if (!(f == f))
 	{
@@ -75,6 +60,7 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff)
 	mant = v.part.mant | __T_FLOAT_MANT_COMP;
 	expo = v.part.exp - __T_FLOAT_EXP_BIAS;
 	frac = 0;
+	mask = ((__T_FLOAT_UI)-1) >> (__T_FLOAT_BSIZE - __T_FLOAT_MANT_SIZE - 1);
 	if (expo > __T_FLOAT_EXP_BIAS || expo <= -__T_FLOAT_EXP_BIAS)
 		return (NULL);
 	else if (expo >= __T_FLOAT_MANT_SIZE)
@@ -82,12 +68,12 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff)
 	else if (expo >= 0)
 	{
 		printf("%llu", (uint64_t)(mant >> (__T_FLOAT_MANT_SIZE - expo)));
-		frac = (mant << (expo + 1)) & MASK;
+		frac = (mant << (expo + 1)) & mask;
 	}
 	else
 	{
 		printf("0");
-		frac = ((mant & MASK) >> -(expo + 1));
+		frac = ((mant & mask) >> -(expo + 1));
 	}
 	if (precision > 0)
 	{
@@ -95,27 +81,9 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff)
 		while (!(0 * (frac *= 10)) && --precision >= 0)
 		{
 			printf("%c", (int)(frac >> (__T_FLOAT_MANT_SIZE + 1)) + '0');
-			frac &= MASK;
+			frac &= mask;
 		}
 		//still needs rounding
 	}
-	return (NULL);
-}
-
-int	main(int argc, char **argv, char **env)
-{
-	print_all_defined();
-	int	p = 17;
-	t_float	t = {.f = 1.1};
-	print_binary(1, 1);
-	print_binary(0, __T_FLOAT_EXP_SIZE);
-	print_binary((__T_FLOAT_UI)-1, __T_FLOAT_MANT_SIZE);
-	printf("\n");
-	print_binary(t.part.sign, 1);
-	print_binary(t.part.exp, __T_FLOAT_EXP_SIZE);
-	print_binary(t.part.mant, __T_FLOAT_MANT_SIZE);
-	printf("\nsizeof t_float: %lu\n", sizeof(t_float));
-	ft_dtoa(t.f, p, NULL);
-	printf("\n%.*f\n", p, t.f);
-	return (0);
+	return (buff);
 }

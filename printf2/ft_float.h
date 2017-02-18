@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 19:37:17 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/18 14:01:48 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/18 15:27:21 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@
 #  define __T_FLOAT_UI __UINT64_TYPE__
 #  define __T_FLOAT_I __INT64_TYPE__
 #  define __T_FLOAT_BSIZE 64
+#  define __T_MAX_DIGIT 105
+#  define __T_MAX_SUB_DIGIT 112
 
 # elif __T_FLOAT_SIZE == 4
 
@@ -57,6 +59,8 @@
 #  define __T_FLOAT_UI __UINT32_TYPE__
 #  define __T_FLOAT_I __INT32_TYPE__
 #  define __T_FLOAT_BSIZE 32
+#  define __T_MAX_DIGIT 105
+#  define __T_MAX_SUB_DIGIT 112
 
 # else
 #  error "invalid __T_FLOAT_SIZE value"
