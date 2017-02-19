@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/19 18:01:58 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/19 21:04:25 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,8 @@ void	print_binary(__T_FLOAT_UI v, int bites)
 int	main()
 {
 	t_float	test;
-	test.ui = 0;
-	test.part.exp = 0b11111;
-	int			p = 64;
+	test.f = 9.99999999999;
+	int			p = 10;
 	char		*str;
 	int			t;
 
@@ -79,9 +78,9 @@ int	main()
 	printf("0bSeeeeeeeeeeeMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n0b");
 	print_binary(test.ui, __T_FLOAT_BSIZE);
 	printf("\n[printf]:  %.*f\n", p, test.f);
-	printf("[ft_dtoa]: %s\n", str = ft_dtoa(test.f, p, NULL, &t));
+	str = ft_dtoa(test.f, p, NULL, &t);
+	printf("[ft_dtoa]: %s\n", str);
 	printf("t: %d\t0x%016llx\n\n", t, (__UINT64_TYPE__)test.ui);
 	free(str);
-	printf("%d\n", ISINF(test.f));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/18 21:09:15 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/19 20:48:36 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,6 +345,7 @@ typedef	union			u_ldouble16c
 ** math defines
 */
 
+/*
 # ifndef _MATH_H
 #  if LOCAL_ENDIAN == BIG_ENDIAN
 #   define __QNAN_BYTES		{0x7f, 0xc0, 0, 0}
@@ -375,6 +376,7 @@ typedef	union			u_ldouble16c
 
 #  define INFINITY	HUGE_VALF
 # endif
+*/
 
 # define M_E			2.71828182845904523536
 # define M_LOG2E		1.44269504088896340736

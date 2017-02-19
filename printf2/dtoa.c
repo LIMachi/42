@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 15:41:37 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/19 18:06:01 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/19 20:54:14 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <libft.h>
 #include "ft_float.h"
 
 /*
@@ -44,6 +45,32 @@ size_t	ft_u64_evaluate_size(__UINT64_TYPE__ v)
 	return (out);
 }
 
+double	ft_pow10(int v)
+{
+	static const double	pow[51] = {0.0000000000000000000000001,
+
+	0.000000000000000000000001, 0.00000000000000000000001,
+	0.0000000000000000000001, 0.000000000000000000001, 0.00000000000000000001,
+	0.0000000000000000001, 0.000000000000000001, 0.00000000000000001,
+	0.0000000000000001, 0.000000000000001, 0.00000000000001, 0.0000000000001,
+	0.000000000001, 0.00000000001, 0.0000000001, 0.000000001, 0.00000001,
+	0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0,
+	1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0, 100000000.0, 1000000000.0,
+	10000000000.0, 100000000000.0, 1000000000000.0, 10000000000000.0,
+	100000000000000.0, 1000000000000000.0, 10000000000000000.0,
+	100000000000000000.0, 1000000000000000000.0, 10000000000000000000.0,
+	100000000000000000000.0, 1000000000000000000000.0,
+	10000000000000000000000.0, 100000000000000000000000.0,
+	1000000000000000000000000.0, 10000000000000000000000000.0};
+	if (v > 25)
+		return (10000000000000000000000000.0 * ft_pow10(v - 25));
+	if (v < -25)
+		return (0.00000000000000000000000001 * ft_pow10(v + 25));
+	return (pow[25 + v]);
+}
+
+
+
 size_t	ft_float_evaluate_size(t_float v, int precision)
 {
 	size_t			out;
@@ -54,6 +81,7 @@ size_t	ft_float_evaluate_size(t_float v, int precision)
 		return (3);
 	if (v.part.exp == __INFINITY_EXP)
 		return (3 + v.part.sign);
+	v.f += ft_pow10(-precision);	//add a little extra to avoid overflow on 99.9999... rounded to 100.0000...
 	out = precision + 1;
 	if (v.part.exp == 0 || (expo = v.part.exp - __T_FLOAT_EXP_BIAS) < 0)
 		++out;
@@ -86,6 +114,8 @@ inline static void	sf_utoa64(__UINT64_TYPE__ v, char *buff, int *writen)
 		buff[(*writen)++] = '0' + (v / log[--i]) % 10;
 }
 
+//if buff == NULL, then work a generic char *dtoa(double v, int precison) and writen (if not null) is equal to strlen of buff returned
+
 char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 {
 	t_float			v;
@@ -94,22 +124,21 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 	__T_FLOAT_UI	frac;
 	__T_FLOAT_UI	mask; //32b
 	int				w;
+	int				t;
 
 	v = (t_float){.f = f};
 	if (buff == NULL)
 	{
-		if ((buff = malloc(sizeof(char) *
-				((w = ft_float_evaluate_size(v, precision)) + 1))) == NULL)
+		if ((buff = malloc(
+			((w = ft_float_evaluate_size(v, precision)) + 1))) == NULL)
 			return (NULL);
 		buff[w] = '\0'; //si buff est cree, on ajoute un '\0' a la fin (le '\0' n'est pas present par defaut)
 	}
+	w = 0;
 	if (writen != NULL)
 		*writen = 0;
 	else
-	{
-		w = 0;
 		writen = &w; //simule la presence de writen
-	}
 	if (f != f)
 	{
 		buff[0] = 'n';
@@ -166,6 +195,20 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 			frac = (frac << 3) + (frac << 1);
 		}
 		//manque l'arondi
+		if (frac >> (__T_FLOAT_MANT_SIZE + 1) >= 5)
+		{
+			t = *writen - 1;
+			while (t >= 0 && (buff[t] == '9' || buff[t] == '.'))
+				if (buff[t--] == '9')
+					buff[t + 1] = '0';
+			if (t < 0)
+			{
+				ft_memmove(buff + 1, buff, ++(*writen));
+				buff[0] = '1';
+			}
+			else
+				++buff[t];
+		}
 	}
 	return (buff);
 }
