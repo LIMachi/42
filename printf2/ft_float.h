@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 19:37:17 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/18 15:27:21 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/19 17:56:37 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 #  define __T_FLOAT_MANT_SIZE 52
 #  define __T_FLOAT_UI __UINT64_TYPE__
 #  define __T_FLOAT_I __INT64_TYPE__
+#  define __T_FLOAT_UL __uint128_t
 #  define __T_FLOAT_BSIZE 64
 #  define __T_MAX_DIGIT 105
 #  define __T_MAX_SUB_DIGIT 112
@@ -61,6 +62,7 @@
 #  define __T_FLOAT_BSIZE 32
 #  define __T_MAX_DIGIT 105
 #  define __T_MAX_SUB_DIGIT 112
+#  define __T_FLOAT_UL __UINT64_TYPE__
 
 # else
 #  error "invalid __T_FLOAT_SIZE value"
@@ -93,9 +95,16 @@ typedef union	u_float
 {
 	__T_FLOAT			f;
 	__T_FLOAT_IEEE_754	part;
+	__T_FLOAT_UI		ui;
 }				t_float;
 
 # define __INFINITY_EXP ((1 << __T_FLOAT_EXP_SIZE) - 1)
-# define INFINITY (((t_float){.part.exp = __INFINITY_EXP, .part.mant = 0}).f)
+# define __INFNANC(s, e, m) {.part.sign = s, .part.exp = e, .part.mant = m}
+//# define INFINITY (((t_float){.part.sign = 0, .part.exp = __INFINITY_EXP, .part.mant = 0}).f)
+# define INFINITY (((t_float)__INFNANC(0, __INFINITY_EXP, 0)).f)
+# define NAN (((t_float)__INFNANC(0, __INFINITY_EXP, 1)).f)
+
+# define ISNAN(v) ((v) != (v))
+# define ISINF(v) ((v) == INFINITY || (v) == -INFINITY)
 
 #endif

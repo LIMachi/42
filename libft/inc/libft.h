@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/15 13:42:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/18 21:09:15 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,8 +376,8 @@ typedef	union			u_ldouble16c
 #  define INFINITY	HUGE_VALF
 # endif
 
-# define M_E			2.7182818284590452354
-# define M_LOG2E		1.4426950408889634074
+# define M_E			2.71828182845904523536
+# define M_LOG2E		1.44269504088896340736
 # define M_LOG10E		0.43429448190325182765
 # define M_LN2			0.69314718055994530942
 # define M_LN10			2.30258509299404568402
@@ -391,6 +391,7 @@ typedef	union			u_ldouble16c
 # define M_2_SQRTPI		1.12837916709551257390
 # define M_SQRT2		1.41421356237309504880
 # define M_SQRT1_2		0.70710678118654752440
+# define M_LOG10_2		0.30102999566398119523
 # define M_EL			2.718281828459045235360287471352662498L
 # define M_LOG2EL		1.442695040888963407359924681001892137L
 # define M_LOG10EL		0.434294481903251827651128918916605082L
@@ -406,6 +407,7 @@ typedef	union			u_ldouble16c
 # define M_2_SQRTPIL	1.128379167095512573896158903121545172L
 # define M_SQRT2L		1.414213562373095048801688724209698079L
 # define M_SQRT1_2L		0.707106781186547524400844362104849039L
+# define M_LOG10_2L		0.301029995663981195225646428359489448L
 # define RADIAN(x) (M_PI_180 * (x))
 # define DEGRE(x) (M_180_PI * (x))
 
