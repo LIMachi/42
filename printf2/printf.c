@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/20 02:03:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/20 17:21:07 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,18 +121,45 @@ int	ft_strcchr(const char *str, int c)
 	return (str[out] == '\0' ? -1 : out);
 }
 
+int	parse_number(char *format, int *number, int arg_number, int *pos)
+{
+	int	tmp;
 
+	if (format[*pos] == '*')
+	{
+		*number = arg_number;
+		if (ft_strcchr("123456789", format[++(*pos)]) != -1)
+		{
+			*number = arg_number;
+			tmp = *pos;
+			while (format[tmp] != '\0' && ft_isdigit(format[tmp]))
+				*number = (*number) * 10 + format[tmp++] - '0';
+			if (format[tmp] == '$')
+				*pos = tmp + 1;
+			else
+				*number = arg_number;
+		}
+		return (1);
+	}
+	if (format[*pos] >= '1' && format[*pos] <= '9')
+	{
+		while (format[*pos] != '\0' && ft_isdigit(format[*pos]))
+			*number = (*number) * 10 + format[(*pos)++] - '0';
+		return (0);
+	}
+	return (-1);
+}
 
-t_printf_form	sf_parse_attributes(char *format)
+t_printf_form	sf_parse_attributes(char *format, int *pos)
 {
 	t_printf_form	out;
 	int				tmp;
 
 	tmp = -1;
 	out = (t_printf_form){0};
-	while (ft_strcchr("%dDioOuUxXeEfFgGaAcCsSpnm", *format) == -1)
+	while (ft_strcchr("%dDioOuUxXeEfFgGaAcCsSpnm", format[*pos]) == -1)
 	{
-		if ((tmp = ft_strcchr("#0- +'I", *format)) != -1)
+		if ((tmp = ft_strcchr("#0- +'I", format[*pos])) != -1)
 		{
 			out.attr |= 1 << tmp;
 			out.attr & 4 ? out.attr &= ~2 : 0;
@@ -146,21 +173,22 @@ t_printf_form	sf_parse_attributes(char *format)
 		{
 
 		}
-		else if (ft_isdigit(*format))
+		else if (ft_isdigit(format[*pos]))
 		{
 
 		}
 		else
 			return ((t_printf_form){0});
+		++(*pos);
 	}
-	if (*format == '\0')
+	if (format[*pos] == '\0')
 		out.type = 0;
 	else
 	{
-		if ((out.type = ft_strcchr("%diouxefgacspnm", *format)) != -1)
+		if ((out.type = ft_strcchr("%diouxefgacspnm", format[*pos])) != -1)
 			out.type = 1 << out.type;
 		else
-			out.type = 1 << ft_strcchr(" D OUXEFGACS", *format);
+			out.type = 1 << ft_strcchr(" D OUXEFGACS", format[*pos]);
 	}
 }
 
@@ -178,7 +206,7 @@ t_printf_form	*sf_parse_forms(const char *format, va_list _ap)
 	f = 0;
 	while (format[++i] != '0')
 		if (format[i] == '%' && format[++i] != '%')
-			out[f++] = sf_parse_attributes((char*)format + i);
+			out[f++] = sf_parse_attributes((char*)format, &i);
 	va_end(ap);
 	return (out);
 }
@@ -217,7 +245,7 @@ int	ft_vdnprintf(int fd, size_t size, const char *format, va_list ap)
 	len = 0;
 	argn = 0;
 	while (len < size && format[++pos] != '\0')
-		if (format[pos] == '%')
+		if (format[pos] == '%' && format[pos++] != '%')
 		{
 			if (forms == NULL && args == NULL &&
 					!((forms = sf_parse_forms(format + pos, ap)) == NULL ||
