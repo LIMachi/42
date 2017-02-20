@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 19:37:17 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/19 17:56:37 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/20 00:35:24 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,9 @@ typedef union	u_float
 }				t_float;
 
 # define __INFINITY_EXP ((1 << __T_FLOAT_EXP_SIZE) - 1)
+
 # define __INFNANC(s, e, m) {.part.sign = s, .part.exp = e, .part.mant = m}
-//# define INFINITY (((t_float){.part.sign = 0, .part.exp = __INFINITY_EXP, .part.mant = 0}).f)
+
 # define INFINITY (((t_float)__INFNANC(0, __INFINITY_EXP, 0)).f)
 # define NAN (((t_float)__INFNANC(0, __INFINITY_EXP, 1)).f)
 

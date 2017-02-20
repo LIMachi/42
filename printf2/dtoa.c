@@ -6,16 +6,16 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 15:41:37 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/19 20:54:14 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/19 22:23:33 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_float.h"
 #include <stdint.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <libft.h>
-#include "ft_float.h"
 
 /*
 ** takes __T_FLOAT (float or double, deppending on flags passed at compilation),

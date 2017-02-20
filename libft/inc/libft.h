@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/19 20:48:36 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/19 23:44:54 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,8 +345,7 @@ typedef	union			u_ldouble16c
 ** math defines
 */
 
-/*
-# ifndef _MATH_H
+# if !defined(_MATH_H) && !defined(FT_FLOAT_H)
 #  if LOCAL_ENDIAN == BIG_ENDIAN
 #   define __QNAN_BYTES		{0x7f, 0xc0, 0, 0}
 #  endif
@@ -376,7 +375,6 @@ typedef	union			u_ldouble16c
 
 #  define INFINITY	HUGE_VALF
 # endif
-*/
 
 # define M_E			2.71828182845904523536
 # define M_LOG2E		1.44269504088896340736
@@ -1246,7 +1244,7 @@ void					ft_env_clear(void);
 char					*ft_pwd(void);
 char					*ft_path_name(char *path);
 
-extern int				ft_printf(const char *format, ...);
+//extern int				ft_printf(const char *format, ...);
 
 int						ft_isinset(const char c, const char *set);
 size_t					ft_strcspn(const char *str, const char *reject);
