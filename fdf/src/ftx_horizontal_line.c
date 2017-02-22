@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/02 12:46:52 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/02 14:39:13 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/22 02:18:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ void				ftx_horizontal_line(t_image *img, t_point a, t_point b,
 		return ;
 	if (a.x > b.x)
 	{
-		ft_int_swap(&(a.x), &(b.x));
-		ft_int_swap(&(color.x), &(color.y));
+		ft_swapi(&(a.x), &(b.x));
+		ft_swapi(&(color.x), &(color.y));
 	}
 	if (!((img->endian == 0) ^ (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)))
 	{

@@ -1,5 +1,5 @@
 #name of the author of the executable
-AUTHOR = "hmartzol\nhmarot\nsboyahi\npbondoer"
+AUTHOR = hmartzol\n
 
 #name of compiled file
 NAME = libft.a
