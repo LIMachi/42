@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/22 19:34:29 by lee              ###   ########.fr       */
+/*   Updated: 2017/02/23 17:05:52 by lee              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ char idee[] =
 typedef union	u_printf_arg
 {
 	__uint128_t		ui;
+	__int128_t		i;
 	__T_FLOAT		f;
 	void			*p;
 }				t_printf_arg;
@@ -176,64 +177,77 @@ t_printf_form	sf_parse_attributes(char *format, int *pos, int *arg_number)
 }
 */
 
-/*	shift
-%	-1(0)	% symbol
-d	0		signed
-i	1		signed
-o	2		octal unsigned
-u	3		unsigned
-x	4		hexa unsigned
-e	5		exponent float
-f	6		standard float
-g	7		auto float (standard or exponent)
-a	8		hexa float
-c	9		char or wchar_t (if l present)
-s	10		string (of wchar_t if l present)
-p	11		void ptr printed as %#x
-n	12		store nb of characters printed in ptr
-m	13		print strerror(errno)
-b	14		print binary
-*/
+#define PT_PERCENT	0
+#define PT_D		1
+#define PT_I		2
+#define PT_O		4
+#define PT_U		8
+#define PT_X		16
+#define PT_E		32
+#define PT_F		64
+#define PT_G		128
+#define PT_A		256
+#define PT_C		512
+#define PT_S		1024
+#define PT_P		2048
+#define PT_N		4096
+#define PT_M		8192
+#define PT_B		16384
 
-/*	shift
-h	0		short
-l	1		long
-L	2		long double
-j	3		intmax_t
-z	4		ssize_t
-t	5		ptrdiff_t
-M	6		__int128_t
-hh	7		char
-ll	8		long long
-*/
+#define PTL_INT		0
+#define PTL_SHORT	1
+#define PTL_LONG	2
+#define PTL_LONGD	4
+#define PTL_INTMAX	8
+#define PTL_SSIZE	16
+#define PTL_PTRDIFF	32
+#define PTL_INT128	64
+#define PTL_CHAR	128
+#define PTL_LONGL	256
+
+#define PA_HASH		1
+#define PA_ZERO		2
+#define PA_MINUS	4
+#define PA_SPACE	8
+#define PA_PLUS		16
+#define PA_AQ		32
+#define PA_I		64
+#define PA_MAJ		128
 
 int	sf_parse_attributes_0(const char *format, int *pos, int *arg_number,
 						t_printf_form *out)
 {
 	int				tmp;
 
+	out->tlength = 0;
 	while (ft_strcchr("%dDioOuUxXeEfFgGaAcCsSpnmbB", format[*pos]) == -1)
 	{
 		if ((tmp = ft_strcchr("#0- +'I", format[*pos])) != -1 && ++(*pos))
 		{
 			out->attr |= 1 << tmp;
-			out->attr & 4 ? out->attr &= ~2 : 0;
-			out->attr & 16 ? out->attr &= ~8 : 0;
+			out->attr & PA_MINUS ? out->attr &= ~PA_ZERO : 0;
+			out->attr & PA_PLUS ? out->attr &= ~PA_SPACE : 0;
 		}
-		else if (format[*pos] == '.' && ++(*pos) && !(0 & (out->attr &= ~2)))
-			(tmp = parse_number(format, &out->precision, arg_number,
+		else if (format[*pos] == '.' && !(0 & (out->attr &= ~PA_ZERO)))
+			++(*pos) && (tmp = parse_number(format, &out->precision, arg_number,
 				pos) == -1) ? (out->precision = -1) :
-				(out->ind_precision = tmp);
+							(out->ind_precision = tmp);
 		else if (format[*pos] == '*' ||
 				(format[*pos] >= '1' && format[*pos] <= '9'))
 			out->ind_field = parse_number(format, &out->field, arg_number, pos);
 		else if ((tmp = ft_strcchr("hlLjztM", format[*pos])) != -1 && ++(*pos))
-			out->tlength = 1 << (tmp + 7 * (((tmp == 0 && format[*pos] == 'h')
+			out->tlength |= 1 << (tmp + 7 * (((tmp == 0 && format[*pos] == 'h')
 					|| (tmp == 1 && format[*pos] == 'l')) && !(0 & ++(*pos))));
 		else
 			return (-1);
 	}
 	return (0);
+}
+
+int	sf_validate_form(t_printf_form *form)
+{
+	(void)form;
+	return (1);
 }
 
 int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
@@ -257,18 +271,20 @@ int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
 	}
 	if (sf_parse_attributes_0(format, pos, arg_number, form))
 		return (-1);
-	if ((tmp = ft_strcchr("%diouxefgacspnmL", format[*pos])) != -1)
+	if ((tmp = ft_strcchr("%diouxefgacspnm", format[*pos])) != -1)
 		form->type = 1 << (tmp - 1);
-	else
+	else if (ft_strcchr("DUXEFGACS", format[*pos]) != -1)
 	{
-		form->tlength = 2;
-		form->type = 1 << (ft_strcchr(" D OUXEFGACS", format[*pos]) - 1);
+		(ft_strcchr("DUCS", format[*pos]) != -1) ? (form->tlength |= PTL_LONG) :
+												(form->attr |= PA_MAJ);
+		form->type = 1 << (ft_strcchr(" D  UXEFGACS", format[*pos]) - 1);
 	}
-//	printf("\n*arg_number: %d\n",*arg_number);
-//	printf("arg.ui: %lld\n", (long long)form->arg.ui);
-	form->arg.ui == -1 ? form->arg.ui = (*arg_number)++ : 0;
-//	printf("arg.ui: %lld\n", (long long)form->arg.ui);
-	out = *arg_number >= form->arg.ui ? *arg_number : form->arg.ui;
+	else
+		return (-1);
+	form->arg.ui == (__uint128_t)-1 ? form->arg.ui = (*arg_number)++ : 0;
+	if (!sf_validate_form(form))
+		return (-1);
+	out = *arg_number >= (int)form->arg.ui ? *arg_number : (int)form->arg.ui;
 	form->ind_precision && out < form->precision ? out = form->precision : 0;
 	return (1 + (form->ind_field && out < form->field ? form->field : out));
 }
@@ -279,7 +295,7 @@ void	debug_printf_forms(t_printf_form *forms)
 
 	printf("\ndebug:");
 	i = -1;
-	while (forms[++i].arg.ui != -1)
+	while (forms[++i].arg.ui != (__uint128_t)-1)
 	{
 		printf("\nattrinutes: "); print_binary(forms[i].attr, 8);
 		printf("\nind_field: "); print_binary(forms[i].ind_field, 1);
@@ -340,7 +356,7 @@ int		sf_parse_args(t_printf_form *forms, va_list _ap, int argn)
 {
 	va_list			ap;
 	t_printf_arg	*args;
-	int				tmp;
+//	int				tmp;
 	int				i;
 
 	if ((args = ft_memalloc(sizeof(t_printf_arg) * argn)) == NULL)
@@ -350,17 +366,51 @@ int		sf_parse_args(t_printf_form *forms, va_list _ap, int argn)
 	}
 	va_copy(ap, _ap);
 	i = -1;
-	while (forms[++i].arg.ui != -1)	//premier passage, on stocke uniquement la taille des arg
-		args[forms[i].arg.ui].ui = forms[i].tlength & (1 << 6);
+	while (forms[++i].arg.ui != (__uint128_t)-1)	//premier passage, on stocke uniquement la taille des arg
+		args[forms[i].arg.ui].ui |= forms[i].tlength & PTL_INT128;
 	i = -1;
 	while (++i < argn)	//on remplit
 		(args[i].ui) ? (args[i].ui = va_arg(ap, __uint128_t)) :
 						(args[i].ui = va_arg(ap, __UINT64_TYPE__));
 	i = -1;
-	while(forms[++i].arg.ui != -1)
+	while(forms[++i].arg.ui != (__uint128_t)-1)
 		sf_form_add_arg(forms + i, args);
 	ft_free(args);
 	return (0);
+}
+
+int			sf_putn_x128_fd(__uint128_t v, int fd, size_t n, int maj)
+{
+	static const char	tab[] = "0123456789abcdef";
+	static const char	tabm[] = "0123456789ABCDEF";
+
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (0);
+	if (maj)
+		return (sf_putn_x128_fd(v / 16, fd, n - 1, maj)
+				+ write(fd, &tabm[v % 16], 1));
+	return (sf_putn_x128_fd(v / 16, fd, n - 1, maj)
+			+ write(fd, &tab[v % 16], 1));
+}
+
+int			putn_x128_fd(__uint128_t v, int fd, size_t n, int maj)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (write(fd, "0", 1));
+	return (sf_putn_x128_fd(v, fd, n, maj));
+}
+
+int			putn_xlong_fd(long v, int fd, size_t n, int maj)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (write(fd, "0", 1));
+	return (sf_putn_x128_fd(v, fd, n, maj));
 }
 
 int			sf_putn_u128_fd(__uint128_t v, int fd, size_t n)
@@ -389,8 +439,63 @@ int			putn_i128_fd(__int128_t v, int fd, size_t n)
 		return (0);
 	if (v == 0)
 		return (write(fd, "0", 1));
-	if (v < -1)
+	if (v & (__int128_t)1 << (__SIZEOF_INT128__ * 8 - 1))
 		return (write(fd, "-", 1) + sf_putn_u128_fd(-v, fd, n - 1));
+	return (sf_putn_u128_fd(v, fd, n));
+}
+
+int			putn_llong_fd(long long v, int fd, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (write(fd, "0", 1));
+	if (v & 1ll << (__SIZEOF_LONG_LONG__ * 8 - 1))
+		return (write(fd, "-", 1) + sf_putn_u128_fd(-(__int128_t)v, fd, n - 1));
+	return (sf_putn_u128_fd(v, fd, n));
+}
+
+int			putn_long_fd(long v, int fd, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (write(fd, "0", 1));
+	if (v & 1l << (__SIZEOF_LONG__ * 8 - 1))
+		return (write(fd, "-", 1) + sf_putn_u128_fd(-(__int128_t)v, fd, n - 1));
+	return (sf_putn_u128_fd(v, fd, n));
+}
+
+int			putn_int_fd(int v, int fd, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (write(fd, "0", 1));
+	if (v & 1 << (__SIZEOF_INT__ * 8 - 1))
+		return (write(fd, "-", 1) + sf_putn_u128_fd(-(__int128_t)v, fd, n - 1));
+	return (sf_putn_u128_fd(v, fd, n));
+}
+
+int			putn_short_fd(short v, int fd, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (write(fd, "0", 1));
+	if (v & 1 << (__SIZEOF_SHORT__ * 8 - 1))
+		return (write(fd, "-", 1) + sf_putn_u128_fd(-(__int128_t)v, fd, n - 1));
+	return (sf_putn_u128_fd(v, fd, n));
+}
+
+int			putn_char_fd(char v, int fd, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (write(fd, "0", 1));
+	if (v & 1 << 7)
+		return (write(fd, "-", 1) + sf_putn_u128_fd(-(__int128_t)v, fd, n - 1));
 	return (sf_putn_u128_fd(v, fd, n));
 }
 
@@ -402,6 +507,55 @@ typedef struct	s_printf_put_arg
 	size_t			pos;
 }				t_printf_put_arg;
 
+int			sf_jump_form(int type, const char *format, size_t *pos)
+{
+	char			*ec;
+
+	ec = NULL;
+	type == PT_PERCENT ? ec = (char[2]){'%', '\0'} : 0;
+	type == PT_D ? ec = (char[2]){'d', 'D'} : 0;
+	type == PT_I ? ec = (char[2]){'i', '\0'} : 0;
+	type == PT_O ? ec = (char[2]){'o', '\0'} : 0;
+	type == PT_U ? ec = (char[2]){'u', 'U'} : 0;
+	type == PT_X ? ec = (char[2]){'x', 'X'} : 0;
+	type == PT_E ? ec = (char[2]){'e', 'E'} : 0;
+	type == PT_F ? ec = (char[2]){'f', 'F'} : 0;
+	type == PT_G ? ec = (char[2]){'g', 'G'} : 0;
+	type == PT_A ? ec = (char[2]){'a', 'A'} : 0;
+	type == PT_C ? ec = (char[2]){'c', 'C'} : 0;
+	type == PT_S ? ec = (char[2]){'s', 'S'} : 0;
+	type == PT_P ? ec = (char[2]){'p', '\0'} : 0;
+	type == PT_N ? ec = (char[2]){'n', '\0'} : 0;
+	type == PT_M ? ec = (char[2]){'m', '\0'} : 0;
+	type == PT_B ? ec = (char[2]){'b', '\0'} : 0;
+	if (ec == NULL)
+		return (0);
+	while (format[*pos] != '\0' && format[*pos] != ec[0]
+			&& format[*pos] != ec[1])
+		++(*pos);
+	return (format[*pos] == ec[0] || (ec[1] != '\0' && format[*pos] == ec[1]));
+}
+
+#ifndef __ULONG_LONG_MAX__
+# define __ULONG_LONG_MAX__ (__LONG_LONG_MAX__ << 1 | 1)
+#endif
+
+#ifndef __ULONG_MAX__
+# define __ULONG_MAX__ (__LONG_MAX__ << 1 | 1)
+#endif
+
+#ifndef __UINT_MAX__
+# define __UINT_MAX__ (__INT_MAX__ << 1 | 1)
+#endif
+
+#ifndef __USHRT_MAX__
+# define __USHRT_MAX__ (__SHRT_MAX__ << 1 | 1)
+#endif
+
+#ifndef __UCHAR_MAX__
+# define __UCHAR_MAX__ (__CHAR_MAX__ << 1 | 1)
+#endif
+
 int			sf_dn_put_arg(t_printf_put_arg *parg, int formn, size_t len, int fd)
 {
 	size_t			limit;
@@ -409,14 +563,37 @@ int			sf_dn_put_arg(t_printf_put_arg *parg, int formn, size_t len, int fd)
 
 	limit = parg->size - len;
 	form = parg->forms[formn];
-	if (form.type & 1)
-		while (parg->format[parg->pos] != '\0' && parg->format[parg->pos] != 'd')
-			++parg->pos;
-	if (form.type & 3)
-		return (
-			//printf("%lld", (long long)form.arg.ui)
-			putn_i128_fd(form.arg.ui, fd, limit)
-	);
+	sf_jump_form(form.type, parg->format, &parg->pos);
+	if (form.type & (PT_D | PT_I))
+	{
+		if (form.tlength == PTL_INT128)
+			return (putn_i128_fd(form.arg.i, fd, limit));
+		if (form.tlength == PTL_LONGL)
+			return (putn_llong_fd(form.arg.i, fd, limit));
+		if (form.tlength == PTL_LONG)
+			return (putn_long_fd(form.arg.i, fd, limit));
+		if (form.tlength == PTL_INT)
+			return (putn_int_fd(form.arg.i, fd, limit));
+		if (form.tlength == PTL_SHORT)
+			return (putn_short_fd(form.arg.i, fd, limit));
+		if (form.tlength == PTL_CHAR)
+			return (putn_char_fd(form.arg.i, fd, limit));
+	}
+	if (form.type == PT_X)
+	{
+		if (form.tlength == PTL_INT128)
+			return (putn_x128_fd(form.arg.ui, fd, limit, form.attr & PA_MAJ));
+		if (form.tlength == PTL_LONGL)
+			return (putn_x128_fd(form.arg.ui & __ULONG_LONG_MAX__, fd, limit, form.attr & PA_MAJ));
+		if (form.tlength == PTL_LONG)
+			return (putn_x128_fd(form.arg.ui & __ULONG_MAX__, fd, limit, form.attr & PA_MAJ));
+		if (form.tlength == PTL_INT)
+			return (putn_x128_fd(form.arg.ui & __UINT_MAX__, fd, limit, form.attr & PA_MAJ));
+		if (form.tlength == PTL_SHORT)
+			return (putn_x128_fd(form.arg.ui & __USHRT_MAX__, fd, limit, form.attr & PA_MAJ));
+		if (form.tlength == PTL_CHAR)
+			return (putn_x128_fd(form.arg.ui & __UCHAR_MAX__, fd, limit, form.attr & PA_MAJ));
+	}
 	return (0);
 }
 
@@ -434,14 +611,16 @@ int	ft_vdnprintf(int fd, size_t size, const char *format, va_list ap)	//en theor
 	while (len < size && format[++parg.pos] != '\0')
 		if (format[parg.pos] == '%' && format[++parg.pos] != '%')
 		{
-			if (!(parg.forms == NULL && !(tmp = 0) && !((parg.forms =
-					sf_parse_forms(format + parg.pos - 1, ap, &tmp)) == NULL ||
-					sf_parse_args(parg.forms, ap, tmp))))
-				return (-1);
+			if (parg.forms == NULL && !(tmp = 0))
+				if ((parg.forms = sf_parse_forms(format + parg.pos - 1,
+					ap, &tmp)) == NULL || sf_parse_args(parg.forms, ap, tmp))
+					return (-1);
 			len += sf_dn_put_arg(&parg, formn++, len, fd);
 		}
 		else
 			len += write(fd, format + parg.pos, 1);
+//	printf("\n\nformn: %d\n", formn);
+	ft_free(parg.forms);
 	return (len);
 }
 
@@ -501,11 +680,27 @@ int	main()
 //	free(str);
 //	ft_printf("test\n");
 
-	t_int128 test0 = 0;
-	t_128 test1 = {.i64[0] = 456, .i64[1] = 789};
-	t_int128 test2 = 0;
+//	170141183460469231731687303715884105727
 
-	ft_printf("test%3$Md\n", test0, test1, test2);
+	t_128 test1 = {.i64[0] = 0xFFFFFFFFFFFFFFFF, .i64[1] = 0xFFFFFFFFFFFFFFFF
+					//.i64[0] = 0x0000000f00000000, .i64[1] = 0x8000000000000000
+				};
+	t_int128 test2 = 42;
+	t_int128 test0 = -3;
+	long	test3;
+//	test3 = 0x8000000000000000;
+//	test3 = 0x7FFFFFFFFFFFFFFF;
+	test3 = -57;
+//	int	test3 = -57;
 
+	ft_printf("ft_printf: \ntest2: %2$Md\ntest3: %3$Md\ntest1: %1$Md\ntestd: %Md\ntestd: %d\ntestd: %d\ntestd: %lX\ntest4: %4$X", test0, test1, test2, test3);
+	int	_test1 = -1;
+	int	_test2 = 42;
+	int	_test0 = -3;
+	int	_test3 = -57;
+	printf("\nprintf: \ntest2: %2$d\ntest3: %3$d\ntest1: %1$d\ntestd: %d\ntestd: %d\ntestd: %d\ntestd: %d\n", _test0, _test1, _test2, _test3);
+	//printf utilise une alloc de moins que ft_printf dans ce test, mais le mien s'explique par la gestion des arguments int128 et sans doute bientot long double
+	//mon parcours est lineaire, la ou printf (pour les sources que j'ai vu) est particulier (pour ne pas dire bordelique pour les $)
+	ft_printf("%ld\n", test3);
 	return (0);
 }
