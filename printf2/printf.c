@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/23 17:05:52 by lee              ###   ########.fr       */
+/*   Updated: 2017/02/24 21:07:10 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <wchar.h>
+#include <stddef.h> //ptrdiff_t
 
 //#include <math.h>
 
@@ -24,21 +25,69 @@
 
 #include "ft_int.h"
 
-size_t	ft_length(unsigned long long v)
+typedef union	u_i128
 {
-	size_t	out;
-	static const unsigned long long	log[20] = {1ull, 10ull, 100ull, 1000ull,
+	__int128_t		i128;
+	__uint128_t		u128;
+	__UINT64_TYPE__	u64[2];
+}				t_i128;
 
-	10000ull, 100000ull, 1000000ull, 10000000ull, 100000000ull, 1000000000ull,
-	10000000000ull, 100000000000ull, 1000000000000ull, 10000000000000ull,
-	100000000000000ull, 1000000000000000ull, 10000000000000000ull,
-	100000000000000000ull, 1000000000000000000ull, 10000000000000000000ull};
+size_t	ft_x128_evaluate_size(__uint128_t v)
+{
+	size_t	l;
+
 	if (v == 0)
 		return (1);
-	out = 1;
-	while (out < 20 && v >= log[out])
-		++out;
-	return (out);
+	l = 1;
+	while (v >>= 4)
+		++l;
+	return (l);
+}
+
+size_t	ft_b128_evaluate_size(__uint128_t v)
+{
+	size_t	l;
+
+	if (v == 0)
+		return (1);
+	l = 1;
+	while (v >>= 1)
+		++l;
+	return (l);
+}
+
+size_t	ft_i128_evaluate_size(__int128_t v)
+{
+	size_t		l;
+	__uint128_t	t;
+
+	if (v == 0)
+		return (1);
+	if (v < 0)
+	{
+		l = 2;
+		t = -v;
+	}
+	else
+	{
+		l = 1;
+		t = v;
+	}
+	while (t /= 10)
+		++l;
+	return (l);
+}
+
+size_t	ft_u128_evaluate_size(__uint128_t v)
+{
+	size_t		l;
+
+	if (v == 0)
+		return (1);
+	l = 1;
+	while (v /= 10)
+		++l;
+	return (l);
 }
 
 void	print_binary(__T_FLOAT_UI v, int bites)
@@ -46,19 +95,6 @@ void	print_binary(__T_FLOAT_UI v, int bites)
 	while (bites--)
 		printf("%d", (int)(v >> bites) & 1);
 }
-
-//printf("%12.12f", 42.0);
-//printf("%2$*1$.*1$f", 12, 42.0);
-
-char idee[] =
-"parsing de $: "
-"chercher toutes les instances de % seul "
-"faire une table d'arg "
-"chercher dans les % les instances de $ et verifier la validité "
-"stocker les plus grand $ trouvé (éventuellement gerer le 128bits?) "
-"allouer un tableau de union_type pour stocker les args "
-"remplir tout le tableau avec les arg (reparser pour les 128bits?) "
-"lancer printf";
 
 typedef union	u_printf_arg
 {
@@ -177,7 +213,7 @@ t_printf_form	sf_parse_attributes(char *format, int *pos, int *arg_number)
 }
 */
 
-#define PT_PERCENT	0
+#define PT_PERCENT	0		//pas de type
 #define PT_D		1
 #define PT_I		2
 #define PT_O		4
@@ -191,7 +227,7 @@ t_printf_form	sf_parse_attributes(char *format, int *pos, int *arg_number)
 #define PT_S		1024
 #define PT_P		2048
 #define PT_N		4096
-#define PT_M		8192
+#define PT_M		8192	//pas de type
 #define PT_B		16384
 
 #define PTL_INT		0
@@ -281,7 +317,14 @@ int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
 	}
 	else
 		return (-1);
-	form->arg.ui == (__uint128_t)-1 ? form->arg.ui = (*arg_number)++ : 0;
+//	if (form->type == PT_PERCENT || form->type == PT_M)
+//	{
+//		if (form->arg.ui != (__uint128_t)-1)
+//			return (-1);
+//	}
+//	else
+		if (form->arg.ui == (__uint128_t)-1)
+			form->arg.ui = (*arg_number)++;
 	if (!sf_validate_form(form))
 		return (-1);
 	out = *arg_number >= (int)form->arg.ui ? *arg_number : (int)form->arg.ui;
@@ -349,7 +392,21 @@ void	sf_form_add_arg(t_printf_form *form, t_printf_arg *args)
 		form->field = args[form->field].ui;
 	if (form->ind_precision)
 		form->precision = args[form->precision].ui;
-	form->arg = args[form->arg.ui];
+	form->tlength == PTL_INT ? form->arg.ui = (int)args[form->arg.ui].ui : 0;
+	if (form->tlength == PTL_SHORT)
+		form->arg.ui = (short)args[form->arg.ui].ui;
+	form->tlength == PTL_LONG ? form->arg.ui = (long)args[form->arg.ui].ui : 0;
+	form->tlength == PTL_LONGD ? form->arg.ui = args[form->arg.ui].ui : 0;
+	if (form->tlength == PTL_INTMAX)
+		form->arg.ui = (intmax_t)args[form->arg.ui].ui;
+	if (form->tlength == PTL_SSIZE)
+		form->arg.ui = (ssize_t)args[form->arg.ui].ui;
+	if (form->tlength == PTL_PTRDIFF)
+		form->arg.ui = (ptrdiff_t)args[form->arg.ui].ui;
+	form->tlength == PTL_INT128 ? form->arg.ui = args[form->arg.ui].ui : 0;
+	form->tlength == PTL_CHAR ? form->arg.ui = (char)args[form->arg.ui].ui : 0;
+	if (form->tlength == PTL_LONGL)
+		form->arg.ui = (long long)args[form->arg.ui].ui;
 }
 
 int		sf_parse_args(t_printf_form *forms, va_list _ap, int argn)
@@ -552,6 +609,16 @@ int			sf_jump_form(int type, const char *format, size_t *pos)
 # define __USHRT_MAX__ (__SHRT_MAX__ << 1 | 1)
 #endif
 
+#ifndef __CHAR_MAX__
+# ifdef __CHAR_BIT__
+#  define __CHAR_MAX__ ((1 << (__CHAR_BIT__ - 1)) - 1)
+# elif defined(__SIZEOF_CHAR__)
+#  define __CHAR_MAX__ ((1 << ((__SIZEOF_CHAR__ << 3) - 1)) - 1)
+# else
+#  define __CHAR_MAX__ 127
+# endif
+#endif
+
 #ifndef __UCHAR_MAX__
 # define __UCHAR_MAX__ (__CHAR_MAX__ << 1 | 1)
 #endif
@@ -566,18 +633,24 @@ int			sf_dn_put_arg(t_printf_put_arg *parg, int formn, size_t len, int fd)
 	sf_jump_form(form.type, parg->format, &parg->pos);
 	if (form.type & (PT_D | PT_I))
 	{
-		if (form.tlength == PTL_INT128)
+//		if (form.tlength == PTL_INT128)
 			return (putn_i128_fd(form.arg.i, fd, limit));
-		if (form.tlength == PTL_LONGL)
-			return (putn_llong_fd(form.arg.i, fd, limit));
-		if (form.tlength == PTL_LONG)
-			return (putn_long_fd(form.arg.i, fd, limit));
-		if (form.tlength == PTL_INT)
-			return (putn_int_fd(form.arg.i, fd, limit));
-		if (form.tlength == PTL_SHORT)
-			return (putn_short_fd(form.arg.i, fd, limit));
-		if (form.tlength == PTL_CHAR)
-			return (putn_char_fd(form.arg.i, fd, limit));
+//		if (form.tlength == PTL_LONGL)
+//			form.arg.ui = (long long)form.arg.ui;
+//			return (putn_i128_fd((long long)form.arg.i, fd, limit));
+//		if (form.tlength == PTL_LONG)
+//			form.arg.ui = (long)form.arg.ui;
+//			return (putn_i128_fd((long)form.arg.i, fd, limit));
+//		if (form.tlength == PTL_INT)
+//			form.arg.ui = (int)form.arg.ui;
+//			return (putn_i128_fd((int)form.arg.i, fd, limit));
+//		if (form.tlength == PTL_SHORT)
+//			form.arg.ui = (short)form.arg.ui;
+//			return (putn_i128_fd((short)form.arg.i, fd, limit));
+//		if (form.tlength == PTL_CHAR)
+//			form.arg.ui = (char)form.arg.ui;
+//			return (putn_i128_fd((char)form.arg.i, fd, limit));
+//		return (putn_i128_fd(form.arg.i, fd, limit));
 	}
 	if (form.type == PT_X)
 	{
@@ -652,12 +725,6 @@ int				ft_printf(const char *format, ...)
 }
 */
 
-typedef union	u_128
-{
-	t_int128		i128;
-	__INT64_TYPE__	i64[2];
-}				t_128;
-
 int	main()
 {
 //	t_float	test;
@@ -682,25 +749,28 @@ int	main()
 
 //	170141183460469231731687303715884105727
 
-	t_128 test1 = {.i64[0] = 0xFFFFFFFFFFFFFFFF, .i64[1] = 0xFFFFFFFFFFFFFFFF
+//	t_i128 test1 = {.u64[0] = 0xFFFFFFFFFFFFFFFF, .u64[1] = 0xFFFFFFFFFFFFFFFF
 					//.i64[0] = 0x0000000f00000000, .i64[1] = 0x8000000000000000
-				};
-	t_int128 test2 = 42;
-	t_int128 test0 = -3;
-	long	test3;
+//				};
+//	t_int128 test2 = 42;
+//	t_int128 test0 = -3;
+//	long	test3;
 //	test3 = 0x8000000000000000;
 //	test3 = 0x7FFFFFFFFFFFFFFF;
-	test3 = -57;
+//	test3 = -57;
 //	int	test3 = -57;
 
-	ft_printf("ft_printf: \ntest2: %2$Md\ntest3: %3$Md\ntest1: %1$Md\ntestd: %Md\ntestd: %d\ntestd: %d\ntestd: %lX\ntest4: %4$X", test0, test1, test2, test3);
-	int	_test1 = -1;
-	int	_test2 = 42;
-	int	_test0 = -3;
-	int	_test3 = -57;
-	printf("\nprintf: \ntest2: %2$d\ntest3: %3$d\ntest1: %1$d\ntestd: %d\ntestd: %d\ntestd: %d\ntestd: %d\n", _test0, _test1, _test2, _test3);
+//	ft_printf("ft_printf: \ntest1: %2$Md\ntest2: %3$Md\ntest0: %1$Md\ntestd0: %Md\ntestd1: %d\ntestd2: %d\ntestd3: %d\n", test0, test1, test2, test3);
+//	int	_test1 = -1;
+//	int	_test2 = 42;
+//	int	_test0 = -3;
+//	int	_test3 = -57;
+//	printf("\nprintf: \ntest1: %2$d\ntest2: %3$d\ntest0: %1$d\ntestd0: %d\ntestd1: %d\ntestd2: %d\ntestd3: %d\n", _test0, _test1, _test2, _test3);
 	//printf utilise une alloc de moins que ft_printf dans ce test, mais le mien s'explique par la gestion des arguments int128 et sans doute bientot long double
 	//mon parcours est lineaire, la ou printf (pour les sources que j'ai vu) est particulier (pour ne pas dire bordelique pour les $)
-	ft_printf("%ld\n", test3);
+	//ft_printf("%ld\n", test3);
+	t_i128	t = {.u64[1] = 0xF000000000000000, .u64[0] = 0};
+	printf("%llx\n", t.u128);
+	ft_printf("%Mx\n", t.u128);
 	return (0);
 }
