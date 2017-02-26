@@ -6,7 +6,7 @@
 /*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:27:04 by lee               #+#    #+#             */
-/*   Updated: 2017/02/26 04:20:29 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/26 09:00:19 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdarg.h>
 # include <stddef.h>
 # include <stdio.h>
+# include <locale.h>
 
 # include <ft_float.h>
 # include <libft.h>
@@ -38,6 +39,13 @@
 # define PT_N			4096
 # define PT_M			8192
 # define PT_B			16384
+
+# define PT_AC			(PT_O | PT_X | PT_B)
+# define PT_AD			(PT_D | PT_I | PT_O | PT_U | PT_X | PT_B)
+# define PT_AF			(PT_A | PT_E | PT_F | PT_G)
+# define PT_CS			(PT_C | PT_S)
+# define PT_NP			(PT_PERCENT | PT_N)
+# define PT_NA			(PT_PERCENT | PT_M)
 
 # define PTL_INT		0
 # define PTL_SHORT		1
@@ -77,10 +85,11 @@ typedef union	u_printf_arg
 typedef struct	s_printf_form
 {
 	int				attr;
+	char			valid : 1;
 	char			ind_field : 1;
 	char			ind_precision : 1;
 	char			ind_array : 1;
-	char			padding : (__CHAR_BIT__ - 3);
+	char			padding : (__CHAR_BIT__ - 4);
 	int				field;
 	int				precision;
 	int				tlength;
@@ -141,8 +150,10 @@ int				ft_vsnprintf(char *str, size_t size, const char *format,
 							va_list ap);
 int				ft_vsprintf(char *str, const char *format, va_list ap);
 
+char			*thousands_sep(void);
 int				parse_number(const char *format, int *number, int *arg_number,
 							int *pos);
+int				parse_args(t_printf_form *forms, va_list ap, int argn);
 void			bufferize_char(t_printf_data *data, char c);
 
 t_printf_form	*parse_forms(const char *format, int *argn);

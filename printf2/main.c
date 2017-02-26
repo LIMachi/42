@@ -6,7 +6,7 @@
 /*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:49:10 by lee               #+#    #+#             */
-/*   Updated: 2017/02/26 03:16:54 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/26 09:49:06 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,10 @@ int	main()
 	char test[] = "|%#b|\n";
 	printf("%s", test);
 	ft_printf(test, 1);
+	setlocale(LC_NUMERIC, "");
+	printf("|%s|\n", thousands_sep());
+	int	truc;
+	printf("|%+-20.15d|\n", truc); // |+262648092         |
+	ft_printf("|%+-20.15d|\n", truc);
 	return (0);
 }

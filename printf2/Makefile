@@ -19,7 +19,7 @@ ITEMS = \
 		./src/printf \
 		./src/parsing/parse_number \
 		./src/debug_printf_forms \
-#		./src/dtoa \
+		./src/dtoa \
 		./src/buffering/to_fd \
 		./src/buffering/to_null \
 		./src/buffering/to_str \
@@ -42,6 +42,7 @@ ITEMS = \
 		./src/printf/ft_sprintf \
 		./src/printf/ft_vasnprintf \
 		./src/printf/ft_vasprintf \
+		./src/parsing/parse_args
 
 
 CC = gcc #clang #x86_64-apple-darwin15.6.0-gcc-4.8
@@ -93,15 +94,9 @@ endif
 DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
 DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
 
-MCLIB = $(patsubst %, -C%, $(CLIB))
-
 INCLUDES = $(patsubst %, -I%, $(INCDIRS)) $(patsubst %, -I%, $(PINC))
 
-SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v $(OBJDIR)))
-
-.PHONY: all clean fclean re norm relibs fcleanlibs items test grind hell
-
-.PHONY: libs
+.PHONY: all clean fclean re norm libs relibs fcleanlibs items test grind hell
 
 all: dirs auteur libs $(NAME)
 
@@ -118,9 +113,12 @@ fcleanlibs: fclean
 	$(foreach V, $(CLIB), make clean -C $(V);)
 	$(foreach V, $(CLIB), make fclean -C $(V);)
 
+ifneq ($(OBJDIR), )
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v $(OBJDIR)))
 dirs:
 ifeq ($(shell [[ -d $(OBJDIR) $(patsubst %, && -d %, $(SUBDIRS)) ]]; echo $$?), 1)
 	mkdir -p $(SUBDIRS)
+endif
 endif
 
 ifeq ($(suffix $(NAME)), .a)

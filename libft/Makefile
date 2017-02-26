@@ -301,7 +301,8 @@ ITEMS = \
 		./ft_printf/src/printf_main \
 		./ft_printf/src/printf_init \
 
-CC = clang #x86_64-apple-darwin15.6.0-gcc-4.8
+
+CC = gcc #x86_64-apple-darwin15.6.0-gcc-4.8
 
 AR = ar #x86_64-apple-darwin15.6.0-gcc-ar-4.8
 

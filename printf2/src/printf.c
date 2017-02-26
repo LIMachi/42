@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/26 04:21:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/26 09:50:44 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ int	sf_parse_attributes_0(const char *format, int *pos, int *arg_number,
 {
 	int				tmp;
 
-	out->tlength = 0;
 	while (ft_strcchr("%dDioOuUxXeEfFgGaAcCsSpnmbB", format[*pos]) == -1)
-	{
 		if ((tmp = ft_strcchr("#0- +'I", format[*pos])) != -1 && ++(*pos))
 		{
 			out->attr |= 1 << tmp;
@@ -62,14 +60,62 @@ int	sf_parse_attributes_0(const char *format, int *pos, int *arg_number,
 					|| (tmp == 1 && format[*pos] == 'l')) && !(0 & ++(*pos))));
 		else
 			return (-1);
-	}
 	return (0);
+}
+
+char	*thousands_sep(void)
+{
+	return (localeconv()->thousands_sep);
 }
 
 int	sf_validate_form(t_printf_form *form)
 {
-	(void)form;
-	return (1);
+	int	out;
+	int	i;
+
+	out = 0;
+	if (form->attr & PA_AQ && form->type & ~(PT_F | PT_D | PT_I) && ++out)
+		form->attr &= ~PA_AQ;
+	if (form->attr & PA_I && form->type & ~(PT_I | PT_D | PT_U) && ++out)
+		form->attr &= ~PA_I;
+	(form->array < -1 && ++out) ? (form->array = -1) : 0;
+	(form->precision < -1 && ++out) ? (form->precision = -1) : 0;
+	(form->field < 0 && ++out) ? (form->field = 0) : 0;
+	i = 10;
+	while (i--)
+		(form->tlength & 1 << i) ? (form->tlength = 1 << i) : 0;
+	form->type & PT_AF ? ++out && (form->tlength &= (PTL_LONG | PTL_LONGD)): 0;
+	form->type & (PT_C | PT_S) ? ++out && (form->tlength &= PTL_LONG) : 0;
+	return (out == 0);
+}
+
+int	validate_form(t_printf_form *form)
+{
+	int	out;
+
+	out = 0;
+	if (form->type & (PT_N | PT_M) && (form->precision < -1 ||
+							form->field < 0 || form->array < -1) && ++out)
+	{
+		form->precision = -1;
+		form->field = 0;
+		form->array = -1;
+	}
+	if (form->array != -1 && form->type & (PT_NP | PT_M) && ++out)
+		form->array = -1;
+	if (form->precision != -1 && form->type & ~(PT_AF | PT_AD) && ++out)
+		form->precision = -1;
+	if (form->attr & PA_HASH && form->type & ~(PT_AF | PT_AC) && ++out)
+		form->attr &= ~PA_HASH;
+	if (form->attr & PA_ZERO && (form->type & PT_N || form->precision != -1))
+		form->attr &= ~PA_ZERO | (0 * ++out);
+	if (form->attr & PA_MINUS && form->type & PT_N && ++out)
+		form->attr &= ~PA_MINUS;
+	if (form->attr & PA_SPACE && form->type & ~(PT_AF | PT_D | PT_I) && ++out)
+		form->attr &= ~PA_SPACE;
+	if (form->attr & PA_PLUS && form->type & ~(PT_AF | PT_D | PT_I) && ++out)
+		form->attr &= ~PA_PLUS;
+	return (form->valid = (out == 0 && sf_validate_form(form)));
 }
 
 int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
@@ -114,8 +160,8 @@ int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
 	else
 		if (form->arg.ui == (__uint128_t)-1)
 			form->arg.ui = (*arg_number)++;
-	if (!sf_validate_form(form))
-		return (-1);
+	/*if (!*/validate_form(form)/*)*/;
+//		return (-1);
 	out = *arg_number >= (int)form->arg.ui ? *arg_number : (int)form->arg.ui;
 	form->ind_precision && out < form->precision ? out = form->precision : 0;
 	return (1 + (form->ind_field && out < form->field ? form->field : out));
@@ -151,54 +197,6 @@ t_printf_form	*parse_forms(const char *format, int *argn)
 	*argn = argc;
 //	debug_printf_forms(out);
 	return (out);
-}
-
-void	sf_form_add_arg(t_printf_form *form, t_printf_arg *args)
-{
-	if (form->ind_field)
-		form->field = args[form->field].ui;
-	if (form->ind_precision)
-		form->precision = args[form->precision].ui;
-	form->tlength == PTL_INT ? form->arg.ui = (int)args[form->arg.ui].ui : 0;
-	if (form->tlength == PTL_SHORT)
-		form->arg.ui = (short)args[form->arg.ui].ui;
-	form->tlength == PTL_LONG ? form->arg.ui = (long)args[form->arg.ui].ui : 0;
-	form->tlength == PTL_LONGD ? form->arg.ui = args[form->arg.ui].ui : 0;
-	if (form->tlength == PTL_INTMAX)
-		form->arg.ui = (intmax_t)args[form->arg.ui].ui;
-	if (form->tlength == PTL_SSIZE)
-		form->arg.ui = (ssize_t)args[form->arg.ui].ui;
-	if (form->tlength == PTL_PTRDIFF)
-		form->arg.ui = (ptrdiff_t)args[form->arg.ui].ui;
-	form->tlength == PTL_INT128 ? form->arg.ui = args[form->arg.ui].ui : 0;
-	form->tlength == PTL_CHAR ? form->arg.ui = (char)args[form->arg.ui].ui : 0;
-	if (form->tlength == PTL_LONGL)
-		form->arg.ui = (long long)args[form->arg.ui].ui;
-}
-
-int		parse_args(t_printf_form *forms, va_list ap, int argn)
-{
-	t_printf_arg	*args;
-//	int				tmp;
-	int				i;
-
-	if ((args = ft_memalloc(sizeof(t_printf_arg) * argn)) == NULL)
-	{
-		ft_free(forms);
-		return (-1);
-	}
-	i = -1;
-	while (forms[++i].arg.ui != (__uint128_t)-1)	//premier passage, on stocke uniquement la taille des arg
-		args[forms[i].arg.ui].ui |= forms[i].tlength & PTL_INT128;
-	i = -1;
-	while (++i < argn)	//on remplit
-		(args[i].ui) ? (args[i].ui = va_arg(ap, __uint128_t)) :
-						(args[i].ui = va_arg(ap, __UINT64_TYPE__));
-	i = -1;
-	while(forms[++i].arg.ui != (__uint128_t)-1)
-		sf_form_add_arg(forms + i, args);
-	ft_free(args);
-	return (0);
 }
 
 int			sf_putn_b128_fd(__uint128_t v, int fd, size_t n)
@@ -299,6 +297,58 @@ int			putn_i128_fd(__int128_t v, int fd, size_t n)
 	return (sf_putn_u128_fd(v, fd, n));
 }
 
+void		buff_space(t_printf_data *data, size_t size)
+{
+	(void)data;
+	while (size-- > 0)
+//		bufferize_char(data, '0');
+		write(1, " ", 1);
+}
+
+void		buff_zero(t_printf_data *data, size_t size)
+{
+	(void)data;
+	while (size-- > 0)
+//		bufferize_char(data, '0');
+		write(1, "0", 1);
+}
+
+void		buff_i128(t_printf_data *data, t_printf_form *form)
+{
+	int	size;
+//	int	tmp;
+//	const static char	tab[] = "0123456789";
+
+	size = ft_evaluate_i128_size(form->arg.i);
+	(form->field < size) ? (form->field = size) : 0;
+	(form->precision < size) ? (form->precision = size) : 0;
+	if (form->arg.i >= 0 && form->attr & (PA_SPACE | PA_PLUS))
+		++size;
+	if (!(form->attr & PA_MINUS) && form->precision < form->field)
+		buff_space(data, form->field - form->precision);
+	if (form->attr & PA_SPACE && form->arg.i >= 0)
+//		bufferize_char(data, ' ');
+		write(1, " ", 1);
+	if (form->attr & PA_PLUS && form->arg.i >= 0)
+//		bufferize_char(data, '+');
+		write(1, "+", 1);
+	if (size < form->precision)
+		buff_zero(data, form->precision - size);
+	if (form->arg.i >= 0 && form->attr & (PA_SPACE | PA_PLUS))
+		--size;
+	putn_i128_fd(form->arg.i, 1, size);
+//	tmp = 1;
+//	while (size-- > 0)
+//		tmp *= 10;
+//	while (tmp /= 10)
+//		bufferize_char(data, "0123456789"[(form->arg.i / tmp) % 10]);
+//		write(1, tab + (form->arg.i / tmp) % 10, 1);
+	//put
+
+	if (form->attr & PA_MINUS && form->precision < form->field)
+		buff_space(data, form->field - form->precision);
+}
+
 int			sf_jump_form(int type, const char *format, size_t *pos)
 {
 	char			*ec;
@@ -338,7 +388,9 @@ int			dn_put_arg(t_printf_put_arg *parg, int formn, size_t len, int fd)
 	sf_jump_form(form.type, parg->format, &parg->pos);
 	if (form.type & (PT_D | PT_I))
 	{
-			return (putn_i128_fd(form.arg.i, fd, limit));
+//			return (putn_i128_fd(form.arg.i, fd, limit));
+		buff_i128(NULL, &form);
+		return (0);
 	}
 	if (form.type == PT_X)
 	{

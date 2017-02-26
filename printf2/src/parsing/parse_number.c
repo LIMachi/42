@@ -6,7 +6,7 @@
 /*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 20:05:01 by lee               #+#    #+#             */
-/*   Updated: 2017/02/26 02:57:56 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/26 09:45:48 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	parse_number(const char *format, int *number, int *arg_number, int *pos)
 	}
 	if (format[*pos] >= '1' && format[*pos] <= '9')
 	{
+		*number = 0;
 		while (format[*pos] != '\0' && ft_isdigit(format[*pos]))
 			*number = (*number) * 10 + format[(*pos)++] - '0';
 		return (0);
