@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 01:05:28 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/21 15:15:19 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/25 23:46:59 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ inline static int	sf_json_print_data(int fd, t_json_value *node)
 	}
 	if (node->type == integer)
 		ft_putnbr_fd(*(int*)node->ptr, fd);
-	if (node->type == number)
-		ft_printf("%f", *(double*)node->ptr);
+//	if (node->type == number)
+//		ft_printf("%f", *(double*)node->ptr);
 	if (node->type == array)
 	{
 		ft_putstr_fd("(t_json_array*)", fd);

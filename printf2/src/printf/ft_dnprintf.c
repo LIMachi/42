@@ -1,18 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_dnprintf.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/25 21:06:01 by lee              ###   ########.fr       */
+/*   Created: 2017/02/25 20:09:21 by lee               #+#    #+#             */
+/*   Updated: 2017/02/25 20:13:33 by lee              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <ft_printf.h>
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+int	ft_dnprintf(int fd, size_t size, const char *format, ...)
 {
-	return (ft_memmove(dst, src, n));
+	int		out;
+	va_list	ap;
+
+	va_start(ap, format);
+	out = ft_vdnprintf(fd, size, format, ap);
+	va_end(ap);
+	return (out);
 }

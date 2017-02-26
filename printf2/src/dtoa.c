@@ -6,21 +6,21 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 15:41:37 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/23 16:37:20 by lee              ###   ########.fr       */
+/*   Updated: 2017/02/26 01:02:29 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_float.h"
+#include <ft_float.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <libft.h>
+#include <libft.h>
 
 /*
 ** debug start
 */
-
+/*
 void	*ft_malloc(size_t size)
 {
 	return (malloc(size));
@@ -49,7 +49,7 @@ int		ft_isdigit(int c)
 {
 	return (isdigit(c));
 }
-
+*/
 /*
 ** debug end
 */
@@ -178,6 +178,7 @@ inline static int	sf_utoa64(__UINT64_TYPE__ v, char *buff, int *writen,
 ** fast i64_t to ascii string in one inline function
 */
 
+/*
 inline static int	sf_itoa64(__INT64_TYPE__ v, char *buff, int *writen,
 								size_t size)
 {
@@ -203,7 +204,7 @@ inline static int	sf_itoa64(__INT64_TYPE__ v, char *buff, int *writen,
 	while (i && (size_t)(*writen - tmp) < size)
 		buff[(*writen)++] = '0' + (v / log[--i]) % 10;
 	return (*writen - tmp);
-}
+}*/
 
 //if buff == NULL, then work like a generic char *dtoa(double v, int precison) and writen (if not null) is equal to strlen of buff returned
 

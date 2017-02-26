@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 09:15:54 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/01/30 17:37:58 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/25 23:47:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int			main(const int argc, char **argv, char **env)
 
 	ft_init(env);
 	if (command_line(argc, argv))
-		ft_end(0 * ft_printf("\nUsage: \t%s/%s <scene.json>\n\n", ft_pwd(),
-					ft_path_name(argv[0])));
+		ft_end(0 /* ft_printf("\nUsage: \t%s/%s <scene.json>\n\n", ft_pwd(),
+					ft_path_name(argv[0]))*/);
 	if ((fd = open(cmd()->scene, O_RDONLY)) == -1)
 		ft_end(-1);
 	parser(src = ft_readfile(fd));
@@ -54,6 +54,6 @@ int			main(const int argc, char **argv, char **env)
 		rt();
 	ft_free(src);
 	if (fd == 1)
-		ft_end(0 * ft_printf("kernel was not found\n"));
+		ft_end(0 /* ft_printf("kernel was not found\n")*/);
 	ft_end(0);
 }

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/19 23:44:54 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/25 18:48:12 by lee              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,36 @@
 #  endif
 # else
 #  define STD_VER -1
+# endif
+
+# ifndef __ULONG_LONG_MAX__
+#  define __ULONG_LONG_MAX__ (__LONG_LONG_MAX__ << 1 | 1)
+# endif
+
+# ifndef __ULONG_MAX__
+#  define __ULONG_MAX__ (__LONG_MAX__ << 1 | 1)
+# endif
+
+# ifndef __UINT_MAX__
+#  define __UINT_MAX__ (__INT_MAX__ << 1 | 1)
+# endif
+
+# ifndef __USHRT_MAX__
+#  define __USHRT_MAX__ (__SHRT_MAX__ << 1 | 1)
+# endif
+
+# ifndef __CHAR_MAX__
+#  ifdef __CHAR_BIT__
+#   define __CHAR_MAX__ ((1 << (__CHAR_BIT__ - 1)) - 1)
+#  elif defined(__SIZEOF_CHAR__)
+#   define __CHAR_MAX__ ((1 << ((__SIZEOF_CHAR__ << 3) - 1)) - 1)
+#  else
+#   define __CHAR_MAX__ 127
+#  endif
+# endif
+
+# ifndef __UCHAR_MAX__
+#  define __UCHAR_MAX__ (__CHAR_MAX__ << 1 | 1)
 # endif
 
 /*
@@ -866,6 +896,16 @@ int						ft_ishexa(int c);
 int						ft_isunix(int c);
 
 /*
+** evaluation funstions
+*/
+
+size_t					ft_evaluate_b128_size(__uint128_t v);
+size_t					ft_evaluate_i128_size(__int128_t v);
+size_t					ft_evaluate_o128_size(__uint128_t v);
+size_t					ft_evaluate_u128_size(__uint128_t v);
+size_t					ft_evaluate_x128_size(__uint128_t v);
+
+/*
 ** file tree related function
 */
 
@@ -979,6 +1019,7 @@ char					*ft_strerror(int error);
 char					*ft_stracat(char *str1, char *str2);
 char					*ft_strndup(const char *s, size_t n);
 char					*ft_strpdup(const char *s, const char *e);
+int						ft_strcchr(const char *str, int c);
 
 /*
 ** files related functions

@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_evaluate_x128_size.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/25 21:06:01 by lee              ###   ########.fr       */
+/*   Created: 2017/02/25 18:15:12 by lee               #+#    #+#             */
+/*   Updated: 2017/02/25 18:21:54 by lee              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include <stddef.h>
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+size_t	ft_evaluate_x128_size(__uint128_t v)
 {
-	return (ft_memmove(dst, src, n));
+	size_t	l;
+
+	if (v == 0)
+		return (1);
+	l = 1;
+	while (v >>= 4)
+		++l;
+	return (l);
 }
