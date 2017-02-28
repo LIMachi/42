@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vdnprintf.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/25 20:10:35 by lee               #+#    #+#             */
-/*   Updated: 2017/02/26 04:16:59 by hmartzol         ###   ########.fr       */
+/*   Created: 2017/02/25 20:10:35 by hmartzol          #+#    #+#             */
+/*   Updated: 2017/02/26 22:26:01 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_printf.h>
 
+/*
 int	ft_vdnprintf(int fd, size_t size, const char *format, va_list ap)
 {
 	size_t				len;
@@ -39,4 +40,14 @@ int	ft_vdnprintf(int fd, size_t size, const char *format, va_list ap)
 	if (parg.forms != NULL)
 		ft_free(parg.forms);
 	return (len);
+}
+*/
+
+int	ft_vdnprintf(int fd, size_t size, const char *format, va_list ap)
+{
+	t_printf_data	data;
+
+	data = (t_printf_data){.format = format, .f_pos = -1, .size = size,
+	.len = 0, .b_pos = 0, .buffer = {0}, .fss.fd = fd, .buffer_dumper = to_fd};
+	return (main_printf(&data, ap));
 }

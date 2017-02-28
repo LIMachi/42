@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vfnprintf.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/25 20:43:11 by lee               #+#    #+#             */
-/*   Updated: 2017/02/25 23:29:07 by hmartzol         ###   ########.fr       */
+/*   Created: 2017/02/25 20:43:11 by hmartzol          #+#    #+#             */
+/*   Updated: 2017/02/28 01:55:58 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 int	ft_vfnprintf(FILE *stream, size_t size, const char *format, va_list ap)
 {
-	(void)stream;
-	(void)size;
-	(void)format;
-	(void)ap;
-	return (-1);
+	t_printf_data	data;
+
+	data = (t_printf_data){.format = format, .f_pos = -1, .size = size,
+		.len = 0, .b_pos = 0, .buffer = {0}, .fss.stream = stream,
+		.buffer_dumper = to_stream};
+	return (main_printf(&data, ap));
 }

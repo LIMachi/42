@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bufferize_str.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/25 20:51:04 by lee               #+#    #+#             */
-/*   Updated: 2017/02/25 23:24:27 by hmartzol         ###   ########.fr       */
+/*   Created: 2017/02/25 20:51:04 by hmartzol          #+#    #+#             */
+/*   Updated: 2017/02/28 02:26:13 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ void	bufferize_str(t_printf_data *data, char *str, size_t size)
 		return ;
 	}
 //	if (data->len + data->)
-	if (data->buffer_pos + size >= data->buffer_size)
+	if (data->b_pos + size >= PRINTF_BUFFER_SIZE)
 	{
-		tmp = (data->buffer_size - data->buffer_pos);
-		data->buffer_dumper(data->fss, data->buffer, data->buffer_pos, data->len);
+		tmp = (PRINTF_BUFFER_SIZE - data->b_pos);
+		data->buffer_dumper(data->fss, data->buffer, data->b_pos, data->len);
 		data->buffer_dumper(data->fss, str, tmp, data->len);
 		bufferize_str(data, str + tmp, size - tmp);
 	}
 	else
 	{
-		ft_memmove(data->buffer + data->buffer_pos, str, size);
-		data->buffer_pos += size;
+		ft_memmove(data->buffer + data->b_pos, str, size);
+		data->b_pos += size;
 	}
 }

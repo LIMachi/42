@@ -8,44 +8,45 @@ NAME = libftprintf.a
 EXEARGS =
 
 #path to folder containing source files, project header and resulting objects
-SRCDIR = ./src
-INCDIRS = ./inc
-OBJDIR = ./OBJ
+SRCDIR = src
+INCDIRS = inc
+OBJDIR = .obj
 
 #name of files to compile without the extension
+#include items
 ITEMS = \
-		./src/printf/ft_printf \
-		./src/printf/ft_vdnprintf \
-		./src/printf \
-		./src/parsing/parse_number \
-		./src/debug_printf_forms \
-		./src/dtoa \
-		./src/buffering/to_fd \
-		./src/buffering/to_null \
-		./src/buffering/to_str \
-		./src/buffering/to_stream \
-		./src/buffering/bufferize_char \
-		./src/buffering/bufferize_str \
-		./src/printf/ft_asnprintf \
-		./src/printf/ft_asprintf \
-		./src/printf/ft_dnprintf \
-		./src/printf/ft_dprintf \
-		./src/printf/ft_fnprintf \
-		./src/printf/ft_fprintf \
-		./src/printf/ft_vdprintf \
-		./src/printf/ft_vfnprintf \
-		./src/printf/ft_vfprintf \
-		./src/printf/ft_vprintf \
-		./src/printf/ft_vsnprintf \
-		./src/printf/ft_vsprintf \
-		./src/printf/ft_snprintf \
-		./src/printf/ft_sprintf \
-		./src/printf/ft_vasnprintf \
-		./src/printf/ft_vasprintf \
-		./src/parsing/parse_args
+		buffering/bufferize_char \
+		buffering/bufferize_str \
+		buffering/to_fd \
+		buffering/to_null \
+		buffering/to_str \
+		buffering/to_stream \
+		debug_printf_forms \
+		dtoa \
+		parsing/parse_args \
+		parsing/parse_number \
+		printf/ft_asnprintf \
+		printf/ft_asprintf \
+		printf/ft_dnprintf \
+		printf/ft_dprintf \
+		printf/ft_fnprintf \
+		printf/ft_fprintf \
+		printf/ft_printf \
+		printf/ft_snprintf \
+		printf/ft_sprintf \
+		printf/ft_vasnprintf \
+		printf/ft_vasprintf \
+		printf/ft_vdnprintf \
+		printf/ft_vdprintf \
+		printf/ft_vfnprintf \
+		printf/ft_vfprintf \
+		printf/ft_vprintf \
+		printf/ft_vsnprintf \
+		printf/ft_vsprintf \
+		printf \
+		printf/main_printf \
 
-
-CC = gcc #clang #x86_64-apple-darwin15.6.0-gcc-4.8
+CC = colorgcc.pl #clang
 
 AR = ar #x86_64-apple-darwin15.6.0-gcc-ar-4.8
 
@@ -91,14 +92,23 @@ endif
 ################################################################################
 ################################################################################
 
+DEPDIR = .dep
+
 DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
 DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
+DOTD = $(patsubst %, $(DEPDIR)/%.d, $(ITEMS))
 
 INCLUDES = $(patsubst %, -I%, $(INCDIRS)) $(patsubst %, -I%, $(PINC))
 
 .PHONY: all clean fclean re norm libs relibs fcleanlibs items test grind hell
 
 all: dirs auteur libs $(NAME)
+
+$(shell mkdir -p $(patsubst %, $(DEPDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v $(DEPDIR) | cut -f2- -d/)) >/dev/null)	#create dependendies/rules subdirs
+
+$(DEPDIR)/%.d: $(SRCDIR)/%.c Makefile
+	@$(CC) -M -MT $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	@printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<)" >> $@
 
 libs:
 ifneq ($(shell [[ 0 = 0$(patsubst %, && `make -q -C %; echo $$?` = 0, $(CLIB)) ]]; echo $$?), 0)
@@ -114,7 +124,7 @@ fcleanlibs: fclean
 	$(foreach V, $(CLIB), make fclean -C $(V);)
 
 ifneq ($(OBJDIR), )
-SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v $(OBJDIR)))
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v $(OBJDIR) | cut -f2- -d/))
 dirs:
 ifeq ($(shell [[ -d $(OBJDIR) $(patsubst %, && -d %, $(SUBDIRS)) ]]; echo $$?), 1)
 	mkdir -p $(SUBDIRS)
@@ -130,8 +140,7 @@ $(NAME): $(DOTO) $(LIB)
 	$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
 endif
 
-$(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $@
+-include $(DOTD)
 
 clean:
 	rm -f items
@@ -140,6 +149,8 @@ clean:
 	if [ -z "$(find $(OBJDIR) -type f)" ]; then rm -rf $(OBJDIR); fi	#test if OBJDIR contain no more files, and if true, remove it (safer)
 
 fclean: clean
+	rm -f $(DOTD)
+	if [ -z "$(find $(DEPDIR) -type f)" ]; then rm -rf $(DEPDIR); fi
 	rm -f $(NAME)
 
 re: fclean
@@ -152,10 +163,10 @@ norm:
 	norminette $(DOTC)
 	norminette $(INCDIRS)
 
-items:
-	@echo "ITEMS = \\" > items;
-	@$(foreach V, $(shell find $(SRCDIR) -type f | grep "\.c" | rev | cut -f2- -d. | rev), echo "		$(V) \\" >> items;)
-	@less items
+items: Makefile
+	@printf "ITEMS = " > items;
+	@$(foreach V, $(shell find $(SRCDIR) -type f | grep "\.c" | rev | cut -f2- -d. | rev | cut -f2- -d/), echo "	$(V) \\" >> items;)
+	@sed -i "" '$$s/..$$//' items
 
 ifeq ($(suffix $(NAME)), .a)
 test: all

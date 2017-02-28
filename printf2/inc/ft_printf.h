@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lee <lee@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/25 18:27:04 by lee               #+#    #+#             */
-/*   Updated: 2017/02/26 09:00:19 by hmartzol         ###   ########.fr       */
+/*   Created: 2017/02/25 18:27:04 by hmartzol          #+#    #+#             */
+/*   Updated: 2017/02/28 03:45:12 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,16 +115,19 @@ typedef union	u_fss
 
 typedef struct	s_printf_data
 {
-	size_t		max_len;
+	const char	*format;
+	size_t		f_pos;
+	size_t		size;
 	size_t		len;
-	size_t		buffer_size;
-	size_t		buffer_pos;
+	size_t		b_pos;
 	char		buffer[PRINTF_BUFFER_SIZE];
 	t_fss		fss;
 	void		(*buffer_dumper)(t_fss, char *, size_t, size_t);
 }				t_printf_data;
 
 void			debug_printf_forms(t_printf_form *forms);
+
+int				main_printf(t_printf_data *data, va_list ap);
 
 int				ft_asnprintf(char **strn, size_t size, const char *format, ...);
 int				ft_asprintf(char **strn, const char *format, ...);
@@ -149,6 +152,11 @@ int				ft_vprintf(const char *format, va_list ap);
 int				ft_vsnprintf(char *str, size_t size, const char *format,
 							va_list ap);
 int				ft_vsprintf(char *str, const char *format, va_list ap);
+
+void			to_fd(t_fss fss, char *buff, size_t size, size_t pos);
+void			to_null(t_fss fss, char *buff, size_t size, size_t pos);
+void			to_str(t_fss fss, char *buff, size_t size, size_t pos);
+void			to_stream(t_fss fss, char *buff, size_t size, size_t pos);
 
 char			*thousands_sep(void);
 int				parse_number(const char *format, int *number, int *arg_number,
