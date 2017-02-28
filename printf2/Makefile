@@ -44,13 +44,7 @@ ITEMS = \
 		printf/ft_vsnprintf \
 		printf/ft_vsprintf \
 		printf \
-		printf/main_printf \
-
-CC = colorgcc.pl #clang
-
-AR = ar #x86_64-apple-darwin15.6.0-gcc-ar-4.8
-
-RANLIB = ranlib #x86_64-apple-darwin15.6.0-gcc-ranlib-4.8
+#		printf/main_printf
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
@@ -92,6 +86,12 @@ endif
 ################################################################################
 ################################################################################
 
+CC = colorgcc.pl #clang
+
+AR = ar #x86_64-apple-darwin15.6.0-gcc-ar-4.8
+
+RANLIB = ranlib #x86_64-apple-darwin15.6.0-gcc-ranlib-4.8
+
 DEPDIR = .dep
 
 DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
@@ -101,14 +101,26 @@ DOTD = $(patsubst %, $(DEPDIR)/%.d, $(ITEMS))
 INCLUDES = $(patsubst %, -I%, $(INCDIRS)) $(patsubst %, -I%, $(PINC))
 
 .PHONY: all clean fclean re norm libs relibs fcleanlibs items test grind hell
+.PRECIOUS: $(DOTD) items
+.SUFFIXES:
 
 all: dirs auteur libs $(NAME)
 
-$(shell mkdir -p $(patsubst %, $(DEPDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v $(DEPDIR) | cut -f2- -d/)) >/dev/null)	#create dependendies/rules subdirs
+$(shell mkdir -p $(patsubst %, $(DEPDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(DEPDIR) | cut -f2- -d/)) >/dev/null)	#create dependendies/rules subdirs
 
-$(DEPDIR)/%.d: $(SRCDIR)/%.c Makefile
-	@$(CC) -M -MT $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
-	@printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<)" >> $@
+$(DEPDIR)/%.d: $(SRCDIR)/%.c
+ifeq ($(SRCDIR), )
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+ifeq ($(SRCDIR), .)
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+	$(CC) -M -MT $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<)" >> $@
+endif
+endif
 
 libs:
 ifneq ($(shell [[ 0 = 0$(patsubst %, && `make -q -C %; echo $$?` = 0, $(CLIB)) ]]; echo $$?), 0)
@@ -124,7 +136,7 @@ fcleanlibs: fclean
 	$(foreach V, $(CLIB), make fclean -C $(V);)
 
 ifneq ($(OBJDIR), )
-SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v $(OBJDIR) | cut -f2- -d/))
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(OBJDIR) | cut -f2- -d/))
 dirs:
 ifeq ($(shell [[ -d $(OBJDIR) $(patsubst %, && -d %, $(SUBDIRS)) ]]; echo $$?), 1)
 	mkdir -p $(SUBDIRS)
@@ -163,7 +175,7 @@ norm:
 	norminette $(DOTC)
 	norminette $(INCDIRS)
 
-items: Makefile
+items:
 	@printf "ITEMS = " > items;
 	@$(foreach V, $(shell find $(SRCDIR) -type f | grep "\.c" | rev | cut -f2- -d. | rev | cut -f2- -d/), echo "	$(V) \\" >> items;)
 	@sed -i "" '$$s/..$$//' items
