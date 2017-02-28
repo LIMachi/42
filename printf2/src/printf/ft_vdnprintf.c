@@ -6,12 +6,11 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 20:10:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/26 22:26:01 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/28 08:27:34 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_printf.h>
-
 /*
 int	ft_vdnprintf(int fd, size_t size, const char *format, va_list ap)
 {

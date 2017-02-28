@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:49:10 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/28 01:54:56 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/28 09:19:09 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	main()
 	ft_printf(test, 1);
 	setlocale(LC_NUMERIC, "");
 	printf("|%s|\n", thousands_sep());
-	int	truc;
+	int	truc = 262648092;
 	printf("|%+-20.15d|\n", truc); // |+262648092         |
 	ft_printf("|%+-20.15d|\n", truc);
 	return (0);

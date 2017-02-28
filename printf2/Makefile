@@ -44,13 +44,13 @@ ITEMS = \
 		printf/ft_vsnprintf \
 		printf/ft_vsprintf \
 		printf \
-#		printf/main_printf
+		printf/main_printf
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror #-g -arch X86_64
+CFLAGS = -Wall -Wextra -Werror -g #-arch X86_64
 #path to external includes
 PINC = ../libft/inc
 #path to libs to compile
@@ -66,7 +66,7 @@ endif
 ifeq ($(shell uname),Darwin)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror #-g -arch X86_64
+CFLAGS = -Wall -Wextra -Werror -g #-arch X86_64
 #path to external includes
 PINC = ../libft/inc
 #path to libs to compile

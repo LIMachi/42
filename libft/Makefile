@@ -305,7 +305,7 @@ ITEMS = \
 ifeq ($(shell uname),Linux)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror #-g -O3 -arch X86_64
+CFLAGS = -Wall -Wextra -Werror -g #-O3 -arch X86_64
 #path to external includes
 PINC =
 #path to libs to compile
@@ -321,7 +321,7 @@ endif
 ifeq ($(shell uname),Darwin)
 
 #gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror #-g -arch X86_64
+CFLAGS = -Wall -Wextra -Werror -g #-arch X86_64
 #path to external includes
 PINC =
 #path to libs to compile

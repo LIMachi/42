@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:27:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/28 03:45:12 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/28 09:01:50 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,11 +162,12 @@ char			*thousands_sep(void);
 int				parse_number(const char *format, int *number, int *arg_number,
 							int *pos);
 int				parse_args(t_printf_form *forms, va_list ap, int argn);
-void			bufferize_char(t_printf_data *data, char c);
+int				bufferize_char(t_printf_data *data, char c);
 
 t_printf_form	*parse_forms(const char *format, int *argn);
 int				parse_args(t_printf_form *forms, va_list ap, int argn);
-int				dn_put_arg(t_printf_put_arg *parg, int formn, size_t len,
-							int fd);
-
+//int				dn_put_arg(t_printf_put_arg *parg, int formn, size_t len,
+//							int fd);
+int				dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn,
+							size_t *pos);
 #endif

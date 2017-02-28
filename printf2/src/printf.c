@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/28 02:24:09 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/02/28 09:17:35 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,7 @@ int			sf_putn_b128_fd(__uint128_t v, int fd, size_t n)
 		return (0);
 	return (sf_putn_b128_fd(v >> 1, fd, n - 1)
 				+ write(fd, &tab[v & 1], 1));
+//			bufferize_char(t_printf_data *data, char c));
 }
 
 int			putn_b128_fd(__uint128_t v, int fd, size_t n)
@@ -268,6 +269,7 @@ int			putn_x128_fd(__uint128_t v, int fd, size_t n, int maj)
 	return (sf_putn_x128_fd(v, fd, n, maj));
 }
 
+/*
 int			sf_putn_u128_fd(__uint128_t v, int fd, size_t n)
 {
 	static const char	tab[] = "0123456789";
@@ -287,7 +289,9 @@ int			putn_u128_fd(__uint128_t v, int fd, size_t n)
 		return (write(fd, "0", 1));
 	return (sf_putn_u128_fd(v, fd, n));
 }
+*/
 
+/*
 int			putn_i128_fd(__int128_t v, int fd, size_t n)
 {
 	if (n == 0)
@@ -298,21 +302,51 @@ int			putn_i128_fd(__int128_t v, int fd, size_t n)
 		return (write(fd, "-", 1) + sf_putn_u128_fd(-v, fd, n - 1));
 	return (sf_putn_u128_fd(v, fd, n));
 }
+*/
+
+int			sf_putn_u128_fd(t_printf_data *data, __uint128_t v, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (0);
+	return (sf_putn_u128_fd(data, v / 10, n - 1) + bufferize_char(data, "0123456789"[v % 10]));
+}
+
+int			putn_u128_fd(t_printf_data *data, __uint128_t v, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (bufferize_char(data, '0'));
+	return (sf_putn_u128_fd(data, v, n));
+}
+
+int			putn_i128_fd(t_printf_data *data, __int128_t v, size_t n)
+{
+	if (n == 0)
+		return (0);
+	if (v == 0)
+		return (bufferize_char(data, '0'));
+	if (v & (__int128_t)1 << (__SIZEOF_INT128__ * 8 - 1))
+		return (bufferize_char(data, '-') + sf_putn_u128_fd(data, -v, n - 1));
+	return (sf_putn_u128_fd(data, v, n));
+}
 
 void		buff_space(t_printf_data *data, size_t size)
 {
 	(void)data;
 	while (size-- > 0)
-//		bufferize_char(data, '0');
-		write(1, " ", 1);
+		bufferize_char(data, ' ');
+//		write(1, " ", 1);
 }
 
 void		buff_zero(t_printf_data *data, size_t size)
 {
 	(void)data;
 	while (size-- > 0)
-//		bufferize_char(data, '0');
-		write(1, "0", 1);
+		bufferize_char(data, '0');
+//		write(1, "0", 1);
 }
 
 void		buff_i128(t_printf_data *data, t_printf_form *form)
@@ -329,16 +363,16 @@ void		buff_i128(t_printf_data *data, t_printf_form *form)
 	if (!(form->attr & PA_MINUS) && form->precision < form->field)
 		buff_space(data, form->field - form->precision);
 	if (form->attr & PA_SPACE && form->arg.i >= 0)
-//		bufferize_char(data, ' ');
-		write(1, " ", 1);
+		bufferize_char(data, ' ');
+//		write(1, " ", 1);
 	if (form->attr & PA_PLUS && form->arg.i >= 0)
-//		bufferize_char(data, '+');
-		write(1, "+", 1);
+		bufferize_char(data, '+');
+//		write(1, "+", 1);
 	if (size < form->precision)
 		buff_zero(data, form->precision - size);
 	if (form->arg.i >= 0 && form->attr & (PA_SPACE | PA_PLUS))
 		--size;
-	putn_i128_fd(form->arg.i, 1, size);
+	putn_i128_fd(data, form->arg.i, size);
 //	tmp = 1;
 //	while (size-- > 0)
 //		tmp *= 10;
@@ -380,7 +414,7 @@ int			sf_jump_form(int type, const char *format, size_t *pos)
 	return (format[*pos] == ec[0] || (ec[1] != '\0' && format[*pos] == ec[1]));
 }
 
-
+/*
 int			dn_put_arg(t_printf_put_arg *parg, int formn, size_t len, int fd)
 {
 	size_t			limit;
@@ -426,20 +460,20 @@ int			dn_put_arg(t_printf_put_arg *parg, int formn, size_t len, int fd)
 	}
 	return (0);
 }
-
-/*
-int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, int *pos)
+*/
+//*
+int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *pos)
 {
 	size_t			limit;
 	t_printf_form	form;
 
-	limit = data->max_len - data->len;
+	limit = data->size - data->len;
 	form = forms[formn];
 	sf_jump_form(form.type, data->format, pos);
 	if (form.type & (PT_D | PT_I))
 	{
 //			return (putn_i128_fd(form.arg.i, fd, limit));
-		buff_i128(NULL, &form);
+		buff_i128(data, &form);
 		return (0);
 	}
 	if (form.type == PT_X)
@@ -484,4 +518,4 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, int *pos)
 	}
 	return (0);
 }
-*/
+//*/
