@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/21 16:49:56 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/12/15 01:08:00 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/02 13:14:54 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,12 @@ int		main(int argc, char **argv, char **env)
 	src = argc == 2 ? "./scl/fractol.cl" : argv[1];
 	if ((fd = open(src, O_RDONLY)) == -1)
 		return (-1);
-	ftocl_make_program(ftocl_str_to_id64("fractol"),
-						ft_str_clear_commentaries(ptr = ft_readfile(fd)));
+	ftocl_make_program(ft_str_to_id64("fractol"),
+						ft_str_clear_commentaries(ptr = ft_readfile(fd)), NULL);
 	close(fd);
-	fractol_data()->lock = ftocl_str_to_id64(argv[argc - 1]) !=
-												ftocl_str_to_id64("julia");
-	if (!(fd = ftocl_set_current_kernel(ftocl_str_to_id64(argv[argc - 1]))))
+	fractol_data()->lock = ft_str_to_id64(argv[argc - 1]) !=
+												ft_str_to_id64("julia");
+	if (!(fd = ftocl_set_current_kernel(ft_str_to_id64(argv[argc - 1]))))
 		fractol();
 	if (fd == 1)
 		print_no_id(src, ptr);

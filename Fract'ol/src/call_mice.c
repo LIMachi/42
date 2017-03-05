@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/21 18:00:30 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 18:46:20 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/02 13:13:09 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ t_cl_comp	mice_to_comp(t_point mice)
 	t_cl_comp		s;
 
 	args = &fractol_data()->args;
-	p = (t_cl_comp){.r = (t_cl_float)mice.x / (t_cl_float)args->size.x,
-					.i = (t_cl_float)mice.y / (t_cl_float)args->size.y};
+	p = (t_cl_comp){.r = (cl_float)mice.x / (cl_float)args->size.x,
+					.i = (cl_float)mice.y / (cl_float)args->size.y};
 	s = (t_cl_comp){.r = args->vp_dr.r - args->vp_ul.r,
 					.i = args->vp_dr.i - args->vp_ul.i};
 	return ((t_cl_comp){

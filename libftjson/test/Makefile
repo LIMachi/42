@@ -1,32 +1,38 @@
-#name of the author of the executable
+#name of the author of the executable (used by the creation of the auteur file)
 AUTHOR = hmartzol
 
-#name of compiled file
-NAME = test.exe
+#name of compiled file (if the 'a' extension is used, the makefile will use the library compilation mode)
+NAME = test.bin
 
 #args passed to executable if executed from "make test"
-EXEARGS = test.json
+EXEARGS = full.json
 
 #path to folder containing source files, project header and resulting objects
-SRCDIR = ./src
-INCDIR = ./inc
-OBJDIR = ./OBJ
+#note: SRCDIR and INCDIRS can be ".", but try to have a diferent path for objects
+#note: SRCDIR and OBJDIR must only contain one path, INCDIRS can have multiple paths
+SRCDIR = src
+INCDIRS = .
+OBJDIR = .obj
 
-#name of files to compile without the extension
+#path to a main function containing file to test the library (if the output is a library)
+MAIN =
+
+#path of files (from $(SRCDIR)) to compile without the extension (you can run "make items" to get them in the file "items")
+#include items
 ITEMS = test
 
 #variables for Linux
 ifeq ($(shell uname),Linux)
 
-#gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror -g -O3
+#CC flags
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
 #path to external includes
-PINC = ../inc ../../libft/inc
+PINC = ../../libft/inc ../inc
 #path to libs to compile
-CLIB = ../ ../../libft
+CLIB = ../../libft ../
 #exact path of lib files to add in source
 LIB = ../libftjson.a ../../libft/libft.a
-#args passed to gcc depending on the os
+#args passed to CC depending on the os
 ARGS =
 
 endif
@@ -34,15 +40,15 @@ endif
 #variables for Max
 ifeq ($(shell uname),Darwin)
 
-#gcc/clang flags
-CFLAGS = -Wall -Wextra -Werror -g
+#CC flags
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
 #path to external includes
-PINC = ../inc ../../libft/inc
+PINC = ../../libft/inc ../inc
 #path to libs to compile
-CLIB = ../ ../../libft
+CLIB = ../../libft ../
 #exact path of lib files to add in source
 LIB = ../libftjson.a ../../libft/libft.a
-#args passed to gcc depending on the os
+#args passed to CC depending on the os
 ARGS =
 
 endif
@@ -55,54 +61,88 @@ endif
 ################################################################################
 ################################################################################
 
-DATE = $(shell date +'%G-%m-%d-%Hh%Mm%Ss')
+DEPDIR = .dep
+
+CC = /usr/bin/perl ~/.bin/colorgcc.pl #/usr/bin/clang
+
+AR = /usr/bin/ar
+
+RANLIB = /usr/bin/ranlib
+
+RM = /bin/rm -f
+
+NORMINETTE = /usr/bin/sh ~/.bin/norminette.sh
 
 DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
 DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
+DOTD = $(patsubst %, $(DEPDIR)/%.d, $(ITEMS))
 
-INCLUDES = $(patsubst %, -I%, $(INCDIR)) $(patsubst %, -I%, $(PINC))
+INCLUDES = $(patsubst %, -I%, $(INCDIRS)) $(patsubst %, -I%, $(PINC))
 
-SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(notdir $(shell find $(SRCDIR) -type d -not -path $(SRCDIR))))
-
-.PHONY: all libs clean fclean re norm relibs fcleanlibs items test hell grind
+.PHONY: all clean fclean re norm libs relibs cleanlibs fcleanlibs items test grind hell
+.PRECIOUS: $(DOTD) items
+.SUFFIXES:
 
 all: dirs auteur libs $(NAME)
 
+$(shell mkdir -p $(DEPDIR) $(patsubst %, $(DEPDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(DEPDIR) | cut -f2- -d/)) >/dev/null)	#create dependendies/rules subdirs
+
+$(DEPDIR)/%.d: $(SRCDIR)/%.c
+ifeq ($(SRCDIR), )
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+ifeq ($(SRCDIR), .)
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+	$(CC) -M -MT $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) -c $< -o $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<)" >> $@
+endif
+endif
+
 libs:
+ifneq ($(shell [[ 0 = 0$(patsubst %, && `make -q -C %; echo $$?` = 0, $(CLIB)) ]]; echo $$?), 0)
 	$(foreach V, $(CLIB), make -C $(V);)
+endif
 
 relibs:
 	$(foreach V, $(CLIB), make re -C $(V);)
-	make re
+	@$(MAKE) re	#delay the re to make sure all libs are compiled before $(NAME)
 
-fcleanlibs:
-	$(foreach V, $(CLIB), make clean -C $(V);)
+fcleanlibs: fclean
 	$(foreach V, $(CLIB), make fclean -C $(V);)
-	make fclean
 
+cleanlibs: clean
+	$(foreach V, $(CLIB), make clean -C $(V);)
+
+ifneq ($(OBJDIR), )
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(OBJDIR) | cut -f2- -d/))
 dirs:
-	@mkdir -p $(OBJDIR) $(SUBDIRS)
+ifeq ($(shell [[ -d $(OBJDIR) $(patsubst %, && -d %, $(SUBDIRS)) ]]; echo $$?), 1)
+	mkdir -p $(OBJDIR) $(SUBDIRS)
+endif
+endif
 
 ifeq ($(suffix $(NAME)), .a)
 $(NAME): $(DOTO) $(LIB)
-	ar -rc $(NAME) $(DOTO) $(LIB)
-	ranlib $(NAME)
+	$(AR) -rc $(NAME) $(DOTO) $(LIB)
+	$(RANLIB) $(NAME)
 else
 $(NAME): $(DOTO) $(LIB)
-	gcc $(CFLAGS) $(ARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
+	$(CC) $(CFLAGS) $(ARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
 endif
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	gcc $(CFLAGS) $(INCLUDES) -c $< -o $@
+-include $(DOTD)
 
 clean:
-	rm -f items
-	rm -f `find . -type f | grep "$(OBJDIR)" | grep ".o"`
-	rm -rf `find . -depth -empty | grep "$(OBJDIR)"`
-	rm -rf `find . -depth -empty | grep "$(OBJDIR)"`
+	$(RM) -f $(DOTO)
+	$(RM) items
+	$(RM) -f test.bin
+	$(shell if [ -z "`find $(OBJDIR) -type f`" ]; then $(RM) -r $(OBJDIR); fi)	#test if OBJDIR contain no more files, and if true, remove it (safer)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) -f $(NAME)
 
 re: fclean all
 
@@ -110,30 +150,27 @@ auteur:
 	@echo $(AUTHOR) > auteur
 
 norm:
-	norminette $(DOTC)
-	norminette $(INCDIR)
-	$(foreach V, $(CLIB), make norm -C $(V);)
+	$(NORMINETTE) $(DOTC)
+	$(NORMINETTE) $(INCDIRS)
 
 items:
-	@echo "ITEMS = \\" > items;
-	@$(foreach V, $(shell find $(SRCDIR) -type f | cut -f3- -d/ | rev | cut -f2- -d. | rev), echo "		$(V) \\" >> items;)
-	@less items
+	@printf "ITEMS = " > items;
+	@$(foreach V, $(shell find $(SRCDIR) -type f | grep "\.c" | rev | cut -f2- -d. | rev | cut -f2- -d/), echo "	$(V) \\" >> items;)
+	@sed -i "" '$$s/..$$//' items
 
+ifeq ($(suffix $(NAME)), .a)
+test: all
+ifneq ($(MAIN), )
+	$(CC) $(MAIN) $(ARGS) $(INCLUDES) $(LIB) $(NAME) -o test.bin
+	./test.bin $(EXEARGS)
+else
+	echo "main function containing file was not set"
+endif
+else
 test: all
 	./$(NAME) $(EXEARGS)
+endif
 
-valgrind_logs:
-	mkdir -p valgrind_logs
-
-grind: valgrind_logs all
+grind: all
 	clear
-	@echo "`valgrind --log-fd=1 --leak-check=full --show-leak-kinds=definite,indirect ./$(NAME) $(EXEARGS)`" > ./valgrind_logs/valgrind_$(DATE).log
-	less ./valgrind_logs/valgrind_$(DATE).log
-
-hell: valgrind_logs all
-	clear
-	@echo "hell has come to earth..."
-	@echo "`valgrind -v --log-fd=1 --track-fds=yes --read-inline-info=yes --read-var-info=yes --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(EXEARGS)`" > ./valgrind_logs/hellgrind_$(DATE).log
-	@echo "time to look your fate"
-	@sleep 2
-	less ./valgrind_logs/hellgrind_$(DATE).log
+	valgrind ./$(NAME) $(EXEARGS)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ftx_hook_miceinite.c                               :+:      :+:    :+:   */
+/*   ftx_hook_miceinit.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmartzol <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 15:17:40 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/02/28 14:22:26 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/02 12:52:32 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	sf_motion(int x, int y, void *param)
 {
 	((t_mlx *)param)->micemap[0] = x;
 	((t_mlx *)param)->micemap[1] = y;
-	return ((int)param);
+	return ((int)(size_t)param);
 }
 
 static int	sf_mpress(int button, int x, int y, void *param)

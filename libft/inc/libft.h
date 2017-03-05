@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/25 18:48:12 by lee              ###   ########.fr       */
+/*   Updated: 2017/03/02 13:51:42 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1285,7 +1285,7 @@ void					ft_env_clear(void);
 char					*ft_pwd(void);
 char					*ft_path_name(char *path);
 
-//extern int				ft_printf(const char *format, ...);
+extern int				ft_printf(const char *format, ...);
 
 int						ft_isinset(const char c, const char *set);
 size_t					ft_strcspn(const char *str, const char *reject);

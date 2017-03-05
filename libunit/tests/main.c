@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 05:57:33 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/12 19:38:31 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/02 13:44:17 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,5 @@ int	main(void)
 		print_red(1, "test failled\n", 13);
 	else
 		print_green(1, "test passed\n", 12);
+	return (0);
 }

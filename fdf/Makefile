@@ -1,322 +1,200 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/06/15 00:21:43 by hmartzol          #+#    #+#              #
-#    Updated: 2016/11/08 18:10:22 by hmartzol         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#name of the author of the executable (used by the creation of the auteur file)
+AUTHOR = hmartzol
 
-NAME =
+#name of compiled file (if the 'a' extension is used, the makefile will use the library compilation mode)
+NAME = fdf
 
-SRCDIR =
-OBJDIR =
-INCDIR =
-LIBFT  = ../libft
+#args passed to executable if executed from "make test"
+EXEARGS = resources/test_maps/42.fdf
 
-CC = gcc
-
-OS = $(shell uname)
-
-ifeq ($(DEFINES), )
-ifeq ($(OS),Linux) #force the disabling of the norm on linux for stability purpose
-DEFINES = NORM42=0
-endif
-ifeq ($(OS),Darwin)
-DEFINES = NORM42=1
-endif
-endif
-
-ifneq ($(DEFINES), )
-EFLAGS = $(patsubst %, -D"%", $(DEFINES))
-endif
-
-FLAGS = -Wall -Wextra -Werror $(EFLAGS)
-LIBS =
-
-
-ifeq ($(SRCDIR), )
-ifneq ($(wildcard src/.), )
+#path to folder containing source files, project header and resulting objects
+#note: SRCDIR and INCDIRS can be ".", but try to have a diferent path for objects
+#note: SRCDIR and OBJDIR must only contain one path, INCDIRS can have multiple paths
 SRCDIR = src
+INCDIRS = .
+OBJDIR = .obj
+
+#path to a main function containing file to test the library (if the output is a library)
+MAIN =
+
+#path of files (from $(SRCDIR)) to compile without the extension (you can run "make items" to get them in the file "items")
+#include items
+ITEMS = color_multiply \
+	fdf \
+	fdf_parse_file \
+	fill_fdf \
+	fill_info \
+	ft_3d_to_2d \
+	ft_bonus_read \
+	ft_frustrum \
+	ft_is_in_frustrum \
+	ftx_ascii \
+	ftx_button \
+	ftx_error \
+	ftx_horizontal_line \
+	ftx_image \
+	ftx_img \
+	ftx_input_hooks \
+	ftx_line \
+	ftx_mlx_data \
+	ftx_pixel \
+	ftx_update \
+	ftx_vertical_line \
+	ftx_window \
+	main_window_init \
+	sf_update
+
+#variables for Linux
+ifeq ($(shell uname),Linux)
+
+#CC flags
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
+#path to external includes
+PINC = ../libft/inc ../minilibx_X11
+#path to libs to compile
+CLIB = ../libft ../minilibx_X11
+#exact path of lib files to add in source
+LIB = ../libft/libft.a ../minilibx_X11/libmlx.a
+#args passed to CC/ar on final link depending on the os
+LARGS = -lXext -lX11
+
+endif
+
+#variables for Max
+ifeq ($(shell uname),Darwin)
+
+#CC flags
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
+#path to external includes
+PINC = ../libft/inc ../minilibx_macos
+#path to libs to compile
+CLIB = ../libft ../minilibx_macos
+#exact path of lib files to add in source
+LIB = ../libft/libft.a ../minilibx_macos/libmlx.a
+#args passed to CC/ar on final link depending on the os
+LARGS = -framework OpenCL -framework OpenGL -framework AppKit
+
+endif
+
+################################################################################
+################################################################################
+################                                                ################
+################   don't change anything past this commentary   ################
+################                                                ################
+################################################################################
+################################################################################
+
+DEPDIR = .dep
+
+CC = /usr/bin/perl ~/.bin/colorgcc.pl #/usr/bin/clang
+
+AR = /usr/bin/ar
+
+RANLIB = /usr/bin/ranlib
+
+RM = /bin/rm -f
+
+NORMINETTE = /usr/bin/sh ~/.bin/norminette.sh
+
+DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
+DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
+DOTD = $(patsubst %, $(DEPDIR)/%.d, $(ITEMS))
+
+INCLUDES = $(patsubst %, -I%, $(INCDIRS)) $(patsubst %, -I%, $(PINC))
+
+.PHONY: all clean fclean re norm libs relibs cleanlibs fcleanlibs items test grind hell
+.PRECIOUS: $(DOTD) items
+.SUFFIXES:
+
+all: dirs auteur libs $(NAME)
+
+$(shell mkdir -p $(DEPDIR) $(patsubst %, $(DEPDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(DEPDIR) | cut -f2- -d/)) >/dev/null)	#create dependendies/rules subdirs
+
+$(DEPDIR)/%.d: $(SRCDIR)/%.c
+ifeq ($(SRCDIR), )
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
 else
-SRCDIR = .
-endif
-endif
-
-DOTC = $(shell find $(SRCDIR) -maxdepth 1 -type f | grep -e '\.c$$')
-
-MAINP = main(
-ifneq ($(DOTC), )
-MAINFOUND = $(shell grep -l -e"$(MAINP)" $(DOTC))
-endif
-
-ifeq ($(INCDIR), )
-ifneq ($(wildcard includes/.), )
-INCDIR = includes
+ifeq ($(SRCDIR), .)
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
 else
-ifneq ($(wildcard include/.), )
-INCDIR = include
+	$(CC) -M -MT $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<)" >> $@
+endif
+endif
+
+libs:
+ifneq ($(shell [[ 0 = 0$(patsubst %, && `make -q -C %; echo $$?` = 0, $(CLIB)) ]]; echo $$?), 0)
+	$(foreach V, $(CLIB), make -C $(V);)
+endif
+
+relibs:
+	$(foreach V, $(CLIB), make re -C $(V);)
+	@$(MAKE) re	#delay the re to make sure all libs are compiled before $(NAME)
+
+fcleanlibs: fclean
+	$(foreach V, $(CLIB), make fclean -C $(V);)
+
+cleanlibs: clean
+	$(foreach V, $(CLIB), make clean -C $(V);)
+
+ifneq ($(OBJDIR), )
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(OBJDIR) | cut -f2- -d/))
+dirs:
+ifeq ($(shell [[ -d $(OBJDIR) $(patsubst %, && -d %, $(SUBDIRS)) ]]; echo $$?), 1)
+	mkdir -p $(OBJDIR) $(SUBDIRS)
+endif
+endif
+
+ifeq ($(suffix $(NAME)), .a)
+$(NAME): $(DOTO) $(LIB)
+	$(AR) -rc $(NAME) $(DOTO) $(LIB)
+	$(RANLIB) $(NAME)
 else
-ifneq ($(wildcard inc/.), )
-INCDIR = inc
-else
-INCDIR = .
-endif
-endif
-endif
+$(NAME): $(DOTO) $(LIB)
+	$(CC) $(CFLAGS) $(LARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
 endif
 
-ifeq ($(NAME), )
-ifneq ($(MAINFOUND), )
-NAME = $(notdir $(basename $(MAINFOUND)))
-else
-ifneq ($(shell find $(INCDIR) -type f | grep -e '\.h$$'), )
-NAME = $(notdir $(basename $(shell find includes -type f | grep -e '\.h$$' | head))).a
-else
-NAME = $(shell pwd | rev | cut -f 1 -d '/' | rev).a
-endif
-endif
-endif
+-include $(DOTD)
 
-INCLUDES = $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$')
+clean:
+	$(RM) -f $(DOTO)
+	$(RM) items
+	$(RM) -f test.bin
+	if [ -z "$$(find $(OBJDIR) -type f)" ]; then $(RM) -r $(OBJDIR); fi
 
-ifeq ($(OBJDIR), )
-OBJDIR = OBJ
-endif
+fclean: clean
+	$(RM) -f $(NAME)
 
-ifneq ($(INCLUDES), )
-MLXFOUND = $(shell grep '\#*include\ <mlx.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(MLXFOUND), )
-MLXFOUND = $(shell grep '\#*include\ \"mlx.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(MLXFOUND), )
-MLXFOUND = $(shell grep '\#*include\ <mlx.h>' $(DOTC))
-ifeq ($(MLXFOUND), )
-MLXFOUND = $(shell grep '\#*include\ \"mlx.h\"' $(DOTC))
-endif
-endif
-
-ifneq ($(INCLUDES), )
-MATHFOUND = $(shell grep '\#*include\ <math.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(MATHFOUND), )
-MATHFOUND = $(shell grep '\#*include\ \"math.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(MATHFOUND), )
-MATHFOUND = $(shell grep '\#*include\ <math.h>' $(DOTC))
-ifeq ($(MATHFOUND), )
-MATHFOUND = $(shell grep '\#*include\ \"math.h\"' $(DOTC))
-endif
-endif
-ifneq ($(MATHFOUND), )
-MATHLIB = -lm
-endif
-
-ifneq ($(INCLUDES), )
-PTHFOUND = $(shell grep '\#*include\ <pthread.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(PTHFOUND), )
-PTHFOUND = $(shell grep '\#*include\ \"pthread.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(PTHFOUND), )
-PTHFOUND = $(shell grep '\#*include\ <pthread.h>' $(DOTC))
-ifeq ($(PTHFOUND), )
-PTHFOUND = $(shell grep '\#*include\ \"pthread.h\"' $(DOTC))
-endif
-endif
-ifneq ($(PTHFOUND), )
-PTHLIB = -lpthread
-endif
-
-ifeq ($(OS),Linux)
-TASKS = $(shell 1 + $(shell grep -c ^processor /proc/cpuinfo))
-ifneq ($(MLXFOUND), )
-ifneq ($(wildcard ../minilibx_X11/.),)
-MLX = ../minilibx_X11
-LMLX = libmlx.a
-MLXFLAGS = -lXext -lX11 ../minilibx_X11/libmlx.a
-IMLX = -I../minilibx_X11
-else
-MLXFLAGS = -lXext -lX11 -lmlx
-endif
-endif
-endif
-ifeq ($(OS),Darwin)
-TASKS = $(shell 1 + $(shell system_profiler | awk '/Number Of CPUs/{print $4}{next;}'))
-ifneq ($(MLXFOUND), )
-ifneq ($(wildcard ../minilibx/.),)
-MLX = ../minilibx
-LMLX = libmlx.a
-MLXFLAGS = -framework OpenGL -framework AppKit ../minilibx/libmlx.a
-IMLX = -I../minilibx
-else
-MLXFLAGS = -framework OpenGL -framework AppKit -lmlx
-endif
-endif
-endif
-
-OBJ = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(DOTC))
-
-ifneq ($(NAME), libft.a)
-ifneq ($(INCLUDES), )
-LFTFOUND = $(shell grep '\#*include\ <libft.h>' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-ifeq ($(LFTFOUND), )
-LFTFOUND = $(shell grep '\#*include\ \"libft.h\"' $(shell find $(INCDIR) -maxdepth 1 -type f | grep -e '\.h$$'))
-endif
-endif
-ifeq ($(LFTFOUND), )
-LFTFOUND = $(shell grep '\#*include\ <libft.h>' $(DOTC))
-ifeq ($(LFTFOUND), )
-LFTFOUND = $(shell grep '\#*include\ \"libft.h\"' $(DOTC))
-endif
-endif
-ifneq ($(LFTFOUND), )
-ifeq ($(LIBFT), )
-LIBFT = libft
-endif
-ifneq ($(wildcard $(LIBFT)/.), )
-LLIBFT = libft.a
-LFLAGS = $(LIBFT)/libft.a
-ifneq ($(wildcard $(LIBFT)/includes/.), )
-ILIBFT = -I$(LIBFT)/includes
-else
-ifneq ($(wildcard $(LIBFT)/include/.), )
-ILIBFT = -I$(LIBFT)/include
-else
-ifneq ($(wildcard $(LIBFT)/inc/.), )
-ILIBFT = -I$(LIBFT)/inc
-else
-ILIBFT = -I$(LIBFT)
-endif
-endif
-endif
-LDEP = libft
-endif
-endif
-endif
-
-ifneq ($(MLXFOUND), )
-DEP = $(LDEP) mlx
-endif
-
-INCLUDES = $(shell find $(INCDIR) $(MLX) $(LIBFT) -maxdepth 1 -type f | grep -e '\.h$$')
-
-.PHONY: all
-all: auteur $(NAME)
-
-ifneq ($(MAINFOUND), )
-$(NAME): trash $(DEP) allobj
-	@echo "compiling executable"
-	$(CC) $(FLAGS) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB) -o $(NAME)
-else
-$(NAME): trash $(DEP) allobj
-	@echo "compiling library"
-	ar -rcs $(NAME) $(ILIBFT) $(IMLX) $(LIBS) $(OBJ) $(MLXFLAGS) $(LFLAGS) $(MATHLIB) $(PTHLIB)
-	ranlib $(NAME)
-endif
-
-bonus:
-	make re -e "DEFINES = NORM42=0"
-
-ifneq ($(LIBFT), )
-.PHONY: libft
-libft:
-	@echo "making libft"
-	test '$(LIBFT)' != '' && make -C $(LIBFT) --no-print-directory
-endif
-
-ifneq ($(MLXFOUND), )
-.PHONY: mlx
-ifneq ($(MLX), )
-mlx:
-	@echo "making mlx"
-	test '$(MLX)' != '' && make -C $(MLX) --no-print-directory
-else
-mlx:
-	@echo "using standard mlx"
-endif
-endif
-
-.PHONY: allobj
-allobj:
-	@echo "making objects"
-	make makeobj -j$(NPROCS) AOBJ="$(OBJ)" --no-print-directory #--silent
-
-.PHONY: makeobj
-makeobj: $(OBJDIR) $(AOBJ)
-	@echo "objects made"
-
-$(OBJDIR):
-	@echo "creating dir $(OBJDIR)"
-	mkdir $(OBJDIR)
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(FLAGS) -c $< -o $@ $(patsubst %, -I%, $(INCDIR)) $(ILIBFT) $(IMLX)
-
-TRASH = $(shell find `pwd` -type f | grep -e "/\._" -e "~$$" -e "\.swp$$" -e "\.DS_Store$$") $(shell find `pwd` -type f | grep -e "/\#" | grep -e "\#$$")
-
-.PHONY: trash
-ifneq ('$(TRASH)', ' ')
-trash:
-	@echo "trashing unwanted files"
-	rm -f $(TRASH)
-else
-trash:
-	@echo "no trash to clear"
-endif
-
-.PHONY: clean
-.PHONY: fclean
-
-ifneq ($(LIBFT), )
-ifneq ($(MLX), )
-clean: trash
-	make clean -C $(LIBFT) --no-print-directory
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
-fclean: trash
-	make clean -C $(MLX) --no-print-directory
-	make fclean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
-else
-clean: trash
-	make clean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
-fclean: trash
-	make fclean -C $(LIBFT) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
-endif
-else
-ifneq ($(MLX), )
-clean: trash
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
-fclean: trash
-	make clean -C $(MLX) --no-print-directory
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
-else
-clean: trash
-	rm -rf $(OBJDIR)
-fclean: trash
-	rm -rf $(OBJDIR)
-	rm -rf $(NAME)
-endif
-endif
-
-.PHONY: re
-re: fclean all
+re: fclean
+	@$(MAKE) all
 
 auteur:
-	@echo "creating default auteur file"
-	echo "hmartzol" > auteur
+	@echo $(AUTHOR) > auteur
 
-.PHONY: test
-test: $(NAME)
-	./$(NAME) ./resources/test_maps/42.fdf
+norm:
+	$(NORMINETTE) $(DOTC)
+	$(NORMINETTE) $(INCDIRS)
+
+items:
+	@printf "ITEMS = " > items;
+	@$(foreach V, $(shell find $(SRCDIR) -type f | grep "\.c" | rev | cut -f2- -d. | rev | cut -f2- -d/), echo "	$(V) \\" >> items;)
+	@sed -i "" '$$s/..$$//' items
+
+ifeq ($(suffix $(NAME)), .a)
+test: all
+ifneq ($(MAIN), )
+	$(CC) $(MAIN) $(LARGS) $(INCLUDES) $(LIB) $(NAME) -o test.bin
+	./test.bin $(EXEARGS)
+else
+	echo "main function containing file was not set"
+endif
+else
+test: all
+	./$(NAME) $(EXEARGS)
+endif
+
+grind: all
+	clear
+	valgrind ./$(NAME) $(EXEARGS)

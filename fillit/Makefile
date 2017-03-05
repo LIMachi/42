@@ -1,160 +1,178 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile libft                                     :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/01/30 23:15:42 by hmartzol          #+#    #+#              #
-#    Updated: 2016/03/08 21:41:25 by hmartzol         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#name of the author of the executable (used by the creation of the auteur file)
+AUTHOR = cchaumar\nhmartzol
 
-NAME =			fillit
+#name of compiled file (if the 'a' extension is used, the makefile will use the library compilation mode)
+NAME = fillit
 
-SRCDIR =		.
-OBJDIR =		.
-INCDIR =		.
+#args passed to executable if executed from "make test"
+EXEARGS = extern_file.txt
 
-LIBDIR =		libft
-LIBNAME =		libft.a
+#path to folder containing source files, project header and resulting objects
+#note: SRCDIR and INCDIRS can be ".", but try to have a diferent path for objects
+#note: SRCDIR and OBJDIR must only contain one path, INCDIRS can have multiple paths
+SRCDIR = .
+INCDIRS = .
+OBJDIR = .obj
 
-INCLUDES =		main
-ITEMS =			main algo
+#path to a main function containing file to test the library (if the output is a library)
+MAIN =
 
-CC =			gcc
-FLAGS =			-Wall -Wextra -Werror
+#path of files (from $(SRCDIR)) to compile without the extension (you can run "make items" to get them in the file "items")
+#include items
+ITEMS = algo \
+	main
 
-INCLUDE =		-I$(INCDIR)/ -I$(LIBDIR)/includes
-LIBS =			
-LIBS_LINUX =	
-LIBS_IOS =		
+#variables for Linux
+ifeq ($(shell uname),Linux)
 
-OS =			$(shell uname)
-OBJ =			$(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
+#CC
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
+#path to external includes
+PINC = ../libft/inc
+#path to libs to compile
+CLIB = ../libft
+#exact path of lib files to add in source
+LIB = ../libft/libft.a
+#args passed to CC depending on the os
+ARGS =
 
-ifeq ($(OS), Darwin)
-	LIB = $(LIBS) $(LIBS_IOS)
-else ifeq ($(OS), Linux)
-	LIB = $(LIBS) $(LIBS_LINUX)
-endif
-OBJMODE =
-ifneq ($(OBJDIR), .)
-ifneq ($(OBJDIR), $(SRCDIR))
-ifneq ($(OBJDIR), $(INCDIR))
-OBJMODE = TRUE
-endif
-endif
 endif
 
-.PHONY: all
-all: $(NAME)
+#variables for Max
+ifeq ($(shell uname),Darwin)
+
+#CC
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
+#path to external includes
+PINC = ../libft/inc
+#path to libs to compile
+CLIB = ../libft
+#exact path of lib files to add in source
+LIB = ../libft/libft.a
+#args passed to CC depending on the os
+ARGS =
+
+endif
+
+################################################################################
+################################################################################
+################                                                ################
+################   don't change anything past this commentary   ################
+################                                                ################
+################################################################################
+################################################################################
+
+DEPDIR = .dep
+
+CC = /usr/bin/perl ~/.bin/colorgcc.pl #/usr/bin/clang
+
+AR = /usr/bin/ar
+
+RANLIB = /usr/bin/ranlib
+
+RM = /bin/rm -f
+
+NORMINETTE = /usr/bin/sh ~/.bin/norminette.sh
+
+DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
+DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
+DOTD = $(patsubst %, $(DEPDIR)/%.d, $(ITEMS))
+
+INCLUDES = $(patsubst %, -I%, $(INCDIRS)) $(patsubst %, -I%, $(PINC))
+
+.PHONY: all clean fclean re norm libs relibs cleanlibs fcleanlibs items test grind hell
+.PRECIOUS: $(DOTD) items
+.SUFFIXES:
+
+all: dirs auteur libs $(NAME)
+
+$(shell mkdir -p $(DEPDIR) $(patsubst %, $(DEPDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(DEPDIR) | cut -f2- -d/)) >/dev/null)	#create dependendies/rules subdirs
+
+$(DEPDIR)/%.d: $(SRCDIR)/%.c
+ifeq ($(SRCDIR), )
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+ifeq ($(SRCDIR), .)
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+	$(CC) -M -MT $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<)" >> $@
+endif
+endif
+
+libs:
+ifneq ($(shell [[ 0 = 0$(patsubst %, && `make -q -C %; echo $$?` = 0, $(CLIB)) ]]; echo $$?), 0)
+	$(foreach V, $(CLIB), make -C $(V);)
+endif
+
+relibs:
+	$(foreach V, $(CLIB), make re -C $(V);)
+	@$(MAKE) re	#delay the re to make sure all libs are compiled before $(NAME)
+
+fcleanlibs: fclean
+	$(foreach V, $(CLIB), make fclean -C $(V);)
+
+cleanlibs: clean
+	$(foreach V, $(CLIB), make clean -C $(V);)
+
+ifneq ($(OBJDIR), )
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(OBJDIR) | cut -f2- -d/))
+dirs:
+ifeq ($(shell [[ -d $(OBJDIR) $(patsubst %, && -d %, $(SUBDIRS)) ]]; echo $$?), 1)
+	mkdir -p $(OBJDIR) $(SUBDIRS)
+endif
+endif
 
 ifeq ($(suffix $(NAME)), .a)
-$(NAME): auteur $(OBJDIR) $(OBJ)
-	@echo "Linking objects together into $(NAME)..."
-	@ar rc $@ $(OBJ)
-	@echo "Linking succesfull, starting ranlib..."
-	@ranlib $@
-	@echo "ranlib succesfull"
+$(NAME): $(DOTO) $(LIB)
+	$(AR) -rc $(NAME) $(DOTO) $(LIB)
+	$(RANLIB) $(NAME)
 else
-ifdef LIBNAME
-ifdef LIBDIR
-$(NAME): $(LIBDIR)/$(LIBNAME) auteur $(OBJDIR) $(OBJ)
-	@echo "Compiling the executable $(NAME)..."
-	@$(CC) $(FLAGS) $(INCLUDE) $(LIB) $(OBJ) $(LIBDIR)/$(LIBNAME) -o $@
-	@echo "Compiling succesfull"
-else
-$(NAME): $(LIBNAME) auteur $(OBJDIR) $(OBJ)
-	@echo "Compiling the executable $(NAME)..."
-	@$(CC) $(FLAGS) $(INCLUDE) $(LIB) $(OBJ) $(LIBNAME) -o $@
-	@echo "Compiling succesfull"
-endif
-else
-$(NAME): auteur $(OBJDIR) $(OBJ)
-	@echo "Compiling the executable $(NAME)..."
-	@$(CC) $(FLAGS) $(INCLUDE) $(LIB) $(OBJ) -o $@
-	@echo "Compiling succesfull"
-endif
+$(NAME): $(DOTO) $(LIB)
+	$(CC) $(CFLAGS) $(LARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
 endif
 
-ifdef LIBNAME
-ifdef LIBDIR
-$(LIBDIR)/$(LIBNAME):
-	@echo "Creating sublib $(LIBNAME)..."
-	@make re -C $(LIBDIR)/
-endif
-endif
+-include $(DOTD)
 
-$(OBJDIR):
-ifdef OBJMODE
-	@echo "Making temporary object directory: $(OBJDIR)..."
-	@mkdir $(OBJDIR)
-	@echo "Directory succesfully created"
-endif
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(FLAGS) $(INCLUDE) $(LIBS) -c $< -o $@
-
-.PHONY: clean
 clean:
-ifdef OBJMODE
-	@echo "Removing object directory: $(OBJDIR)..."
-	@rm -rf $(OBJDIR)
-else
-	@echo "Removing objects"
-	@rm -f $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
-endif
-	@echo "Removing succesfull"
-	@echo "Removing swaps and undesirable files..."
-	@rm -f $(patsubst %, $(SRCDIR)/%.c~, $(ITEMS))
-	@rm -f $(patsubst %, $(SRCDIR)/#%.c#, $(ITEMS))
-	@rm -f $(patsubst %, $(SRCDIR)/.%.c.swp, $(ITEMS))
-	@rm -f $(patsubst %, $(INCDIR)/%.h~, $(INCLUDES))
-	@rm -f $(patsubst %, $(INCDIR)/#%.h#, $(INCLUDES))
-	@rm -f $(patsubst %, $(INCDIR)/.%.h.swp, $(INCLUDES))
-ifneq ($(INCDIR), .)
-	@rm -f $(patsubst %, $(INCDIR)/%, .DS_Store ._.DS_Store)
-endif
-ifneq ($(SRCDIR), .)
-	@rm -f $(patsubst %, $(SRCDIR)/%, .DS_Store ._.DS_Store)
-endif
-	@rm -f .DS_Store ._.DS_Store
-	@echo "Removing succesfull"
-ifdef LIBNAME
-ifdef LIBDIR
-	@echo "Executing clean on sublib: $(LIBNAME)"
-	@make -C $(LIBDIR) clean
-endif
-endif
+	$(RM) -f $(DOTO)
+	$(RM) items
+	$(RM) -f test.bin
+	if [ -z "$$(find $(OBJDIR) -type f)" ]; then $(RM) -r $(OBJDIR); fi
 
-.PHONY: fclean
 fclean: clean
-ifeq ($(suffix $(NAME)), .a)
-	@echo "Removing library: $(NAME)..."
-else
-	@echo "Removing executable: $(NAME)..."
-endif
-	@rm -rf $(NAME)
-	@echo "Removing succesfull"
-ifdef LIBNAME
-ifdef LIBDIR
-	@echo "Executing fclean on sublib: $(LIBNAME)"
-	@make -C $(LIBDIR) fclean
-endif
-endif
+	$(RM) -f $(NAME)
 
-.PHONY: re
-re: fclean all
-
-.PHONY: norm
-norm:
-	@clear
-	@echo "Looking for norm errors in the sources and includes..."
-	@norminette $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
-	@norminette $(patsubst %, $(INCDIR)/%.h, $(INCLUDES))
+re: fclean
+	@$(MAKE) all
 
 auteur:
-	@echo "Creating default auteur file..."
-	@echo "cchaumar\nhmartzol" > auteur
-	@echo "Default auteur file succesfully created"
+	@echo $(AUTHOR) > auteur
+
+norm:
+	$(NORMINETTE) $(DOTC)
+	$(NORMINETTE) $(INCDIRS)
+
+items:
+	@printf "ITEMS = " > items;
+	@$(foreach V, $(shell find $(SRCDIR) -type f | grep "\.c" | rev | cut -f2- -d. | rev | cut -f2- -d/), echo "	$(V) \\" >> items;)
+	@sed -i "" '$$s/..$$//' items
+
+ifeq ($(suffix $(NAME)), .a)
+test: all
+ifneq ($(MAIN), )
+	$(CC) $(MAIN) $(LARGS) $(INCLUDES) $(LIB) $(NAME) -o test.bin
+	./test.bin $(EXEARGS)
+else
+	echo "main function containing file was not set"
+endif
+else
+test: all
+	./$(NAME) $(EXEARGS)
+endif
+
+grind: all
+	clear
+	valgrind ./$(NAME) $(EXEARGS)

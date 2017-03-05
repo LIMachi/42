@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 02:04:31 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 20:41:19 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/02 13:11:30 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct	s_fractol_data
 }				t_fractol_data;
 
 void			fractol(void);
-void			zoom(t_cl_float zoom);
+void			zoom(cl_float zoom);
 void			view_port_cut(t_fractol_args *args, t_point a, t_point b);
 t_fractol_data	*fractol_data(void);
 int				refresh_fractol_window(t_window *win);

@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/21 16:55:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/21 17:42:39 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/02 13:15:22 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,15 @@ static void	sf_view_port_cut(t_fractol_args *args, t_point a, t_point b)
 
 void		view_port_cut(t_fractol_args *args, t_point a, t_point b)
 {
-	t_cl_float	r;
+	cl_float	r;
 	t_point		t;
 
 	if (ft_point_equal(a, b))
 		return ;
 	if (a.x > b.x)
-		ft_int_swap(&a.x, &b.x);
+		ft_swapi(&a.x, &b.x);
 	if (a.y > b.y)
-		ft_int_swap(&a.y, &b.y);
+		ft_swapi(&a.y, &b.y);
 	if (*ftx_key_status(KEY_R) != FTX_KEY_STATUS_PRESSED)
 	{
 		r = (cl_float)args->size.x / (cl_float)args->size.y;
@@ -52,7 +52,7 @@ void		view_port_cut(t_fractol_args *args, t_point a, t_point b)
 	sf_view_port_cut(args, a, b);
 }
 
-void		zoom(t_cl_float zoom)
+void		zoom(cl_float zoom)
 {
 	t_fractol_args	*args;
 	t_point			mice;

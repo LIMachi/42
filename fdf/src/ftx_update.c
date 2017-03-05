@@ -6,13 +6,13 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/02 08:44:01 by hmartzol          #+#    #+#             */
-/*   Updated: 2016/11/08 18:11:50 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/02 13:00:21 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ftx.h>
 
-#if NORM42 == 0
+#if OS == LINUX
 
 static int	ftx_update0(t_window *tmpwin, int f, struct timespec time,
 															void *mlx)
@@ -69,10 +69,6 @@ int			ftx_update(void *ptr)
 }
 
 #else
-# if OS == LINUX
-#  pragma message "Warning: NORM42 will disable the fps stabilisation on Linux."
-#  pragma message "Please disable NORM42 (= 0/undef) to allow fps stabilisation"
-# endif
 
 int			ftx_update(void *ptr)
 {

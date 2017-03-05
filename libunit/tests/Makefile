@@ -1,48 +1,180 @@
-AUTHORS := glouyot\nhmartzol
+#name of the author of the executable (used by the creation of the auteur file)
+AUTHOR = glouyot\nhmartzol
 
-NAME := test.bin
+#name of compiled file (if the 'a' extension is used, the makefile will use the library compilation mode)
+NAME = test.bin
 
-INCLUDES := -I../framework/ -I. -I../../libft/inc
+#args passed to executable if executed from "make test"
+EXEARGS =
 
-FRAMEWORK_PATH := ../framework
-FRAMEWORK_NAME := libunit.a
+#path to folder containing source files, project header and resulting objects
+#note: SRCDIR and INCDIRS can be ".", but try to have a diferent path for objects
+#note: SRCDIR and OBJDIR must only contain one path, INCDIRS can have multiple paths
+SRCDIR = .
+INCDIRS = .
+OBJDIR = .obj
 
-FLAGS := -Wall -Wextra -Werror
+#path to a main function containing file to test the library (if the output is a library)
+MAIN =
 
-ARGS := ../../libft/libft.a
+#path of files (from $(SRCDIR)) to compile without the extension (you can run "make items" to get them in the file "items")
+#include items
+ITEMS = main \
+	strlen/00_launcher \
+	strlen/01_basic_test \
+	strlen/02_null_test
 
-OBJECTS := main.o\
-			strlen/00_launcher.o\
-			strlen/01_basic_test.o\
-			strlen/02_null_test.o
+#variables for Linux
+ifeq ($(shell uname),Linux)
 
-ifneq ($(shell make -q -C $(FRAMEWORK_PATH); echo $$?), 0)
-.PHONY: $(FRAMEWORK_PATH)/$(FRAMEWORK_NAME)
+#CC flags
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
+#path to external includes
+PINC = ../../libft/inc ../framework
+#path to libs to compile
+CLIB = ../../libft ../framework
+#exact path of lib files to add in source
+LIB = ../../libft/libft.a ../framework/libunit.a
+#args passed to CC depending on the os
+ARGS =
+
 endif
 
-.PHONY: all test clean fclean re
+#variables for Max
+ifeq ($(shell uname),Darwin)
 
-all: $(NAME)
+#CC flags
+CFLAGS = -Wall -Wextra -Werror -g #-O2 -arch X86_64
+#path to external includes
+PINC = ../../libft/inc ../framework
+#path to libs to compile
+CLIB = ../../libft ../framework
+#exact path of lib files to add in source
+LIB = ../../libft/libft.a ../framework/libunit.a
+#args passed to CC depending on the os
+ARGS =
 
-$(FRAMEWORK_PATH)/$(FRAMEWORK_NAME):
-	make -C $(FRAMEWORK_PATH)
+endif
 
-%.o: %.c
-	gcc $(FLAGS) $(INCLUDES) -c $< -o $@
+################################################################################
+################################################################################
+################                                                ################
+################   don't change anything past this commentary   ################
+################                                                ################
+################################################################################
+################################################################################
 
-test: $(NAME)
-	./$(NAME)
+DEPDIR = .dep
 
-$(NAME): $(FRAMEWORK_PATH)/$(FRAMEWORK_NAME) $(OBJECTS)
-	gcc $(OBJECTS) $(FRAMEWORK_PATH)/$(FRAMEWORK_NAME) $(ARGS) -o $(NAME)
+CC = /usr/bin/perl ~/.bin/colorgcc.pl #/usr/bin/clang
 
-auteur:
-	@echo $(AUTHORS) > auteur
+AR = /usr/bin/ar
+
+RANLIB = /usr/bin/ranlib
+
+RM = /bin/rm -f
+
+NORMINETTE = /usr/bin/sh ~/.bin/norminette.sh
+
+DOTC = $(patsubst %, $(SRCDIR)/%.c, $(ITEMS))
+DOTO = $(patsubst %, $(OBJDIR)/%.o, $(ITEMS))
+DOTD = $(patsubst %, $(DEPDIR)/%.d, $(ITEMS))
+
+INCLUDES = $(patsubst %, -I%, $(INCDIRS)) $(patsubst %, -I%, $(PINC))
+
+.PHONY: all clean fclean re norm libs relibs cleanlibs fcleanlibs items test grind hell
+.PRECIOUS: $(DOTD) items
+.SUFFIXES:
+
+all: dirs auteur libs $(NAME)
+
+$(shell mkdir -p $(DEPDIR) $(patsubst %, $(DEPDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(DEPDIR) | cut -f2- -d/)) >/dev/null)	#create dependendies/rules subdirs
+
+$(DEPDIR)/%.d: $(SRCDIR)/%.c
+ifeq ($(SRCDIR), )
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+ifeq ($(SRCDIR), .)
+	$(CC) -M -MT $(patsubst %.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst %.c, $(OBJDIR)/%.o, $<)" >> $@
+else
+	$(CC) -M -MT $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<) $(INCLUDES) $< > $@
+	printf "\t$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $<)" >> $@
+endif
+endif
+
+libs:
+ifneq ($(shell [[ 0 = 0$(patsubst %, && `make -q -C %; echo $$?` = 0, $(CLIB)) ]]; echo $$?), 0)
+	$(foreach V, $(CLIB), make -C $(V);)
+endif
+
+relibs:
+	$(foreach V, $(CLIB), make re -C $(V);)
+	@$(MAKE) re	#delay the re to make sure all libs are compiled before $(NAME)
+
+fcleanlibs: fclean
+	$(foreach V, $(CLIB), make fclean -C $(V);)
+
+cleanlibs: clean
+	$(foreach V, $(CLIB), make clean -C $(V);)
+
+ifneq ($(OBJDIR), )
+SUBDIRS = $(patsubst %, $(OBJDIR)/%, $(shell find $(SRCDIR) -type d -not -path $(SRCDIR) | grep -v -F $(OBJDIR) | cut -f2- -d/))
+dirs:
+ifeq ($(shell [[ -d $(OBJDIR) $(patsubst %, && -d %, $(SUBDIRS)) ]]; echo $$?), 1)
+	mkdir -p $(OBJDIR) $(SUBDIRS)
+endif
+endif
+
+ifeq ($(suffix $(NAME)), .a)
+$(NAME): $(DOTO) $(LIB)
+	$(AR) -rc $(NAME) $(DOTO) $(LIB)
+	$(RANLIB) $(NAME)
+else
+$(NAME): $(DOTO) $(LIB)
+	$(CC) $(CFLAGS) $(LARGS) $(INCLUDES) $(DOTO) $(LIB) -o $(NAME)
+endif
+
+-include $(DOTD)
 
 clean:
-	rm -f $(OBJECTS)
+	$(RM) -f $(DOTO)
+	$(RM) items
+	$(RM) -f test.bin
+	if [ -z "$$(find $(OBJDIR) -type f)" ]; then $(RM) -r $(OBJDIR); fi
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) -f $(NAME)
 
-re: fclean all
+re: fclean
+	@$(MAKE) all
+
+auteur:
+	@echo $(AUTHOR) > auteur
+
+norm:
+	$(NORMINETTE) $(DOTC)
+	$(NORMINETTE) $(INCDIRS)
+
+items:
+	@printf "ITEMS = " > items;
+	@$(foreach V, $(shell find $(SRCDIR) -type f | grep "\.c" | rev | cut -f2- -d. | rev | cut -f2- -d/), echo "	$(V) \\" >> items;)
+	@sed -i "" '$$s/..$$//' items
+
+ifeq ($(suffix $(NAME)), .a)
+test: all
+ifneq ($(MAIN), )
+	$(CC) $(MAIN) $(LARGS) $(INCLUDES) $(LIB) $(NAME) -o test.bin
+	./test.bin $(EXEARGS)
+else
+	echo "main function containing file was not set"
+endif
+else
+test: all
+	./$(NAME) $(EXEARGS)
+endif
+
+grind: all
+	clear
+	valgrind ./$(NAME) $(EXEARGS)
