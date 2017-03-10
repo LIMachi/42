@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/28 09:17:35 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/09 21:02:08 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,32 +32,31 @@ t_printf_form	*sf_prepare_forms(const char *format)
 	return (out);
 }
 
-int	sf_parse_attributes_0(const char *format, int *pos, int *arg_number,
+int	sf_parse_attributes_0(const char *str, int *pos, int *arg_number,
 						t_printf_form *out)
 {
 	int				tmp;
 
-	while (ft_strcchr("%dDioOuUxXeEfFgGaAcCsSpnmbB", format[*pos]) == -1)
-		if ((tmp = ft_strcchr("#0- +'I", format[*pos])) != -1 && ++(*pos))
+	while (ft_strcchr("%dDioOuUxXeEfFgGaAcCsSpnmbB", str[*pos]) == -1)
+		if ((tmp = ft_strcchr("#0- +'I", str[*pos])) != -1 && ++(*pos))
 		{
 			out->attr |= 1 << tmp;
 			out->attr & PA_MINUS ? out->attr &= ~PA_ZERO : 0;
 			out->attr & PA_PLUS ? out->attr &= ~PA_SPACE : 0;
 		}
-		else if (format[*pos] == '.' && !(0 & (out->attr &= ~PA_ZERO)))
-			++(*pos) && (tmp = parse_number(format, &out->precision, arg_number,
+		else if (str[*pos] == '.' && !(0 & (out->attr &= ~PA_ZERO)))
+			++(*pos) && (tmp = parse_number(str, &out->precision, arg_number,
 				pos) == -1) ? (out->precision = -1) :
 							(out->ind_precision = tmp);
-		else if (format[*pos] == 'v')
-			++(*pos) && (tmp = parse_number(format, &out->array, arg_number,
+		else if (str[*pos] == 'v')
+			++(*pos) && (tmp = parse_number(str, &out->array, arg_number,
 				pos) == -1) ? (out->array = 0) :
 							(out->ind_array = tmp);
-		else if (format[*pos] == '*' ||
-				(format[*pos] >= '1' && format[*pos] <= '9'))
-			out->ind_field = parse_number(format, &out->field, arg_number, pos);
-		else if ((tmp = ft_strcchr("hlLjztM", format[*pos])) != -1 && ++(*pos))
-			out->tlength |= 1 << (tmp + 7 * (((tmp == 0 && format[*pos] == 'h')
-					|| (tmp == 1 && format[*pos] == 'l')) && !(0 & ++(*pos))));
+		else if (str[*pos] == '*' || (str[*pos] >= '1' && str[*pos] <= '9'))
+			out->ind_field = parse_number(str, &out->field, arg_number, pos);
+		else if ((tmp = ft_strcchr("hlLjztM", str[*pos])) != -1 && ++(*pos))
+			out->tlength |= 1 << (tmp + 7 * (((tmp == 0 && str[*pos] == 'h')
+					|| (tmp == 1 && str[*pos] == 'l')) && !(0 & ++(*pos))));
 		else
 			return (-1);
 	return (0);
@@ -352,37 +351,21 @@ void		buff_zero(t_printf_data *data, size_t size)
 void		buff_i128(t_printf_data *data, t_printf_form *form)
 {
 	int	size;
-//	int	tmp;
-//	const static char	tab[] = "0123456789";
 
 	size = ft_evaluate_i128_size(form->arg.i);
 	(form->field < size) ? (form->field = size) : 0;
 	(form->precision < size) ? (form->precision = size) : 0;
-	if (form->arg.i >= 0 && form->attr & (PA_SPACE | PA_PLUS))
-		++size;
 	if (!(form->attr & PA_MINUS) && form->precision < form->field)
 		buff_space(data, form->field - form->precision);
 	if (form->attr & PA_SPACE && form->arg.i >= 0)
 		bufferize_char(data, ' ');
-//		write(1, " ", 1);
 	if (form->attr & PA_PLUS && form->arg.i >= 0)
 		bufferize_char(data, '+');
-//		write(1, "+", 1);
 	if (size < form->precision)
 		buff_zero(data, form->precision - size);
-	if (form->arg.i >= 0 && form->attr & (PA_SPACE | PA_PLUS))
-		--size;
 	putn_i128_fd(data, form->arg.i, size);
-//	tmp = 1;
-//	while (size-- > 0)
-//		tmp *= 10;
-//	while (tmp /= 10)
-//		bufferize_char(data, "0123456789"[(form->arg.i / tmp) % 10]);
-//		write(1, tab + (form->arg.i / tmp) % 10, 1);
-	//put
-
 	if (form->attr & PA_MINUS && form->precision < form->field)
-		buff_space(data, form->field - form->precision);
+		buff_space(data, form->field - form->precision - 1);
 }
 
 int			sf_jump_form(int type, const char *format, size_t *pos)

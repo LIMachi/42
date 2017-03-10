@@ -72,15 +72,15 @@ else
 fi
 
 
-/bin/echo "INC=$conf_inc" > Makefile.gen
-/bin/echo "HT=$conf_ht" >> Makefile.gen
-/bin/echo "DOCP=$conf_docp" >> Makefile.gen
-cat Makefile.mk | grep -v %%%% >> Makefile.gen
+echo "INC=$conf_inc" > Makefile.gen
+echo "HT=$conf_ht" >> Makefile.gen
+echo "DOCP=$conf_docp" >> Makefile.gen
+grep Makefile.mk -v -e %%%% >> Makefile.gen
 
-/bin/echo "INC=$conf_inc" > test/Makefile.gen
-/bin/echo "HT=$conf_ht" >> test/Makefile.gen
-/bin/echo "DOCP=$conf_docp" >> test/Makefile.gen
-cat test/Makefile.mk | grep -v %%%% >> test/Makefile.gen
+echo "INC=$conf_inc" > test/Makefile.gen
+echo "HT=$conf_ht" >> test/Makefile.gen
+echo "DOCP=$conf_docp" >> test/Makefile.gen
+grep test/Makefile.mk -v -e %%%% >> test/Makefile.gen
 
 
 if [ -n "$1" -a "$1" = "clean" ] ; then

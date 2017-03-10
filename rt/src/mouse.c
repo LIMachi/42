@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/30 19:03:16 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/01/30 19:03:33 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/08 04:14:15 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int			mouse_move(int x, int y, void *data)
 
 	if (!mouse()->is_select)
 		return (0);
-	upd++ && data;
+	ft_void(upd++ && data);
 	if (upd != UPD || (upd = 0))
 		return (0);
 	if (mouse()->is_select > 0)

@@ -21,4 +21,6 @@ clean	:
 
 fclean : clean
 
+redep:
+
 re	: clean all

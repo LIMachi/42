@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/25 17:10:35 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/01/30 15:32:24 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/08 04:14:58 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int					add_texture(void)
 		textures_holder()->nb_info].index], ubmp->data,
 		ubmp->size.x * ubmp->size.y * sizeof(int));
 	ft_free(ubmp->data);
-	return ((int)ft_free(ubmp));
+	return ((int)(size_t)ft_free(ubmp));
 }
 
 void				parse_image(t_json_value *sp)

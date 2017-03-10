@@ -1,6 +1,0 @@
-New log started
-Initializing OpenCL environement...
-Log ended
-New log started
-Initializing OpenCL environement...
-Log ended
