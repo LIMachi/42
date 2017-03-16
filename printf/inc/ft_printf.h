@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:27:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/28 09:01:50 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/15 21:46:23 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@
 # define PT_CS			(PT_C | PT_S)
 # define PT_NP			(PT_PERCENT | PT_N)
 # define PT_NA			(PT_PERCENT | PT_M)
+# define PT_AP			(PT_N | PT_S)
 
-# define PTL_INT		0
-# define PTL_SHORT		1
-# define PTL_LONG		2
-# define PTL_LONGD		4
+# define PTL_INT		1
+# define PTL_SHORT		2
+# define PTL_LONG		4
 # define PTL_INTMAX		8
 # define PTL_SSIZE		16
 # define PTL_PTRDIFF	32
@@ -67,12 +67,61 @@
 # define PA_I			64
 # define PA_MAJ			128
 
-typedef union	u_i128
-{
-	__int128_t		i128;
-	__uint128_t		u128;
-	__UINT64_TYPE__	u64[2];
-}				t_i128;
+# if (__SIZEOF_INT__ == __SIZEOF_FLOAT__)
+#  define PTL_FLOAT		PTL_INT
+# else
+#  if (__SIZEOF_LONG__ == __SIZEOF_FLOAT__)
+#   define PTL_FLOAT	PTL_LONG
+#  else
+#   if (__SIZEOF_LONG_LONG__ == __SIZEOF_FLOAT__)
+#    define PTL_FLOAT	PTL_LONGL
+#   else
+#    define PTL_FLOAT	PTL_INT128
+#   endif
+#  endif
+# endif
+
+# if (__SIZEOF_INT__ == __SIZEOF_DOUBLE__)
+#  define PTL_DOUBLE		PTL_INT
+# else
+#  if (__SIZEOF_LONG__ == __SIZEOF_DOUBLE__)
+#   define PTL_DOUBLE	PTL_LONG
+#  else
+#   if (__SIZEOF_LONG_LONG__ == __SIZEOF_DOUBLE__)
+#    define PTL_DOUBLE	PTL_LONGL
+#   else
+#    define PTL_DOUBLE	PTL_INT128
+#   endif
+#  endif
+# endif
+
+# if (__SIZEOF_INT__ == __SIZEOF_LONG_DOUBLE__)
+#  define PTL_LDOUBLE		PTL_INT
+# else
+#  if (__SIZEOF_LONG__ == __SIZEOF_LONG_DOUBLE__)
+#   define PTL_LDOUBLE	PTL_LONG
+#  else
+#   if (__SIZEOF_LONG_LONG__ == __SIZEOF_LONG_DOUBLE__)
+#    define PTL_LDOUBLE	PTL_LONGL
+#   else
+#    define PTL_LDOUBLE	PTL_INT128
+#   endif
+#  endif
+# endif
+
+# if (__SIZEOF_INT__ == __SIZEOF_POINTER__)
+#  define PTL_POINTER		PTL_INT
+# else
+#  if (__SIZEOF_LONG__ == __SIZEOF_POINTER__)
+#   define PTL_POINTER	PTL_LONG
+#  else
+#   if (__SIZEOF_LONG_LONG__ == __SIZEOF_POINTER__)
+#    define PTL_POINTER	PTL_LONGL
+#   else
+#    define PTL_POINTER	PTL_INT128
+#   endif
+#  endif
+# endif
 
 typedef union	u_printf_arg
 {
@@ -170,4 +219,5 @@ int				parse_args(t_printf_form *forms, va_list ap, int argn);
 //							int fd);
 int				dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn,
 							size_t *pos);
+__uint128_t		cast_uint128(__uint128_t v, int tlength);
 #endif

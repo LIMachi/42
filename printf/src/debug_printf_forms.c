@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 20:01:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/28 01:54:45 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/15 21:58:20 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ void	debug_printf_forms(t_printf_form *forms)
 		printf("\nattrinutes: "); print_binary(forms[i].attr, 8);
 		printf("\nind_field: "); print_binary(forms[i].ind_field, 1);
 		printf("\nind_precision: "); print_binary(forms[i].ind_precision, 1);
+		printf("\nind_array: "); print_binary(forms[i].ind_array, 1);
 		printf("\nfield: %d", forms[i].field);
 		printf("\nprecision: %d", forms[i].precision);
-		printf("\ntlength: "); print_binary(forms[i].tlength, 16);
+		printf("\ntlength: %d", forms[i].tlength);
+		printf("\narray: %d", forms[i].array);
 		printf("\ntype: "); print_binary(forms[i].type, 16);
 		printf("\nargn: %lld\n", (long long)forms[i].arg.ui);
 	}

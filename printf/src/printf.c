@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/09 21:02:08 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/16 01:19:03 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 //gcc -D__T_FLOAT_SIZE=8 -I../libft/inc printf.c ../libft/libft.a && ./a.out
 
 #include <ft_printf.h>
+#include <ft_int.h>
 
 t_printf_form	*sf_prepare_forms(const char *format)
 {
@@ -32,6 +33,27 @@ t_printf_form	*sf_prepare_forms(const char *format)
 	return (out);
 }
 
+void	sf_parse_length_attribute(const char *str, int *pos, t_printf_form *out)
+{
+	if (str[*pos] == 'h')
+		out->tlength = (out->tlength == __SIZEOF_SHORT__) ?
+				__SIZEOF_CHAR__ : __SIZEOF_SHORT__;
+	if (str[*pos] == 'l')
+		out->tlength = (out->tlength == __SIZEOF_LONG__) ?
+				__SIZEOF_LONG_LONG__ : __SIZEOF_LONG__;
+	if (str[*pos] == 'L')
+		out->tlength = __SIZEOF_LONG_DOUBLE__;
+	if (str[*pos] == 'j')
+		out->tlength = __SIZEOF_INTMAX_T__;
+	if (str[*pos] == 'z')
+		out->tlength = __SIZEOF_SIZE_T__;
+	if (str[*pos] == 't')
+		out->tlength = __SIZEOF_PTRDIFF_T__;
+	if (str[*pos] == 'M')
+		out->tlength = __SIZEOF_INT128__;
+	++(*pos);
+}
+
 int	sf_parse_attributes_0(const char *str, int *pos, int *arg_number,
 						t_printf_form *out)
 {
@@ -45,32 +67,26 @@ int	sf_parse_attributes_0(const char *str, int *pos, int *arg_number,
 			out->attr & PA_PLUS ? out->attr &= ~PA_SPACE : 0;
 		}
 		else if (str[*pos] == '.' && !(0 & (out->attr &= ~PA_ZERO)))
-			++(*pos) && (tmp = parse_number(str, &out->precision, arg_number,
-				pos) == -1) ? (out->precision = -1) :
+			++(*pos) && ((tmp = parse_number(str, &out->precision, arg_number,
+				pos)) == -1) ? (out->precision = -1) :
 							(out->ind_precision = tmp);
 		else if (str[*pos] == 'v')
-			++(*pos) && (tmp = parse_number(str, &out->array, arg_number,
-				pos) == -1) ? (out->array = 0) :
+			++(*pos) && ((tmp = parse_number(str, &out->array, arg_number,
+				pos)) == -1) ? (out->array = 0) :
 							(out->ind_array = tmp);
 		else if (str[*pos] == '*' || (str[*pos] >= '1' && str[*pos] <= '9'))
 			out->ind_field = parse_number(str, &out->field, arg_number, pos);
-		else if ((tmp = ft_strcchr("hlLjztM", str[*pos])) != -1 && ++(*pos))
-			out->tlength |= 1 << (tmp + 7 * (((tmp == 0 && str[*pos] == 'h')
-					|| (tmp == 1 && str[*pos] == 'l')) && !(0 & ++(*pos))));
+		else if (ft_strcchr("hlLjztM", str[*pos]) != -1)
+			sf_parse_length_attribute(str, pos, out);
 		else
 			return (-1);
 	return (0);
 }
 
-char	*thousands_sep(void)
-{
-	return (localeconv()->thousands_sep);
-}
-
 int	sf_validate_form(t_printf_form *form)
 {
 	int	out;
-	int	i;
+//	int	i;
 
 	out = 0;
 	if (form->attr & PA_AQ && form->type & ~(PT_F | PT_D | PT_I) && ++out)
@@ -80,13 +96,21 @@ int	sf_validate_form(t_printf_form *form)
 	(form->array < -1 && ++out) ? (form->array = -1) : 0;
 	(form->precision < -1 && ++out) ? (form->precision = -1) : 0;
 	(form->field < 0 && ++out) ? (form->field = 0) : 0;
-	i = 10;
-	while (i--)
-		(form->tlength & 1 << i) ? (form->tlength = 1 << i) : 0;
-	if (form->type & PT_AF && ++out)
-		form->tlength &= (PTL_LONG | PTL_LONGD);
-	if (form->type & (PT_C | PT_S) && ++out)
-		form->tlength &= PTL_LONG;
+	if (form->tlength == 0 && form->type & PT_AP)
+		form->tlength = __SIZEOF_POINTER__;
+	if (form->tlength == 0 && form->type & PT_AF)
+		form->tlength = __SIZEOF_DOUBLE__;
+	if (form->tlength == 0 && form->type & PT_AD)
+		form->tlength = __SIZEOF_INT__;
+	if (form->tlength == 0 && PT_C)
+		form->tlength = __SIZEOF_CHAR__;
+//	i = 10;
+	// while (i--)
+	// 	(form->tlength & 1 << i) ? (form->tlength = 1 << i) : 0;
+	// if (form->type & PT_AF && ++out)
+	// 	form->tlength &= (PTL_DOUBLE | PTL_LDOUBLE);
+	// if (form->type & (PT_C | PT_S) && ++out)
+	// 	form->tlength &= PTL_LONG;
 	return (out == 0);
 }
 
@@ -146,7 +170,7 @@ int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
 		form->type = 1 << (tmp - 1);
 	else if (ft_strcchr("DUXEFGACSB", format[*pos]) != -1)
 	{
-		(ft_strcchr("DUCS", format[*pos]) != -1) ? (form->tlength |= PTL_LONG) :
+		(ft_strcchr("DUCS", format[*pos]) != -1) ? (form->tlength = __SIZEOF_LONG__) :
 												(form->attr |= PA_MAJ);
 									//"%diouxefgacspnmb"
 		form->type = 1 << (ft_strcchr(" D  UXEFGACS   B", format[*pos]) - 1);
@@ -165,6 +189,7 @@ int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
 //		return (-1);
 	out = *arg_number >= (int)form->arg.ui ? *arg_number : (int)form->arg.ui;
 	form->ind_precision && out < form->precision ? out = form->precision : 0;
+	form->ind_array && out < form->array ? out = form->array : 0;
 	return (1 + (form->ind_field && out < form->field ? form->field : out));
 }
 
@@ -334,38 +359,67 @@ int			putn_i128_fd(t_printf_data *data, __int128_t v, size_t n)
 
 void		buff_space(t_printf_data *data, size_t size)
 {
-	(void)data;
 	while (size-- > 0)
 		bufferize_char(data, ' ');
-//		write(1, " ", 1);
 }
 
 void		buff_zero(t_printf_data *data, size_t size)
 {
-	(void)data;
 	while (size-- > 0)
 		bufferize_char(data, '0');
-//		write(1, "0", 1);
 }
 
-void		buff_i128(t_printf_data *data, t_printf_form *form)
+/*
+void		sf_buff_i128(t_printf_data *data, __int128_t i, int size, int attr)
+{
+	if (attr & PA_AQ)
+}
+*/
+
+void		buff_i128(t_printf_data *data, t_printf_form form, __int128_t i)
 {
 	int	size;
+	int	m;
 
-	size = ft_evaluate_i128_size(form->arg.i);
-	(form->field < size) ? (form->field = size) : 0;
-	(form->precision < size) ? (form->precision = size) : 0;
-	if (!(form->attr & PA_MINUS) && form->precision < form->field)
-		buff_space(data, form->field - form->precision);
-	if (form->attr & PA_SPACE && form->arg.i >= 0)
+	m = (form.attr & PA_SPACE || form.attr & PA_PLUS);
+	size = ft_evaluate_i128_size(i);
+	(form.attr & PA_AQ) ? size += (size / 3) : 0;
+	(form.field < size) ? (form.field = size) : 0;
+	(form.precision < size) ? (form.precision = size) : 0;
+	if (!(form.attr & PA_MINUS) && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+	if (form.attr & PA_SPACE && i >= 0)
 		bufferize_char(data, ' ');
-	if (form->attr & PA_PLUS && form->arg.i >= 0)
+	if (form.attr & PA_PLUS && i >= 0)
 		bufferize_char(data, '+');
-	if (size < form->precision)
-		buff_zero(data, form->precision - size);
-	putn_i128_fd(data, form->arg.i, size);
-	if (form->attr & PA_MINUS && form->precision < form->field)
-		buff_space(data, form->field - form->precision - 1);
+	if (size < form.precision)
+		buff_zero(data, form.precision - size);
+	putn_i128_fd(data, i, size);
+	if (form.attr & PA_MINUS && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+}
+
+void		buff_u128(t_printf_data *data, t_printf_form form, __uint128_t ui)
+{
+	int	size;
+	int	m;
+
+	m = (form.attr & PA_SPACE || form.attr & PA_PLUS);
+	size = ft_evaluate_u128_size(ui);
+	(form.attr & PA_AQ) ? size += (size / 3) : 0;
+	(form.field < size) ? (form.field = size) : 0;
+	(form.precision < size) ? (form.precision = size) : 0;
+	if (!(form.attr & PA_MINUS) && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+	if (form.attr & PA_SPACE)
+		bufferize_char(data, ' ');
+	if (form.attr & PA_PLUS)
+		bufferize_char(data, '+');
+	if (size < form.precision)
+		buff_zero(data, form.precision - size);
+	putn_u128_fd(data, ui, size/*, form.attr*/);
+	if (form.attr & PA_MINUS && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
 }
 
 int			sf_jump_form(int type, const char *format, size_t *pos)
@@ -455,8 +509,46 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 	sf_jump_form(form.type, data->format, pos);
 	if (form.type & (PT_D | PT_I))
 	{
-//			return (putn_i128_fd(form.arg.i, fd, limit));
-		buff_i128(data, &form);
+		if (form.array == -1)
+			buff_i128(data, form, form.arg.ui);
+		else
+		{
+			char *ptr = (char *)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_i128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength));
+				ptr += form.tlength;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
+		return (0);
+	}
+	if (form.type == PT_U)
+	{
+		if (form.array == -1)
+			buff_u128(data, form, form.arg.ui);
+		else
+		{
+			char *ptr = (char *)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_u128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength));
+				ptr += form.tlength;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
 		return (0);
 	}
 	if (form.type == PT_X)

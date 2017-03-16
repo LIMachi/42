@@ -1,0 +1,9 @@
+*.a
+*.o
+*.d
+*.bin
+test
+log.txt
+.items
+*~
+._*

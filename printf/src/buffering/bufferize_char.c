@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 21:17:03 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/28 09:01:39 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/15 22:22:00 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,22 @@
 
 int	bufferize_char(t_printf_data *data, char c)
 {
-	if (data->len + data->b_pos < data->size)
+	if (data->len < data->size)
 	{
-		if (data->b_pos == PRINTF_BUFFER_SIZE)
+		if (data->b_pos == PRINTF_BUFFER_SIZE || c == '\n')
 		{
-			data->buffer_dumper(data->fss, data->buffer, data->b_pos, data->len);
-			data->len += data->b_pos;
+			data->buffer_dumper(data->fss,
+								data->buffer, data->b_pos, data->len);
 			data->b_pos = 0;
 		}
 		data->buffer[data->b_pos++] = c;
 	}
-	else
+	else if (data->b_pos)
 	{
-		if (data->b_pos)
-		{
-			data->buffer_dumper(data->fss, data->buffer, data->b_pos, data->len);
-			data->len += data->b_pos;
-			data->b_pos = 0;
-		}
+		data->buffer_dumper(data->fss,
+							data->buffer, data->b_pos, data->len);
+		data->b_pos = 0;
 	}
+	++data->len;
 	return (1);
 }
