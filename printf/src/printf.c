@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 03:27:48 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 06:45:04 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,6 +346,104 @@ int			putn_u128_fd(t_printf_data *data, __uint128_t v, size_t n)
 	return (sf_putn_u128_fd(data, v, n));
 }
 
+void	sf_buff_o128(t_printf_data *data, __uint128_t v)
+{
+	int s;
+
+	if (v == 0)
+	{
+		bufferize_char(data, '0');
+		return ;
+	}
+	s = 0;
+	while (s < 48 && v >= (__uint128_t)1 << (s * 3))
+		++s;
+	while (s--)
+		bufferize_char(data, '0' + ((v >> (s * 3)) & 7));
+}
+
+void	sf_buff_b128(t_printf_data *data, __uint128_t v)
+{
+	int s;
+
+	if (v == 0)
+	{
+		bufferize_char(data, '0');
+		return ;
+	}
+	s = 0;
+	while (s < 128 && v >= (__uint128_t)1 << s)
+		++s;
+	while (s--)
+		bufferize_char(data, '0' + ((v >> s) & 1));
+}
+
+void	sf_buff_x128(t_printf_data *data, __uint128_t v, int maj)
+{
+	int s;
+
+	if (v == 0)
+	{
+		bufferize_char(data, '0');
+		return ;
+	}
+	s = 0;
+	while (s < 32 && v >= (__uint128_t)1 << (s << 2))
+		++s;
+	if (maj)
+		while (s--)
+			bufferize_char(data, "0123456789ABCDEF"[(v >> (s << 2)) & 0xF]);
+	else
+		while (s--)
+			bufferize_char(data, "0123456789abcdef"[(v >> (s << 2)) & 0xF]);
+}
+
+void	sf_buff_u128(t_printf_data *data, __uint128_t v)
+{
+	int					i;
+	static const t_i128	p[39] = {{{1, 0}}, {{10, 0}}, {{100, 0}}, {{1000, 0}},
+
+	{{10000, 0}}, {{100000, 0}}, {{1000000, 0}}, {{10000000, 0}}, {{100000000,
+	0}}, {{1000000000, 0}}, {{10000000000, 0}}, {{100000000000, 0}},
+	{{1000000000000, 0}}, {{10000000000000, 0}}, {{100000000000000, 0}},
+	{{1000000000000000, 0}}, {{10000000000000000, 0}}, {{100000000000000000,
+	0}}, {{1000000000000000000, 0}}, {{10000000000000000000u, 0}},
+	{{0x6bc75e2d63100000, 5}}, {{0x35c9adc5dea00000, 0x36}},
+	{{0x19e0c9bab2400000, 0x21e}}, {{0x2c7e14af6800000, 0x152d}},
+	{{0x1bcecceda1000000, 0xd3c2}}, {{0x161401484a000000, 0x84595}},
+	{{0xdcc80cd2e4000000, 0x52b7d2}}, {{0x9fd0803ce8000000, 0x33b2e3c}},
+	{{0x3e25026110000000, 0x204fce5e}}, {{0x6d7217caa0000000, 0x1431e0fae}},
+	{{0x4674edea40000000, 0xc9f2c9cd0}}, {{0xc0914b2680000000, 0x7e37be2022}},
+	{{0x85acef8100000000, 0x4ee2d6d415b}}, {{0x38c15b0a00000000,
+	0x314dc6448d93}}, {{0x378d8e6400000000, 0x1ed09bead87c0}},
+	{{0x2b878fe800000000, 0x13426172c74d82}}, {{0xb34b9f1000000000,
+	0xc097ce7bc90715}}, {{0xf436a000000000, 0x785ee10d5da46d9}},
+	{{0x98a224000000000, 0x4b3b4ca85a86c47a}}};
+	i = 0;
+	while (i < 40 && v > p[i].u128)
+		++i;
+	!i ? bufferize_char(data, '0') : 0;
+	while (i-- > 0)
+		bufferize_char(data, "0123456789"[v / p[i].u128 % 10]);
+}
+
+void	sf_buff_i128(t_printf_data *data, __int128_t v)
+{
+	if (v == -1)
+	{
+		bufferize_char(data, '-');
+		bufferize_char(data, '1');
+		return ;
+	}
+	if (v & ((__int128_t)1) << 127)
+	{
+		bufferize_char(data, '-');
+		sf_buff_u128(data, -v);
+	}
+	else
+		sf_buff_u128(data, v);
+}
+
 int			putn_i128_fd(t_printf_data *data, __int128_t v, size_t n)
 {
 	if (n == 0)
@@ -394,7 +492,7 @@ void		buff_i128(t_printf_data *data, t_printf_form form, __int128_t i)
 		bufferize_char(data, '+');
 	if (size < form.precision)
 		buff_zero(data, form.precision - size);
-	putn_i128_fd(data, i, size);
+	sf_buff_i128(data, i);
 	if (form.attr & PA_MINUS && form.precision < form.field)
 		buff_space(data, form.field - form.precision - m);
 }
@@ -417,7 +515,76 @@ void		buff_u128(t_printf_data *data, t_printf_form form, __uint128_t ui)
 		bufferize_char(data, '+');
 	if (size < form.precision)
 		buff_zero(data, form.precision - size);
-	putn_u128_fd(data, ui, size/*, form.attr*/);
+	sf_buff_u128(data, ui/*, size, form.attr*/);
+	if (form.attr & PA_MINUS && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+}
+
+void		buff_x128(t_printf_data *data, t_printf_form form, __uint128_t ui)
+{
+	int	size;
+	int	m;
+
+	m = (form.attr & PA_HASH) ? 2 : 0;
+	size = ft_evaluate_x128_size(ui);
+	(form.attr & PA_AQ) ? size += (size / 3) : 0;
+	(form.field < size) ? (form.field = size) : 0;
+	(form.precision < size) ? (form.precision = size) : 0;
+	if (!(form.attr & PA_MINUS) && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+	if (form.attr & PA_HASH)
+	{
+		bufferize_char(data, '0');
+		bufferize_char(data, form.attr & PA_MAJ ? 'X' : 'x');
+	}
+	if (size < form.precision)
+		buff_zero(data, form.precision - size);
+	sf_buff_x128(data, ui, form.attr & PA_MAJ);
+	if (form.attr & PA_MINUS && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+}
+
+void		buff_b128(t_printf_data *data, t_printf_form form, __uint128_t ui)
+{
+	int	size;
+	int	m;
+
+	m = (form.attr & PA_HASH) ? 2 : 0;
+	size = ft_evaluate_b128_size(ui);
+	(form.attr & PA_AQ) ? size += (size / 3) : 0;
+	(form.field < size) ? (form.field = size) : 0;
+	(form.precision < size) ? (form.precision = size) : 0;
+	if (!(form.attr & PA_MINUS) && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+	if (form.attr & PA_HASH)
+	{
+		bufferize_char(data, '0');
+		bufferize_char(data, form.attr & PA_MAJ ? 'B' : 'b');
+	}
+	if (size < form.precision)
+		buff_zero(data, form.precision - size);
+	sf_buff_b128(data, ui);
+	if (form.attr & PA_MINUS && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+}
+
+void		buff_o128(t_printf_data *data, t_printf_form form, __uint128_t ui)
+{
+	int	size;
+	int	m;
+
+	m = ((form.attr & PA_HASH) && ui);
+	size = ft_evaluate_o128_size(ui);
+	(form.attr & PA_AQ) ? size += (size / 3) : 0;
+	(form.field < size) ? (form.field = size) : 0;
+	(form.precision < size) ? (form.precision = size) : 0;
+	if (!(form.attr & PA_MINUS) && form.precision < form.field)
+		buff_space(data, form.field - form.precision - m);
+	if ((form.attr & PA_HASH) && ui)
+		bufferize_char(data, '0');
+	if (size < form.precision)
+		buff_zero(data, form.precision - size);
+	sf_buff_o128(data, ui);
 	if (form.attr & PA_MINUS && form.precision < form.field)
 		buff_space(data, form.field - form.precision - m);
 }
@@ -551,9 +718,28 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 		}
 		return (0);
 	}
-	if (form.type == PT_X)
+	if (form.type == PT_X) ///buff_x128
 	{
-		if (limit > 1 && (form.attr & PA_HASH) && form.arg.ui != 0)
+		if (form.array == -1)
+			buff_x128(data, form, form.arg.ui);
+		else
+		{
+			char *ptr = (char *)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_x128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength << 3, 0));
+				ptr += form.tlength;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
+		return (0);
+/*		if (limit > 1 && (form.attr & PA_HASH) && form.arg.ui != 0)
 		{
 			//data->len += write(1, "0", 1);
 			bufferize_char(data, '0');
@@ -564,17 +750,40 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 				bufferize_char(data, 'x');
 			limit -= 2;
 		}
-		return (putn_x128_fd(form.arg.ui, data->fss.fd, limit, form.attr & PA_MAJ));
+//		return (putn_x128_fd(form.arg.ui, data->fss.fd, limit, form.attr & PA_MAJ));
+		sf_buff_x128(data, form.arg.ui, form.attr & PA_MAJ);
+		return (0);
+*/
 	}
 	if (form.type == PT_O)
 	{
-		if (limit && (form.attr & PA_HASH) && form.arg.ui != 0)
+		if (form.array == -1)
+			buff_o128(data, form, form.arg.ui);
+		else
+		{
+			char *ptr = (char *)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_o128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength << 3, 0));
+				ptr += form.tlength;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
+		return (0);
+/*		if (limit && (form.attr & PA_HASH) && form.arg.ui != 0)
 		{
 //			data->len += write(1, "0", 1);
 			bufferize_char(data, '0');
 			--limit;
 		}
 		return (putn_o128_fd(form.arg.ui, data->fss.fd, limit));
+*/
 	}
 	if (form.type == PT_B)
 	{
