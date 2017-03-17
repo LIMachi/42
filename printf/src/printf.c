@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 07:36:30 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 09:44:11 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,15 @@ int	sf_validate_form(t_printf_form *form)
 //	int	i;
 
 	out = 0;
-	if (form->attr & PA_AQ && form->type & ~(PT_F | PT_D | PT_I) && ++out)
-		form->attr &= ~PA_AQ;
+//	if (form->attr & PA_AQ && form->type & ~(PT_F | PT_D | PT_I) && ++out)
+//		form->attr &= ~PA_AQ;
 	if (form->attr & PA_I && form->type & ~(PT_I | PT_D | PT_U) && ++out)
 		form->attr &= ~PA_I;
 	(form->array < -1 && ++out) ? (form->array = -1) : 0;
 	(form->precision < -1 && ++out) ? (form->precision = -1) : 0;
 	(form->field < 0 && ++out) ? (form->field = 0) : 0;
 	if (form->tlength == 0 && form->type & PT_AP)
-		form->tlength = __SIZEOF_POINTER__;
+		form->tlength = __SIZEOF_CHAR__;
 	if (form->tlength == 0 && form->type & PT_AF)
 		form->tlength = __SIZEOF_DOUBLE__;
 	if (form->tlength == 0 && form->type & PT_AD)
@@ -128,10 +128,10 @@ int	validate_form(t_printf_form *form)
 	}
 	if (form->array != -1 && form->type & (PT_NP | PT_M) && ++out)
 		form->array = -1;
-	if (form->precision != -1 && form->type & ~(PT_AF | PT_AD) && ++out)
-		form->precision = -1;
-	if (form->attr & PA_HASH && form->type & ~(PT_AF | PT_AC) && ++out)
-		form->attr &= ~PA_HASH;
+//	if (form->precision != -1 && form->type & ~(PT_AF | PT_AD) && ++out)
+//		form->precision = -1;
+//	if (form->attr & PA_HASH && form->type & ~(PT_AF | PT_AC) && ++out)
+//		form->attr &= ~PA_HASH;
 	if (form->attr & PA_ZERO && (form->type & PT_N || form->precision != -1))
 		form->attr &= ~PA_ZERO | (0 * ++out);
 	if (form->attr & PA_MINUS && form->type & PT_N && ++out)
@@ -140,7 +140,7 @@ int	validate_form(t_printf_form *form)
 		form->attr &= ~PA_SPACE;
 	if (form->attr & PA_PLUS && form->type & ~(PT_AF | PT_D | PT_I) && ++out)
 		form->attr &= ~PA_PLUS;
-	return (form->valid = (out == 0 && sf_validate_form(form)));
+	return (form->valid = (sf_validate_form(form) && out == 0));
 }
 
 int	sf_parse_attributes(const char *format, int *pos, int *arg_number,
@@ -423,8 +423,8 @@ void	sf_buff_u128(t_printf_data *data, __uint128_t v)
 	while (i < 40 && v > p[i].u128)
 		++i;
 	!i ? bufferize_char(data, '0') : 0;
-	while (i)
-		bufferize_char(data, "0123456789"[v / p[i--].u128 % 10]);
+	while (i--)
+		bufferize_char(data, "0123456789"[v / p[i].u128 % 10]);
 }
 
 void	sf_buff_i128(t_printf_data *data, __int128_t v)
@@ -587,6 +587,89 @@ void		buff_o128(t_printf_data *data, t_printf_form form, __uint128_t ui)
 	sf_buff_o128(data, ui);
 	if (form.attr & PA_MINUS && form.precision < form.field)
 		buff_space(data, form.field - form.precision - m);
+}
+
+int		buff_ce(t_printf_data *data, __uint128_t c)
+{
+	c &= 0xFF;
+	if (c < 0x20 || c > 0x7E)
+	{
+		bufferize_char(data, '\\');
+		if (c == '\a')
+			return (bufferize_char(data, 'a'));
+		if (c == '\b')
+			return (bufferize_char(data, 'b'));
+		if (c == '\t')
+			return (bufferize_char(data, 't'));
+		if (c == '\n')
+			return (bufferize_char(data, 'n'));
+		if (c == '\v')
+			return (bufferize_char(data, 'v'));
+		if (c == '\f')
+			return (bufferize_char(data, 'f'));
+		if (c == '\r')
+			return (bufferize_char(data, 'r'));
+		bufferize_char(data, 'x');
+		sf_buff_x128(data, c, 1);
+	}
+	else
+		bufferize_char(data, c);
+	return (0);
+}
+
+void		buff_c128(t_printf_data *data, t_printf_form form, __uint128_t ui)
+{
+	if (form.attr & PA_AQ)
+		bufferize_char(data, '\'');
+	if (form.tlength == __SIZEOF_CHAR__)
+	{
+		if (form.attr & PA_HASH)
+			buff_ce(data, ui);
+		else
+			bufferize_char(data, (char)ui);
+	}
+//	if (form.tlength == __SIZEOF_WCHAR_T__)
+//		bufferize_wchar(data, ui);
+	if (form.attr & PA_AQ)
+		bufferize_char(data, '\'');
+}
+
+void		buff_s128(t_printf_data *data, t_printf_form form, char *str)
+{
+	char	*ptr;
+	int		size;
+	int		i;
+
+	ptr = str;
+//	printf("%p\n", ptr);
+	if (form.attr & PA_AQ)
+		bufferize_char(data, '\"');
+	if (form.tlength == __SIZEOF_CHAR__)
+	{
+		size = ft_strlen(ptr);
+		(form.field < size) ? (form.field = size) : 0;
+//		printf("\nprecision %d\n", form.precision);
+		(form.precision > -1 && form.precision < size) ? (size = form.precision) : 0;
+		if (!(form.attr & PA_MINUS) && size < form.field)
+			buff_space(data, form.field - size);
+		i = 0;
+		if (form.attr & PA_HASH)
+			while (i < size && ptr[i] != '\0')
+				buff_ce(data, ptr[i++]);
+		else
+			while (i < size && ptr[i] != '\0')
+				bufferize_char(data, ptr[i++]);
+		if (form.attr & PA_MINUS && size < form.field)
+			buff_space(data, form.field - size);
+	}
+	// if (form.tlength == __SIZEOF_WCHAR_T__)
+	// 	while (*(wchar_t*)ptr != NULL_WCHAR_T)
+	// 	{
+	// 		bufferize_wchar(data, *ptr);
+	// 		ptr += __SIZEOF_WCHAR_T__;
+	// 	}
+	if (form.attr & PA_AQ)
+		bufferize_char(data, '\"');
 }
 
 int			sf_jump_form(int type, const char *format, size_t *pos)
@@ -819,6 +902,50 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 		}
 		return (putn_b128_fd(form.arg.ui, data->fss.fd, limit));
 */
+	}
+	if (form.type == PT_C)
+	{
+		if (form.array == -1)
+			buff_c128(data, form, form.arg.ui);
+		else
+		{
+			char *ptr = (char *)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_c128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength << 3, 0));
+				ptr += form.tlength;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
+		return (0);
+	}
+	if (form.type == PT_S)
+	{
+		if (form.array == -1)
+			buff_s128(data, form, (char*)(long)form.arg.ui);
+		else
+		{
+			char **ptr = (char **)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_s128(data, form, *ptr);
+				++ptr;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
+		return (0);
 	}
 	return (0);
 }

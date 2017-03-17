@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:49:10 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 07:43:15 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 09:50:01 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,14 @@ int	main()
 	__int128_t t[40];
 	for (int i = 0; i < 40; ++i)
 		t[i] = pow10_i128(i);
-	ft_printf("%#-178.128v40MB\n", t);
+	char str0[] = "sa\a\tlut\xFF";
+	char str1[] = "ça va bien?";
+	char *str[2] = {str0, str1};
+//	str[5] = 255;
+//	printf("%p\n", str);
+//	ft_printf("%hhu\n", 255);
+	ft_printf("%#v2's\n", str);
+//	printf("|%-10.3s|\n", str);
 //	printf("|%-0#10.5hhx|\n", &t);
 	return (0);
 }

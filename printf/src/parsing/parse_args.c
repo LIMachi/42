@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/26 08:59:40 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 07:32:06 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 09:38:54 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	sf_form_add_arg(t_printf_form *form, t_printf_arg *args)
 		form->precision = args[form->precision].ui;
 	if (form->ind_array)
 		form->array = args[form->array].ui;
-	if (form->array != -1)
+	if (form->array != -1 || form->type & PT_AP)
 		form->arg.ui = cast_uint128(args[form->arg.ui].ui,
 						__SIZEOF_POINTER__ << 3, 0);
 	else
@@ -50,7 +50,7 @@ int		parse_args(t_printf_form *forms, va_list ap, int argn)
 	i = -1;
 	while(forms[++i].arg.ui != (__uint128_t)-1)
 		sf_form_add_arg(forms + i, args);
-//	debug_printf_forms(forms);
+	debug_printf_forms(forms);
 	ft_free(args);
 	return (0);
 }
