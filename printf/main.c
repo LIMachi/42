@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:49:10 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 06:46:17 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 07:43:15 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,8 +155,10 @@ int	main()
 	// 	i[_] = pow10_i128(_);
 	// j = ft_printf("%1$3v*2$hh#x\n", "ceci est un gros troll :p", 26);
 	// printf("%d\n", j);
-	__int128_t t = -1;
-	ft_printf("%hhb\n", -42);
+	__int128_t t[40];
+	for (int i = 0; i < 40; ++i)
+		t[i] = pow10_i128(i);
+	ft_printf("%#-178.128v40MB\n", t);
 //	printf("|%-0#10.5hhx|\n", &t);
 	return (0);
 }

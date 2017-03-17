@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 06:45:04 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 07:36:30 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ t_printf_form	*parse_forms(const char *format, int *argn)
 	}
 //	printf("args: %d\n", argc);
 	*argn = argc;
-//	debug_printf_forms(out);
+	debug_printf_forms(out);
 	return (out);
 }
 
@@ -423,8 +423,8 @@ void	sf_buff_u128(t_printf_data *data, __uint128_t v)
 	while (i < 40 && v > p[i].u128)
 		++i;
 	!i ? bufferize_char(data, '0') : 0;
-	while (i-- > 0)
-		bufferize_char(data, "0123456789"[v / p[i].u128 % 10]);
+	while (i)
+		bufferize_char(data, "0123456789"[v / p[i--].u128 % 10]);
 }
 
 void	sf_buff_i128(t_printf_data *data, __int128_t v)
@@ -668,10 +668,10 @@ int			dn_put_arg(t_printf_put_arg *parg, int formn, size_t len, int fd)
 //*
 int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *pos)
 {
-	size_t			limit;
+//	size_t			limit;
 	t_printf_form	form;
 
-	limit = data->size - data->len;
+//	limit = data->size - data->len;
 	form = forms[formn];
 	sf_jump_form(form.type, data->format, pos);
 	if (form.type & (PT_D | PT_I))
@@ -787,7 +787,26 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 	}
 	if (form.type == PT_B)
 	{
-		if (limit > 1 && (form.attr & PA_HASH) && form.arg.ui != 0)
+		if (form.array == -1)
+			buff_b128(data, form, form.arg.ui);
+		else
+		{
+			char *ptr = (char *)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_b128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength << 3, 0));
+				ptr += form.tlength;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
+		return (0);
+/*		if (limit > 1 && (form.attr & PA_HASH) && form.arg.ui != 0)
 		{
 //			data->len += write(1, "0", 1);
 //			data->len += ((form.attr & PA_MAJ) ? write(1, "B", 1) : write(1, "b", 1));
@@ -799,6 +818,7 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 			limit -= 2;
 		}
 		return (putn_b128_fd(form.arg.ui, data->fss.fd, limit));
+*/
 	}
 	return (0);
 }
