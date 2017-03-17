@@ -1,0 +1,24 @@
+la methode marche avec une grille d'au moins 7*4 et si l'ia joue en première au centre
+
+
+....... l'ia va empiler 3 pierres sur la colonne centrale.
+....... mettre deux pierres a 2 colone de l'ia, puis stoper l'ia. elle riposte
+...p... en nous stopant aussi
+...i.i.
+...i.p.
+...i.p.
+
+....... on peut rejouer une pierre sur la colonne qui vient d'etre bloqué par l'ia,
+....... ce qui fait que la valeur des colonnes ce retrouve nulle, et l'ia prend la colonne
+...ppp. entre les deux colones du départ, on peut rajouter un pierre dans cette colonne
+...iii. ce qui fait que l'ia voit une possibilité d'aligner 3 pierres, et nous alignons 3 pierres aussi
+...ipp.
+...iip.
+
+....... ici, l'ia ce trompe de valeur de colonne et va remplir la colonne vide adjacente a la centrale
+....... on peut alors prendre la derniere colonne vide qui n'est pas sur un bord, et l'ia, une
+....... nouvelle fois ce trompe et continue de remplir la colonne, ce qui nous permet de bloquer
+..ippp. le puissance 4 de l'ia tout en assurant le notre dans 2 tours car l'ia doit obligatoirement stoper
+..piii. le puissance 4 que nous allions faire a l'horizontale, il ne reste plus qu'a joueur
+.xiipp. la derniere pierre sur la colonne avec seulement notre pion et l'ia est face
+.piiip. a un double puissamce 4, nous avons gagné

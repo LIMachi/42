@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/26 08:59:40 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/16 01:18:50 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 03:28:01 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,11 @@ void	sf_form_add_arg(t_printf_form *form, t_printf_arg *args)
 	if (form->ind_array)
 		form->array = args[form->array - 1].ui;
 	if (form->array != -1)
-		form->arg.ui = cast_uint128(args[form->arg.ui].ui, __SIZEOF_POINTER__);
+		form->arg.ui = cast_uint128(args[form->arg.ui].ui,
+						__SIZEOF_POINTER__ << 3, 0);
 	else
-		form->arg.ui = cast_uint128(args[form->arg.ui].ui, form->tlength);
+		form->arg.ui = cast_uint128(args[form->arg.ui].ui,
+						form->tlength << 3, ((form->type & PT_AS) != 0));
 }
 
 int		parse_args(t_printf_form *forms, va_list ap, int argn)

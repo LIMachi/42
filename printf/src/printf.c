@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/16 01:19:03 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 03:27:48 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -510,14 +510,14 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 	if (form.type & (PT_D | PT_I))
 	{
 		if (form.array == -1)
-			buff_i128(data, form, form.arg.ui);
+			buff_i128(data, form, form.arg.i);
 		else
 		{
 			char *ptr = (char *)(long)form.arg.ui;
 			bufferize_char(data, '{');
 			for (int i = 0; i < form.array; ++i)
 			{
-				buff_i128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength));
+				buff_i128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength << 3, 1));
 				ptr += form.tlength;
 				if (i < form.array - 1)
 				{
@@ -539,7 +539,7 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 			bufferize_char(data, '{');
 			for (int i = 0; i < form.array; ++i)
 			{
-				buff_u128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength));
+				buff_u128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength << 3, 0));
 				ptr += form.tlength;
 				if (i < form.array - 1)
 				{

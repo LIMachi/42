@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:49:10 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/16 01:42:28 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 03:24:42 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,12 +148,13 @@ int	main()
 //	int	truc = 262648092;
 //	printf("   printf: |% #'20.10u|\n", -truc); // |+262648092         |
 //	ft_printf("ft_printf: |% #'20.10u|\n", -truc);
-	__int128_t i[40];
-	int j;
-	int n;
-	for (int _ = 0; _ < 40; ++ _)
-		i[_] = pow10_i128(_);
-	j = ft_printf("%1$3v*2$hh#x\n", "ceci est un gros troll :p", 26);
-	printf("%d\n", j);
+	// __int128_t i[40];
+	// int j;
+	// int n;
+	// for (int _ = 0; _ < 40; ++ _)
+	// 	i[_] = pow10_i128(_);
+	// j = ft_printf("%1$3v*2$hh#x\n", "ceci est un gros troll :p", 26);
+	// printf("%d\n", j);
+	ft_printf("%lld\n", -42ll);
 	return (0);
 }

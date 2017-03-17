@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:27:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/15 21:46:23 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/17 03:27:32 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # define PT_NP			(PT_PERCENT | PT_N)
 # define PT_NA			(PT_PERCENT | PT_M)
 # define PT_AP			(PT_N | PT_S)
+# define PT_AS			(PT_D | PT_I)
 
 # define PTL_INT		1
 # define PTL_SHORT		2
@@ -219,5 +220,6 @@ int				parse_args(t_printf_form *forms, va_list ap, int argn);
 //							int fd);
 int				dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn,
 							size_t *pos);
-__uint128_t		cast_uint128(__uint128_t v, int tlength);
+__uint128_t		cast_uint128(__uint128_t v, int blength, int sign);
+
 #endif
