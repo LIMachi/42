@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:27:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 03:27:32 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/19 08:30:02 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,5 +221,9 @@ int				parse_args(t_printf_form *forms, va_list ap, int argn);
 int				dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn,
 							size_t *pos);
 __uint128_t		cast_uint128(__uint128_t v, int blength, int sign);
+t_printf_form	*parse_forms(const char *format, int *argn);
+int				parse_attributes(const char *format, int *pos, int *arg_number,
+								t_printf_form *form);
+
 
 #endif

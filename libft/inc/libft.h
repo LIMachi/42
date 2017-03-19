@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 14:39:36 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/02 13:51:42 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/19 08:29:07 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1343,5 +1343,7 @@ void					ft_put_double_fd(double v, int precision, int fd);
 void					ft_put_double(double v);
 void					ft_putnbr_bin_fd(unsigned long nbr, int fd);
 void					ft_putnbr_bin(unsigned long nbr);
+
+__int128_t				ft_pow10_i128(unsigned p);
 
 #endif
