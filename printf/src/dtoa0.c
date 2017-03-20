@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dtoa.c                                             :+:      :+:    :+:   */
+/*   dtoa0.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 15:41:37 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/20 08:48:56 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/20 08:40:10 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,43 +16,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <libft.h>
-
-/*
-** debug start
-*/
-/*
-void	*ft_malloc(size_t size)
-{
-	return (malloc(size));
-}
-
-void	*ft_memalloc(size_t size)
-{
-	return (calloc(1, size));
-}
-
-#include <string.h>
-
-void	*ft_memmove(void *dest, const void *src, size_t n)
-{
-	return (memmove(dest, src, n));
-}
-
-void	ft_free(void *ptr)
-{
-	free(ptr);
-}
-
-#include <ctype.h>
-
-int		ft_isdigit(int c)
-{
-	return (isdigit(c));
-}
-*/
-/*
-** debug end
-*/
 
 /*
 ** takes __T_FLOAT (float or double, deppending on flags passed at compilation),
@@ -214,7 +177,7 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 	__T_FLOAT_I		expo;
 	__T_FLOAT_UI	mant;
 	__T_FLOAT_UI	frac;
-	__T_FLOAT_UI	mask;
+	__T_FLOAT_UI	mask; //32b
 	int				w;
 	int				t;
 
@@ -224,13 +187,13 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 		if ((buff = ft_malloc(
 			((w = ft_float_evaluate_size(v, precision)) + 1))) == NULL)
 			return (NULL);
-		buff[w] = '\0';
+		buff[w] = '\0'; //si buff est cree, on ajoute un '\0' a la fin (le '\0' n'est pas present par defaut)
 	}
 	w = 0;
 	if (writen != NULL)
 		*writen = 0;
 	else
-		writen = &w;
+		writen = &w; //simule la presence de writen
 	if (f != f)
 	{
 		buff[0] = 'n';
@@ -250,8 +213,8 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 	}
 	mant = v.part.exp ? v.part.mant | __T_FLOAT_MANT_COMP : v.part.mant;
 	expo = v.part.exp - __T_FLOAT_EXP_BIAS;
-	mask = ((__T_FLOAT_UI)-1) >> (__T_FLOAT_BSIZE - __T_FLOAT_MANT_SIZE - 1);
-	if (v.part.exp == 0)
+	mask = ((__T_FLOAT_UI)-1) >> (__T_FLOAT_BSIZE - __T_FLOAT_MANT_SIZE - 2); //32 - 2 - 23 = 9;
+	if (v.part.exp == 0) //subnormal numbers
 	{
 		buff[(*writen)++] = '0';
 		frac = mant & mask;
@@ -260,15 +223,27 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 		return (NULL);
 	else if (expo >= __T_FLOAT_MANT_SIZE)
 		sf_utoa64(mant << (expo - __T_FLOAT_MANT_SIZE), buff, writen, -1ul);
+//		printf("%llu", (uint64_t)(mant << (expo - __T_FLOAT_MANT_SIZE)));
 	else if (expo >= 0)
 	{
 		sf_utoa64(mant >> (__T_FLOAT_MANT_SIZE - expo), buff, writen, -1ul);
-		frac = (mant << (expo + 1)) & mask;
+//		printf("%llu", (uint64_t)(mant >> (__T_FLOAT_MANT_SIZE - expo)));
+		frac = (mant << (expo + 2)) & mask;
 	}
 	else
 	{
+//		mask = 1 | (mask << 1);
 		buff[(*writen)++] = '0';
-		frac = ((mant) >> -(expo + 1)) & mask;
+//		ft_printf("%.64llb\n", ((mant) >> -(expo + 2)));
+		frac = ((mant) >> -(expo + 2)) & mask; //perte de 3 bits de precision (pas sur)
+		ft_printf("mant: %.64llb, exp: %d\n", mant, -(expo + 2));
+		ft_printf("%.64llb\n", frac);
+//		frac >>= 1;
+//		ft_printf("%.64llb\n", frac);
+		//0b00111101110011001100110011001101 = 0.1000000001
+		//0b00111101110011001100110011001000 = 0.0999999996 (dtoa sort des nombres plus petits que prevus)
+		//0b00000000000000000000000000000101 = diff
+		//apres plus de test, on dirait que seul le dernier bit (faible) est ignoré, ce qui produit un nombre plus petit que prevus une fois sur deux
 	}
 	if (precision > 0)
 	{
@@ -276,11 +251,13 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 		frac = (frac << 3) + (frac << 1);
 		while (--precision >= 0)
 		{
-			buff[(*writen)++] = (frac >> (__T_FLOAT_MANT_SIZE + 1)) + '0';
+			buff[(*writen)++] = (frac >> (__T_FLOAT_MANT_SIZE + 2)) + '0';
+//			printf("%c", (int)(frac >> (__T_FLOAT_MANT_SIZE + 1)) + '0');
 			frac &= mask;
 			frac = (frac << 3) + (frac << 1);
 		}
-		if (frac >> (__T_FLOAT_MANT_SIZE + 1) >= 5)
+		//manque l'arondi
+		if (frac >> (__T_FLOAT_MANT_SIZE + 2) >= 5)
 		{
 			t = *writen - 1;
 			while (t >= 0 && (buff[t] == '9' || buff[t] == '.'))
@@ -297,3 +274,6 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 	}
 	return (buff);
 }
+
+//0.1000000000000000055511151231257827021181583404541015625000000000
+//0.100000001490116119384765625

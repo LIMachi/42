@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 19:37:17 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/20 00:35:24 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/20 10:43:23 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 
 #  define __T_FLOAT_EXP_SIZE 11
 #  define __T_FLOAT_MANT_SIZE 52
+#  define __T_FLOAT_MANT_XDIGIT 13
 #  define __T_FLOAT_UI __UINT64_TYPE__
 #  define __T_FLOAT_I __INT64_TYPE__
 #  define __T_FLOAT_UL __uint128_t
@@ -57,6 +58,7 @@
 
 #  define __T_FLOAT_EXP_SIZE 8
 #  define __T_FLOAT_MANT_SIZE 23
+#  define __T_FLOAT_MANT_XDIGIT 6
 #  define __T_FLOAT_UI __UINT32_TYPE__
 #  define __T_FLOAT_I __INT32_TYPE__
 #  define __T_FLOAT_BSIZE 32

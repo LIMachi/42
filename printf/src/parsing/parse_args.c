@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/26 08:59:40 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/17 09:38:54 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/20 11:35:35 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,25 @@ int		parse_args(t_printf_form *forms, va_list ap, int argn)
 	int				i;
 
 	if ((args = ft_memalloc(sizeof(t_printf_arg) * argn)) == NULL)
-	{
-		ft_free(forms);
-		return (-1);
-	}
+		return (-1 | (long)ft_free(forms));
 	i = -1;
 	while (forms[++i].arg.ui != (__uint128_t)-1)
-		args[forms[i].arg.ui].ui =
-			(forms[i].tlength > 8 && forms[i].array == -1);
+		if (forms[i].array == -1)
+			args[forms[i].arg.ui].ui = !(forms[i].type & PT_AF) ?
+				(forms[i].tlength > 8 && forms[i].array == -1) :
+				2 + (forms[i].tlength == __SIZEOF_LONG_DOUBLE__);
 	i = -1;
 	while (++i < argn)
-		(args[i].ui) ? (args[i].ui = va_arg(ap, __uint128_t)) :
-						(args[i].ui = va_arg(ap, __UINT64_TYPE__));
+		if (args[i].ui == 1)
+			args[i].ui = va_arg(ap, __uint128_t);
+		else if (args[i].ui == 2)
+			args[i].f = va_arg(ap, double);
+		else if (args[i].ui == 3)
+			args[i].ld = va_arg(ap, long double);
+		else
+			args[i].ui = va_arg(ap, __UINT64_TYPE__);
 	i = -1;
 	while(forms[++i].arg.ui != (__uint128_t)-1)
 		sf_form_add_arg(forms + i, args);
-	debug_printf_forms(forms);
-	ft_free(args);
-	return (0);
+	return ((long)ft_free(args));
 }
