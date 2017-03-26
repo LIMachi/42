@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:49:10 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/23 11:09:44 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/27 01:40:57 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,12 @@ int	main(void)
 //	ft_printf("123456789%n|\n", &i);
 //	printf("%d\n", i);
 	ft_printf("%d\n", 85+171);
+	t_float	f = {.part = {.sign = 0, .exp = 1023, .mant = 42425789}};
+	int		i;
+	printf("|%n|\n", &i);
+	printf("%d\n", i);
+	ft_printf("123456789%n|\n", &i);
+	printf("%d\n", i);
 //	printf("%8p\n", NULL);
 	// uint64_t	mant;
 	// mant = (1ll << __T_FLOAT_MANT_SIZE) | f.part.mant;
