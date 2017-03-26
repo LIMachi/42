@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 15:41:37 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/02/26 01:02:29 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/20 08:48:56 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 	__T_FLOAT_I		expo;
 	__T_FLOAT_UI	mant;
 	__T_FLOAT_UI	frac;
-	__T_FLOAT_UI	mask; //32b
+	__T_FLOAT_UI	mask;
 	int				w;
 	int				t;
 
@@ -224,13 +224,13 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 		if ((buff = ft_malloc(
 			((w = ft_float_evaluate_size(v, precision)) + 1))) == NULL)
 			return (NULL);
-		buff[w] = '\0'; //si buff est cree, on ajoute un '\0' a la fin (le '\0' n'est pas present par defaut)
+		buff[w] = '\0';
 	}
 	w = 0;
 	if (writen != NULL)
 		*writen = 0;
 	else
-		writen = &w; //simule la presence de writen
+		writen = &w;
 	if (f != f)
 	{
 		buff[0] = 'n';
@@ -250,8 +250,8 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 	}
 	mant = v.part.exp ? v.part.mant | __T_FLOAT_MANT_COMP : v.part.mant;
 	expo = v.part.exp - __T_FLOAT_EXP_BIAS;
-	mask = ((__T_FLOAT_UI)-1) >> (__T_FLOAT_BSIZE - __T_FLOAT_MANT_SIZE - 1); //32 - 1 - 23 = 8 = 0x00FFFFFF;
-	if (v.part.exp == 0) //subnormal numbers
+	mask = ((__T_FLOAT_UI)-1) >> (__T_FLOAT_BSIZE - __T_FLOAT_MANT_SIZE - 1);
+	if (v.part.exp == 0)
 	{
 		buff[(*writen)++] = '0';
 		frac = mant & mask;
@@ -260,20 +260,15 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 		return (NULL);
 	else if (expo >= __T_FLOAT_MANT_SIZE)
 		sf_utoa64(mant << (expo - __T_FLOAT_MANT_SIZE), buff, writen, -1ul);
-//		printf("%llu", (uint64_t)(mant << (expo - __T_FLOAT_MANT_SIZE)));
 	else if (expo >= 0)
 	{
 		sf_utoa64(mant >> (__T_FLOAT_MANT_SIZE - expo), buff, writen, -1ul);
-//		printf("%llu", (uint64_t)(mant >> (__T_FLOAT_MANT_SIZE - expo)));
 		frac = (mant << (expo + 1)) & mask;
 	}
 	else
 	{
 		buff[(*writen)++] = '0';
-		frac = ((mant) >> -(expo + 1)) & mask; //perte de 3 bits de precision (pas sur)
-		//0b00111101110011001100110011001101 = 0.1000000001
-		//0b00111101110011001100110011001000 = 0.0999999996 (dtoa sort des nombres plus petits que prevus)
-		//0b00000000000000000000000000000101 = diff
+		frac = ((mant) >> -(expo + 1)) & mask;
 	}
 	if (precision > 0)
 	{
@@ -282,11 +277,9 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 		while (--precision >= 0)
 		{
 			buff[(*writen)++] = (frac >> (__T_FLOAT_MANT_SIZE + 1)) + '0';
-//			printf("%c", (int)(frac >> (__T_FLOAT_MANT_SIZE + 1)) + '0');
 			frac &= mask;
 			frac = (frac << 3) + (frac << 1);
 		}
-		//manque l'arondi
 		if (frac >> (__T_FLOAT_MANT_SIZE + 1) >= 5)
 		{
 			t = *writen - 1;
@@ -304,6 +297,3 @@ char	*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen)
 	}
 	return (buff);
 }
-
-//0.1000000000000000055511151231257827021181583404541015625000000000
-//0.100000001490116119384765625

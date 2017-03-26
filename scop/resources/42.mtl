@@ -1,0 +1,11 @@
+# Blender MTL File: '42.blend'
+# Material Count: 1
+
+newmtl Material					#declare the name of the material
+Ns 96.078431					#specular exponent
+Ka 0.000000 0.000000 0.000000	#ambient
+Kd 0.640000 0.640000 0.640000	#diffuse
+Ks 0.500000 0.500000 0.500000	#specular
+Ni 1.000000						#unlnown data
+d 1.000000						#alpha
+illum 2							#illumination model

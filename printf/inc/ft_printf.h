@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/25 18:27:04 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/19 08:30:02 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/20 11:25:02 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ typedef union	u_printf_arg
 	__uint128_t		ui;
 	__int128_t		i;
 	__T_FLOAT		f;
+	long double		ld;
 	void			*p;
 }				t_printf_arg;
 
@@ -224,6 +225,6 @@ __uint128_t		cast_uint128(__uint128_t v, int blength, int sign);
 t_printf_form	*parse_forms(const char *format, int *argn);
 int				parse_attributes(const char *format, int *pos, int *arg_number,
 								t_printf_form *form);
-
+char			*ft_dtoa(__T_FLOAT f, int precision, char *buff, int *writen);
 
 #endif

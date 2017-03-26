@@ -1,9 +1,10 @@
 AUTHOR := hmartzol
 NAME := libftprintf.a
 SRCDIR := src
-INCDIRS := inc ../libft/inc
+INCDIRS := inc
 MAIN := main.c
 CFLAGS := -Wall -Wextra -Werror -g
+PINC := ../libft/inc
 CLIB := ../libft
 LIB := ../libft/libft.a
 include ../Makefiles/Makefile.gen

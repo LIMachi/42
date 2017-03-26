@@ -6,7 +6,7 @@
 /*   By: hmartzol <hmartzol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 18:15:18 by hmartzol          #+#    #+#             */
-/*   Updated: 2017/03/19 08:25:49 by hmartzol         ###   ########.fr       */
+/*   Updated: 2017/03/20 12:42:49 by hmartzol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,13 +150,13 @@ void	sf_buff_i128(t_printf_data *data, __int128_t v)
 		sf_buff_u128(data, v);
 }
 
-void		buff_space(t_printf_data *data, size_t size)
+void		buff_space(t_printf_data *data, int size)
 {
 	while (size-- > 0)
 		bufferize_char(data, ' ');
 }
 
-void		buff_zero(t_printf_data *data, size_t size)
+void		buff_zero(t_printf_data *data, int size)
 {
 	while (size-- > 0)
 		bufferize_char(data, '0');
@@ -277,6 +277,54 @@ void		buff_o128(t_printf_data *data, t_printf_form form, __uint128_t ui)
 		buff_space(data, form.field - form.precision - m);
 }
 
+size_t		sf_evaluate_a_size(t_float a, int hash, int precision)
+{
+	size_t			size;
+
+	size = 4;
+	if (a.part.mant || precision != -1)
+	{
+		if (precision == -1)
+			size += __T_FLOAT_MANT_XDIGIT + 1;
+		else
+			size += precision + 1;
+	}
+	else if (hash)
+		++size;
+	size += ft_evaluate_i128_size(a.part.exp - __T_FLOAT_EXP_BIAS);
+	if (a.part.exp - __T_FLOAT_EXP_BIAS >= 0)
+		++size;
+	return (size);
+}
+
+void		buff_a128(t_printf_data *data, t_printf_form form, __uint128_t ui)
+{
+	int				size;
+	t_float			a;
+	int				t;
+
+	a = (t_float){.ui = ui};
+	size = sf_evaluate_a_size(a, form.attr & PA_HASH, form.precision);
+	(form.field < size) ? (form.field = size) : 0;
+	if (!(form.attr & PA_MINUS))
+		buff_space(data, form.field - size);
+	bufferize_char(data, '0');
+	bufferize_char(data, form.attr & PA_MAJ ? 'X' : 'x');
+	bufferize_char(data, a.part.exp ? '1' : '0');
+	if (form.attr & PA_HASH || a.part.mant || form.precision != -1)
+		bufferize_char(data, '.');
+	if ((a.part.mant || form.precision != -1) && (t = __T_FLOAT_MANT_XDIGIT) &&
+		(form.precision == -1 ? (form.precision = __T_FLOAT_MANT_XDIGIT) : 1))
+		while (form.precision--)
+			bufferize_char(data, (form.attr & PA_MAJ ? "0123456789ABCDEF" :
+				"0123456789abcdef")[15 & (a.part.mant >> (--t << 2))]);
+	bufferize_char(data, form.attr & PA_MAJ ? 'P' : 'p');
+	buff_i128(data, (t_printf_form){.attr = PA_PLUS},
+					a.part.exp - __T_FLOAT_EXP_BIAS);
+	if (form.attr & PA_MINUS)
+		buff_space(data, form.field - size);
+}
+
 int		buff_ce(t_printf_data *data, __uint128_t c)
 {
 	c &= 0xFF;
@@ -392,10 +440,8 @@ int			sf_jump_form(int type, const char *format, size_t *pos)
 //*
 int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *pos)
 {
-//	size_t			limit;
 	t_printf_form	form;
 
-//	limit = data->size - data->len;
 	form = forms[formn];
 	sf_jump_form(form.type, data->format, pos);
 	if (form.type & (PT_D | PT_I))
@@ -442,7 +488,7 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 		}
 		return (0);
 	}
-	if (form.type == PT_X) ///buff_x128
+	if (form.type == PT_X)
 	{
 		if (form.array == -1)
 			buff_x128(data, form, form.arg.ui);
@@ -463,21 +509,6 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 			bufferize_char(data, '}');
 		}
 		return (0);
-/*		if (limit > 1 && (form.attr & PA_HASH) && form.arg.ui != 0)
-		{
-			//data->len += write(1, "0", 1);
-			bufferize_char(data, '0');
-			//data->len += ((form.attr & PA_MAJ) ? write(1, "X", 1) : write(1, "x", 1));
-			if (form.attr & PA_MAJ)
-				bufferize_char(data, 'X');
-			else
-				bufferize_char(data, 'x');
-			limit -= 2;
-		}
-//		return (putn_x128_fd(form.arg.ui, data->fss.fd, limit, form.attr & PA_MAJ));
-		sf_buff_x128(data, form.arg.ui, form.attr & PA_MAJ);
-		return (0);
-*/
 	}
 	if (form.type == PT_O)
 	{
@@ -500,14 +531,6 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 			bufferize_char(data, '}');
 		}
 		return (0);
-/*		if (limit && (form.attr & PA_HASH) && form.arg.ui != 0)
-		{
-//			data->len += write(1, "0", 1);
-			bufferize_char(data, '0');
-			--limit;
-		}
-		return (putn_o128_fd(form.arg.ui, data->fss.fd, limit));
-*/
 	}
 	if (form.type == PT_B)
 	{
@@ -530,19 +553,6 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 			bufferize_char(data, '}');
 		}
 		return (0);
-/*		if (limit > 1 && (form.attr & PA_HASH) && form.arg.ui != 0)
-		{
-//			data->len += write(1, "0", 1);
-//			data->len += ((form.attr & PA_MAJ) ? write(1, "B", 1) : write(1, "b", 1));
-			bufferize_char(data, '0');
-			if (form.attr & PA_MAJ)
-				bufferize_char(data, 'B');
-			else
-				bufferize_char(data, 'b');
-			limit -= 2;
-		}
-		return (putn_b128_fd(form.arg.ui, data->fss.fd, limit));
-*/
 	}
 	if (form.type == PT_C)
 	{
@@ -587,6 +597,45 @@ int			dn_put_arg(t_printf_data *data, t_printf_form *forms, int formn, size_t *p
 			bufferize_char(data, '}');
 		}
 		return (0);
+	}
+	if (form.type == PT_A)
+	{
+		if (form.array == -1)
+			buff_a128(data, form, form.arg.ui);
+		else
+		{
+			char *ptr = (char *)(long)form.arg.ui;
+			bufferize_char(data, '{');
+			for (int i = 0; i < form.array; ++i)
+			{
+				buff_a128(data, form, cast_uint128(*(__uint128_t*)ptr, form.tlength << 3, 0));
+				ptr += form.tlength;
+				if (i < form.array - 1)
+				{
+					bufferize_char(data, ',');
+					bufferize_char(data, ' ');
+				}
+			}
+			bufferize_char(data, '}');
+		}
+		return (0);
+	}
+	if (form.type == PT_N)
+	{
+		if (form.array != -1)
+			form.arg.ui = *(long *)(long)form.arg.ui;
+		if (form.tlength == __SIZEOF_CHAR__)
+			*(char*)(long)form.arg.ui = data->len;
+		if (form.tlength == __SIZEOF_SHORT__)
+			*(short*)(long)form.arg.ui = data->len;
+		if (form.tlength == __SIZEOF_INT__)
+			*(int*)(long)form.arg.ui = data->len;
+		if (form.tlength == __SIZEOF_LONG__)
+			*(long*)(long)form.arg.ui = data->len;
+		if (form.tlength == __SIZEOF_LONG_LONG__)
+			*(long long*)(long)form.arg.ui = data->len;
+		if (form.tlength == 16)
+			*(__int128_t*)(long)form.arg.ui = data->len;
 	}
 	return (0);
 }

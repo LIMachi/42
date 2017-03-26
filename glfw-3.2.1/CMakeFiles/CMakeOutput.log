@@ -1,0 +1,303 @@
+The system is: Linux - 4.10.3-1-ARCH - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/sbin/cc 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is GNU, found in "/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/3.7.2/CompilerIdC/a.out"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_0f879/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_0f879.dir/build.make CMakeFiles/cmTC_0f879.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0f879.dir/testCCompiler.c.o
+/usr/sbin/cc     -o CMakeFiles/cmTC_0f879.dir/testCCompiler.c.o   -c /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_0f879
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0f879.dir/link.txt --verbose=1
+/usr/sbin/cc       CMakeFiles/cmTC_0f879.dir/testCCompiler.c.o  -o cmTC_0f879 -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_aa30d/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_aa30d.dir/build.make CMakeFiles/cmTC_aa30d.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o
+/usr/sbin/cc     -o CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.7/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_aa30d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_aa30d.dir/link.txt --verbose=1
+/usr/sbin/cc      -v CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o  -o cmTC_aa30d -rdynamic  
+Using built-in specs.
+COLLECT_GCC=/usr/sbin/cc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++ --enable-shared --enable-threads=posix --enable-libmpx --with-system-zlib --with-isl --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --disable-libssp --enable-gnu-unique-object --enable-linker-build-id --enable-lto --enable-plugin --enable-install-libiberty --with-linker-hash-style=gnu --enable-gnu-indirect-function --disable-multilib --disable-werror --enable-checking=release
+Thread model: posix
+gcc version 6.3.1 20170306 (GCC) 
+COMPILER_PATH=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_aa30d' '-rdynamic' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/collect2 -plugin /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccdsJdsL.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_aa30d /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crt1.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crti.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/crtbegin.o -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1 -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../.. CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/crtend.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_aa30d' '-rdynamic' '-mtune=generic' '-march=x86-64'
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/sbin/make" "cmTC_aa30d/fast"]
+  ignore line: [/usr/sbin/make -f CMakeFiles/cmTC_aa30d.dir/build.make CMakeFiles/cmTC_aa30d.dir/build]
+  ignore line: [make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp']
+  ignore line: [Building C object CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/sbin/cc     -o CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.7/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_aa30d]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_aa30d.dir/link.txt --verbose=1]
+  ignore line: [/usr/sbin/cc      -v CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o  -o cmTC_aa30d -rdynamic  ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/sbin/cc]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/lto-wrapper]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++ --enable-shared --enable-threads=posix --enable-libmpx --with-system-zlib --with-isl --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --disable-libssp --enable-gnu-unique-object --enable-linker-build-id --enable-lto --enable-plugin --enable-install-libiberty --with-linker-hash-style=gnu --enable-gnu-indirect-function --disable-multilib --disable-werror --enable-checking=release]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 6.3.1 20170306 (GCC) ]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_aa30d' '-rdynamic' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/collect2 -plugin /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccdsJdsL.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_aa30d /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crt1.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crti.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/crtbegin.o -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1 -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../.. CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/crtend.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crtn.o]
+    arg [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccdsJdsL.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_aa30d] ==> ignore
+    arg [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/crtbegin.o] ==> ignore
+    arg [-L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1] ==> dir [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1]
+    arg [-L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../..] ==> dir [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../..]
+    arg [CMakeFiles/cmTC_aa30d.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/crtend.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib/crtn.o] ==> ignore
+  remove lib [gcc]
+  remove lib [gcc_s]
+  remove lib [gcc]
+  remove lib [gcc_s]
+  collapse library dir [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1] ==> [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1]
+  collapse library dir [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/../../..] ==> [/usr/lib]
+  implicit libs: [c]
+  implicit dirs: [/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1;/usr/lib;/lib]
+  implicit fwks: []
+
+
+
+
+Detecting C [-std=c11] compiler features compiled with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_25347/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_25347.dir/build.make CMakeFiles/cmTC_25347.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_25347.dir/feature_tests.c.o
+/usr/sbin/cc    -std=c11 -o CMakeFiles/cmTC_25347.dir/feature_tests.c.o   -c /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/feature_tests.c
+Linking C executable cmTC_25347
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25347.dir/link.txt --verbose=1
+/usr/sbin/cc       CMakeFiles/cmTC_25347.dir/feature_tests.c.o  -o cmTC_25347 -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c99] compiler features compiled with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_e417d/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_e417d.dir/build.make CMakeFiles/cmTC_e417d.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e417d.dir/feature_tests.c.o
+/usr/sbin/cc    -std=c99 -o CMakeFiles/cmTC_e417d.dir/feature_tests.c.o   -c /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/feature_tests.c
+Linking C executable cmTC_e417d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e417d.dir/link.txt --verbose=1
+/usr/sbin/cc       CMakeFiles/cmTC_e417d.dir/feature_tests.c.o  -o cmTC_e417d -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c90] compiler features compiled with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_698f3/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_698f3.dir/build.make CMakeFiles/cmTC_698f3.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_698f3.dir/feature_tests.c.o
+/usr/sbin/cc    -std=c90 -o CMakeFiles/cmTC_698f3.dir/feature_tests.c.o   -c /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/feature_tests.c
+Linking C executable cmTC_698f3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_698f3.dir/link.txt --verbose=1
+/usr/sbin/cc       CMakeFiles/cmTC_698f3.dir/feature_tests.c.o  -o cmTC_698f3 -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:0c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:0c_variadic_macros
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_7d2f0/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_7d2f0.dir/build.make CMakeFiles/cmTC_7d2f0.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7d2f0.dir/CheckIncludeFile.c.o
+/usr/sbin/cc     -o CMakeFiles/cmTC_7d2f0.dir/CheckIncludeFile.c.o   -c /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_7d2f0
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7d2f0.dir/link.txt --verbose=1
+/usr/sbin/cc       CMakeFiles/cmTC_7d2f0.dir/CheckIncludeFile.c.o  -o cmTC_7d2f0 -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Determining if the function pthread_create exists in the pthread passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_18187/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_18187.dir/build.make CMakeFiles/cmTC_18187.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_18187.dir/CheckFunctionExists.c.o
+/usr/sbin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_18187.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_18187
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_18187.dir/link.txt --verbose=1
+/usr/sbin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_18187.dir/CheckFunctionExists.c.o  -o cmTC_18187 -rdynamic -lpthread 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Determining if the function XOpenDisplay exists in the /usr/lib64/libX11.so;/usr/lib64/libXext.so passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_3a34d/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_3a34d.dir/build.make CMakeFiles/cmTC_3a34d.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3a34d.dir/CheckFunctionExists.c.o
+/usr/sbin/cc    -DCHECK_FUNCTION_EXISTS=XOpenDisplay   -o CMakeFiles/cmTC_3a34d.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_3a34d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3a34d.dir/link.txt --verbose=1
+/usr/sbin/cc   -DCHECK_FUNCTION_EXISTS=XOpenDisplay    CMakeFiles/cmTC_3a34d.dir/CheckFunctionExists.c.o  -o cmTC_3a34d -rdynamic /usr/lib64/libX11.so /usr/lib64/libXext.so 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Determining if the function gethostbyname exists passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_1313f/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_1313f.dir/build.make CMakeFiles/cmTC_1313f.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1313f.dir/CheckFunctionExists.c.o
+/usr/sbin/cc    -DCHECK_FUNCTION_EXISTS=gethostbyname   -o CMakeFiles/cmTC_1313f.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_1313f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1313f.dir/link.txt --verbose=1
+/usr/sbin/cc   -DCHECK_FUNCTION_EXISTS=gethostbyname    CMakeFiles/cmTC_1313f.dir/CheckFunctionExists.c.o  -o cmTC_1313f -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Determining if the function connect exists passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_68526/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_68526.dir/build.make CMakeFiles/cmTC_68526.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_68526.dir/CheckFunctionExists.c.o
+/usr/sbin/cc    -DCHECK_FUNCTION_EXISTS=connect   -o CMakeFiles/cmTC_68526.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_68526
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_68526.dir/link.txt --verbose=1
+/usr/sbin/cc   -DCHECK_FUNCTION_EXISTS=connect    CMakeFiles/cmTC_68526.dir/CheckFunctionExists.c.o  -o cmTC_68526 -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Determining if the function remove exists passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_09377/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_09377.dir/build.make CMakeFiles/cmTC_09377.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_09377.dir/CheckFunctionExists.c.o
+/usr/sbin/cc    -DCHECK_FUNCTION_EXISTS=remove   -o CMakeFiles/cmTC_09377.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_09377
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_09377.dir/link.txt --verbose=1
+/usr/sbin/cc   -DCHECK_FUNCTION_EXISTS=remove    CMakeFiles/cmTC_09377.dir/CheckFunctionExists.c.o  -o cmTC_09377 -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Determining if the function shmat exists passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_02261/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_02261.dir/build.make CMakeFiles/cmTC_02261.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_02261.dir/CheckFunctionExists.c.o
+/usr/sbin/cc    -DCHECK_FUNCTION_EXISTS=shmat   -o CMakeFiles/cmTC_02261.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_02261
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_02261.dir/link.txt --verbose=1
+/usr/sbin/cc   -DCHECK_FUNCTION_EXISTS=shmat    CMakeFiles/cmTC_02261.dir/CheckFunctionExists.c.o  -o cmTC_02261 -rdynamic 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
+Determining if the function IceConnectionNumber exists in the ICE passed with the following output:
+Change Dir: /home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/sbin/make" "cmTC_51bc9/fast"
+/usr/sbin/make -f CMakeFiles/cmTC_51bc9.dir/build.make CMakeFiles/cmTC_51bc9.dir/build
+make[1]: Entering directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_51bc9.dir/CheckFunctionExists.c.o
+/usr/sbin/cc    -DCHECK_FUNCTION_EXISTS=IceConnectionNumber   -o CMakeFiles/cmTC_51bc9.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_51bc9
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_51bc9.dir/link.txt --verbose=1
+/usr/sbin/cc   -DCHECK_FUNCTION_EXISTS=IceConnectionNumber    CMakeFiles/cmTC_51bc9.dir/CheckFunctionExists.c.o  -o cmTC_51bc9 -rdynamic -lICE 
+make[1]: Leaving directory '/home/lee/Desktop/github/glfw-3.2.1/CMakeFiles/CMakeTmp'
+
+
