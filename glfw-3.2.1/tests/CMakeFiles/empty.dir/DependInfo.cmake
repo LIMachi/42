@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/lee/Desktop/github/glfw-3.2.1/deps/glad.c" "/home/lee/Desktop/github/glfw-3.2.1/tests/CMakeFiles/empty.dir/__/deps/glad.c.o"
-  "/home/lee/Desktop/github/glfw-3.2.1/deps/tinycthread.c" "/home/lee/Desktop/github/glfw-3.2.1/tests/CMakeFiles/empty.dir/__/deps/tinycthread.c.o"
-  "/home/lee/Desktop/github/glfw-3.2.1/tests/empty.c" "/home/lee/Desktop/github/glfw-3.2.1/tests/CMakeFiles/empty.dir/empty.c.o"
+  "/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/glad.c" "/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/tests/CMakeFiles/empty.dir/__/deps/glad.c.o"
+  "/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/tinycthread.c" "/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/tests/CMakeFiles/empty.dir/__/deps/tinycthread.c.o"
+  "/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/tests/empty.c" "/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/tests/CMakeFiles/empty.dir/empty.c.o"
   )
-set(CMAKE_C_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "Clang")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
@@ -18,7 +18,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/lee/Desktop/github/glfw-3.2.1/src/CMakeFiles/glfw.dir/DependInfo.cmake"
+  "/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/src/CMakeFiles/glfw.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

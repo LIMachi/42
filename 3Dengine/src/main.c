@@ -1,5 +1,5 @@
-#include <glad.c> //petite triche
-#include <GLFW/glfw3.h>
+#include "glad.c" //petite triche
+#include "../glfw-3.2.1/include/GLFW/glfw3.h"
 #include <stdlib.h>
 
 #include <sys/stat.h> //stat
@@ -18,11 +18,19 @@ void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 //read the file at "path" and return a static buffer to his content
 //if NULL is passed to path, the function will clear is internal information
 //the function will return the same content in the buffer if the file was not modified
+
+#define IO6 0, 0, 0, 0, 0, 0
+#define IBO2 {0, 0}
+#define I4BO2 IBO2, IBO2, IBO2, IBO2
+
+#define _SSTAT0 {0, IO6, I4BO2, IO6, IBO2}
+#define SSTAT0 (struct stat)_SSTAT0
+
 char	*read_file_s(const char *path)
 {
 	static char			*buffer = NULL;
 	static long			size = 0;
-	static struct stat	data = {0};
+	static struct stat	data = _SSTAT0;
 	struct stat			tmp;
 	int					fd;
 
@@ -31,7 +39,7 @@ char	*read_file_s(const char *path)
 		if (buffer != NULL)
 			free(buffer);
 		size = 0;
-		data = (struct stat){0};
+		data = SSTAT0;
 		return (buffer = NULL);
 	}
 	if (stat(path, &tmp))

@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/getopt.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/getopt.c
 getopt.h
-/home/lee/Desktop/github/glfw-3.2.1/deps/getopt.h
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/getopt.h
 stddef.h
 -
 string.h
 -
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/getopt.h
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/getopt.h
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/glad.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/glad.c
 stdio.h
 -
 stdlib.h
@@ -26,9 +26,9 @@ string.h
 glad/glad.h
 -
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/tinycthread.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/tinycthread.c
 tinycthread.h
-/home/lee/Desktop/github/glfw-3.2.1/deps/tinycthread.h
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/tinycthread.h
 stdlib.h
 -
 signal.h
@@ -46,7 +46,7 @@ process.h
 sys/timeb.h
 -
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/tinycthread.h
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/tinycthread.h
 time.h
 -
 sys/time.h
@@ -56,7 +56,7 @@ pthread.h
 windows.h
 -
 
-/home/lee/Desktop/github/glfw-3.2.1/examples/particles.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/examples/particles.c
 stdlib.h
 -
 stdio.h

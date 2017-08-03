@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/getopt.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/getopt.c
 getopt.h
-/home/lee/Desktop/github/glfw-3.2.1/deps/getopt.h
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/getopt.h
 stddef.h
 -
 string.h
 -
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/getopt.h
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/getopt.h
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/glad.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/glad.c
 stdio.h
 -
 stdlib.h
@@ -26,7 +26,7 @@ string.h
 glad/glad.h
 -
 
-/home/lee/Desktop/github/glfw-3.2.1/tests/glfwinfo.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/tests/glfwinfo.c
 vulkan/vulkan.h
 -
 glad/glad.h
@@ -40,7 +40,7 @@ stdlib.h
 string.h
 -
 getopt.h
-/home/lee/Desktop/github/glfw-3.2.1/tests/getopt.h
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/tests/getopt.h
 
 deps/KHR/khrplatform.h
 stdint.h

@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/lee/Desktop/github/glfw-3.2.1/deps/glad.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/deps/glad.c
 stdio.h
 -
 stdlib.h
@@ -16,7 +16,7 @@ string.h
 glad/glad.h
 -
 
-/home/lee/Desktop/github/glfw-3.2.1/tests/reopen.c
+/Users/hugo_martzolf/Desktop/github/42/glfw-3.2.1/tests/reopen.c
 glad/glad.h
 -
 GLFW/glfw3.h
