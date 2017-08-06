@@ -1,3 +1,21 @@
 [submodule "libft"]
 	path = libft
 	url = https://github.com/LIMachi/libft.git
+[submodule "libftocl"]
+	path = libftocl
+	url = https://github.com/LIMachi/libftocl.git
+[submodule "libftjson"]
+	path = libftjson
+	url = https://github.com/LIMachi/libftjson.git
+[submodule "Makefiles"]
+	path = Makefiles
+	url = https://github.com/LIMachi/Makefiles.git
+[submodule "connect_4"]
+	path = connect_4
+	url = https://github.com/LIMachi/connect_4.git
+[submodule "fdf"]
+	path = fdf
+	url = https://github.com/LIMachi/fdf.git
+[submodule "fillit"]
+	path = fillit
+	url = https://github.com/LIMachi/fillit.git
